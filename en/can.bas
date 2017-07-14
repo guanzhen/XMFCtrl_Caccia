@@ -4,7 +4,7 @@ Const CANCMD_SETBRAKE           = &H02
 Const CANCMD_Command_AxisRefRun = &h04
 Const CANCMD_test = &h06
 
-Const SLOT_NO = 29
+Const SLOT_NO = 1
 
 Function btn_CanConnect( id, id1 )
   Dim Net,Baud,CANConfig, CANID,CANData,i
@@ -25,7 +25,7 @@ Function btn_CanConnect( id, id1 )
 If CANConfig.Config = 0 Then
     CANConfig.Baudrate = "250"
     text = "[Standalone]"
-    Visual.Select("inputCANID").Value = "6e8"
+    Visual.Select("inputCANID").Value = "608"
   Elseif CANConfig.Config = 1 Then
     CANConfig.Baudrate = "1000"
     Visual.Select("inputCANID").Value = "500"

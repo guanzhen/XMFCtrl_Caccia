@@ -20,6 +20,7 @@ Option Explicit
 #include "DebugLog.bas"
 #include "MF_Init.bas"
 #include "can.bas"
+#include "MF_Commands.bas"
 
 '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '~~~ Select memory size ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
