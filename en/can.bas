@@ -630,57 +630,7 @@ Function CANSendPrepareCMD(Cmd,Context,SlotNo,Division,DataLen,PubEndTimeout)
       CANSendPrepareCMD = False
       Exit Function
     End If
-    CanManager.Deliver = True
-  Exit Function
-    'Process PUB Start    
-    'DebugMessage "Wait for Pub Start"
-    If CANConfig.Config = 1 Then
-    
-    Else
-      
-      'Standalone PUB Start
-      If CanManager.PeekMessage (CanReadArg, 2000,CR_IGNORE_ERROR_FRAME) Then
-        DebugMessage "Pub Start: " & CANReadArg.Format
-        If CANReadArg.Error = CAN_ERROR_NO AND CANReadArg.Data(1) = 0 Then
-          CANSendPrepareCMD = True
-        Else          
-          CANSendPrepareCMD = False
-        End If
-        
-      Else
-        DebugMessage "Pub Start Timeout!"
-        CANSendPrepareCMD = False
-        Exit Function
-      End If
-    End If    
-  'Process PUB End
-  
-  'DebugMessage "Wait for Pub End"
-    WaitPub = 1
-    If CANConfig.Config = 1 Then
-    
-    Else
-      Do While WaitPub = 1
-        If CanManager.PeekMessage (CanReadArg, PubEndTimeout,CR_IGNORE_ERROR_FRAME) Then
-          'Only read synchronos Pub messages. 
-          If Lang.Bit(CanReadArg.Data(0),7) = 0 AND Lang.Bit(CanReadArg.Data(0),6) = 0 Then
-            DebugMessage "Pub End: " & CANReadArg.Format    
-            If CANReadArg.Error = CAN_ERROR_NO AND CANReadArg.Data(1) = 0 Then
-              CANSendPrepareCMD = True
-            Else          
-              CANSendPrepareCMD = False        
-            End If
-            WaitPub = 0
-          End If
-        Else
-          DebugMessage "Pub End Timeout!"
-          CANSendPrepareCMD = False
-          Exit Function
-        End If
-      Loop
-    End If
-    
-   
+    CanManager.Deliver = True   
   Else
     DebugMessage "CANSendPrepareCMD Error"
     CANSendPrepareCMD = False

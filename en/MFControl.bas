@@ -19,6 +19,7 @@ Option Explicit
 #include <GridCtrl.bas>
 #include "DebugLog.bas"
 #include "MF_Init.bas"
+#include "ptkl_mf.h"
 #include "can.bas"
 #include "MF_Commands.bas"
 

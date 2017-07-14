@@ -28,13 +28,16 @@
   html { background-color : #97A0A5;}
   h1 {font-size: 12pt;color:white;margin:5px 0px 5px 0px;font-family:arial}
   body {font-size: 12pt;color:white;font-family:arial}
+  button {width:150px}
+  input {width:150px;}
+  select {width:150px;}   
   #ButtonGridClear {margin-top:4px;float:left; width: 100px;height:34px;align:right;}
   //#ButtonDebugLog  {margin-top:4px;float:right; width: 150px;height:34px;}  
   #Layer_TabStrip  { padding:3px 5px 1px 5px; height:70%; width:100%;}
   #Layer_MessageLog { padding:1px 5px;height:28%; width :100%;}
   #MessageLogObj { height:80%; width :100%;}  
-  #LayerCommand {float:left;width :50%; height:90%}
-  #LayerReply {float:leftwidth :50%;height:90%}
+  #LayerCommand {float:left;width :49%; height:90%}
+  #LayerReply {float:left;width :49%;height:90%}
   .GrpFrame
   {
     border-color:     white;
@@ -60,29 +63,34 @@
   </table>
   
   <div id="LayerCommand" class = "GrpFrame">
-    <!-- Setup Measurement~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
-    <div id="SubLayerSetup" class = "GrpFrame">
-      <h1>Setup Measurement</h1>
-      Contact Module 
-      <select id = "opt_CMID">
+  <!-- Measure Component~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="SubLayerMeasure" class = "GrpFrame">
+      <h1>Measurement</h1>
+     <table> 
+     <tr><td>Contact Module</td>
+        <td><select id = "opt_CMID">
         <option value = "0x01">1</option>
         <option value = "0x02">2</option>
         <option value = "0x03">3</option>
-      </select>
-      <button style="align:center" id="btn_setupmeasure"> Setup </button>
-    </div>
-  <!-- Measure Component~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-    <div id="SubLayerMeasure" class = "GrpFrame">
-    <h1>Measure</h1>
-    <select id = "optMeasureCommand" >
-      <option value = "MEAS_RES">Resistor</option>
-      <option value = "MEAS_CAP">Capacitor</option>
-      <option value = "MEAS_IND">Inductor</option>
-      <option value = "MEAS_DIODE">Forward Voltage</option>
-      <option value = "MEAS_PCAP">Polar Cap</option>
-      <option value = "MEAS_AUTO">Auto Measurement</option>
-    </select>
+        </select>
+      </tr>
+      <tr><td>
+        Expected Value <td><input id="ip_param_setupExpectedVal"></input>
+      </tr>
+      <tr><td>
+        Component Type <td>
+        <select id = "optMeasureCommand" >
+          <option value = "1">Resistor</option>
+          <option value = "2">Capacitor</option>
+          <option value = "3">Inductor</option>
+          <option value = "4">Forward Voltage</option>
+          <option value = "5">Polar Cap</option>
+          <option value = "6">Auto Measurement</option>
+        </select>
+      </tr>
+    <tr><td><button id="btn_setupmeasure"> Setup Measure</button></tr>
+    </table>
+    <br>
     <table>
     <tr id="param_voltage"><td>Voltage</td> <td><input id = "ip_paramvoltage" ></input></td>    
     <tr id="param_current"><td>Current</td> <td><input id = "ip_paramcurrent" ></input></td>
@@ -90,10 +98,16 @@
     <tr id="param_maxvoltage"><td>MaxVoltage</td> <td><input id = "ip_parammaxvoltage" ></input></td>
     <tr id="param_numofcycle"><td>NumOfCycles(opt)</td> <td><input id = "ip_paramnumofcycles" ></input></td>
     <tr id="param_polarity"><td>Polarity(Opt)</td> <td><input id = "ip_parampolarity" ></input></td>
+    <tr><td><button id="btn_measure"> Measure </button>    
     </table>
-    <button style="align:center" id="btn_measure"> Measure </button>    
     </div>
     
+    <div id="SubLayerTools" class = "GrpFrame">
+      <h1> Functions </h1>
+      <button style="width:150px" id="btn_calibrate"> Calibration </button>    
+      <br>
+      <button style="width:150px" id="btn_selftest"> Self Test </button>    
+    </div>
   </div>
   
   <div id="LayerReply" class = "GrpFrame">

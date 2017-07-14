@@ -20,7 +20,7 @@ Sub OnLoadFrame()
   Dim i, Config, Release, TitleString
   
   'log outputs
-  Memory.Set "dispLog", false
+  Memory.Set "dispLog", true
   
   Window.Width  = 1040
   Window.Height = 680
@@ -43,7 +43,8 @@ Sub OnLoadFrame()
   '~~~ Disable elements for input only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   'DisableComponents
 '  Visual.SerScopeGrid.AddRows 10,10, True, 1
-  
+  CreateDebugLogWindow
+  Init_MFCommand
   Visual.Script("win").attachEvent "onClose" , Lang.GetRef( "btn_CanConnect" , 1)
 End Sub
 
@@ -55,7 +56,7 @@ Sub OnUnloadFrame()
   'If configLoaded = True Then
   '  WriteConfigParam
   'End If
-  'DebugWindowClose
+  DebugWindowClose
 End Sub
 
 
