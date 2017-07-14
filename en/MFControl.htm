@@ -2,64 +2,136 @@
 <HTML>
 
 <HEAD>
-  <link rel="stylesheet" type="text/css" href="dhtmlx/codebase/dhtmlx.css">
-  <script src="dhtmlx/codebase/dhtmlx.js"></script>
+  <!-- Dhtmlx Common -->
+  <script src="../../../codebase/dhtmlxcommon.js"></script>
+  <script src="../../../codebase/dhtmlxcontainer.js"></script>
+
+  <!-- Dhtmlx TabBar -->
+  <link rel="stylesheet" type="text/css" href="../../../codebase/tabbar/dhtmlxtabbar.css">
+  <script src="../../../codebase/tabbar/dhtmlxtabbar.js"></script>
+  
+  <!-- Dhtmlx Grid -->
+  <link rel="stylesheet" type="text/css" href="../../../codebase/grid/skins/dhtmlxgrid_dhx_skyblue.css">
+  <link rel="stylesheet" type="text/css" href="../../../codebase/grid/dhtmlxgrid.css">
+  <script src="../../../codebase/grid/dhtmlxgrid.js"></script>
+  <script src="../../../codebase/grid/dhtmlxgridcell.js"></script>
+  <script src="../../../codebase/grid/ext/dhtmlxgrid_data.js"></script>
+    
+  <!-- Dhtmlx Windows -->
+  <link rel="stylesheet" type="text/css" href="../../../codebase/windows/skins/dhtmlxwindows_dhx_skyblue.css">
+  <link rel="stylesheet" type="text/css" href="../../../codebase/windows/dhtmlxwindows.css">
+  <script src="../../../codebase/windows/dhtmlxwindows.js"></script>
+  
+  <script src="onload.js" ></script>
+  
+  <STYLE>
+  html { background-color : #97A0A5;}
+  h1 {font-size: 12pt;color:white;margin:5px 0px 5px 0px;font-family:arial}
+  body {font-size: 12pt;color:white;font-family:arial}
+  #ButtonGridClear {margin-top:4px;float:left; width: 100px;height:34px;align:right;}
+  //#ButtonDebugLog  {margin-top:4px;float:right; width: 150px;height:34px;}  
+  #Layer_TabStrip  { padding:3px 5px 1px 5px; height:70%; width:100%;}
+  #Layer_MessageLog { padding:1px 5px;height:28%; width :100%;}
+  #MessageLogObj { height:80%; width :100%;}  
+  #LayerCommand {float:left;width :50%; height:90%}
+  #LayerReply {float:leftwidth :50%;height:90%}
+  .GrpFrame
+  {
+    border-color:     white;
+    border-style:     solid;
+    border-width:     2px;
+    filter:           progid:DXImageTransform.Microsoft.Gradient(startColorStr='#AA312C',endColorStr='#A4312C',gradientType='1');
+    Background-color: #AA312C;
+    margin:           2px;
+    padding:          3px;
+  }
+  </STYLE>
 </HEAD>
 
 <BODY>
 
-<div class="Common" id="LayerAndromeda">
-  <div id="sidebarObj" style="position: relative; width: 400px; height: 300px;"></div>
-</div>
+<div id="Layer_TabStrip" class = "GrpFrame">
+  <table>
+    <td><span style = "color = white;font-size = 10pt;font-family=arial;margin=0px;">0x</span></td>
+    <td><input id = "inputCANID" ></input></td>
+    <td><button id = "btnAssignCANID" class = "ButtonInfo">Assign CANID</button></td>
+    <td><button id = "btnGetApp" class = "ButtonInfo">Read Info</button></td>
+    <td><button id = "btnReset" class = "ButtonInfo">Reset</button></td>
+  </table>
+  
+  <div id="LayerCommand" class = "GrpFrame">
+    <!-- Setup Measurement~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<script>
-</script>
+    <div id="SubLayerSetup" class = "GrpFrame">
+      <h1>Setup Measurement</h1>
+      Contact Module 
+      <select id = "opt_CMID">
+        <option value = "0x01">1</option>
+        <option value = "0x02">2</option>
+        <option value = "0x03">3</option>
+      </select>
+      <button style="align:center" id="btn_setupmeasure"> Setup </button>
+    </div>
+  <!-- Measure Component~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="SubLayerMeasure" class = "GrpFrame">
+    <h1>Measure</h1>
+    <select id = "optMeasureCommand" >
+      <option value = "MEAS_RES">Resistor</option>
+      <option value = "MEAS_CAP">Capacitor</option>
+      <option value = "MEAS_IND">Inductor</option>
+      <option value = "MEAS_DIODE">Forward Voltage</option>
+      <option value = "MEAS_PCAP">Polar Cap</option>
+      <option value = "MEAS_AUTO">Auto Measurement</option>
+    </select>
+    <table>
+    <tr id="param_voltage"><td>Voltage</td> <td><input id = "ip_paramvoltage" ></input></td>    
+    <tr id="param_current"><td>Current</td> <td><input id = "ip_paramcurrent" ></input></td>
+    <tr id="param_result"><td>Expected Result</td> <td><input id = "ip_paramresults" ></input></td>
+    <tr id="param_maxvoltage"><td>MaxVoltage</td> <td><input id = "ip_parammaxvoltage" ></input></td>
+    <tr id="param_numofcycle"><td>NumOfCycles(opt)</td> <td><input id = "ip_paramnumofcycles" ></input></td>
+    <tr id="param_polarity"><td>Polarity(Opt)</td> <td><input id = "ip_parampolarity" ></input></td>
+    </table>
+    <button style="align:center" id="btn_measure"> Measure </button>    
+    </div>
+    
+  </div>
+  
+  <div id="LayerReply" class = "GrpFrame">
+  <h1>Results</h1>
+  <table>
+    <tr id="param_STcontactres"><td>Contact Res</td> <td><input id = "op_paramSTcontactres" ></input></td>    
+    <tr id="param_STCapacity"><td>Capacitance</td> <td><input id = "op_paramSTcapacitance" ></input></td>
+    <tr id="param_setupCompType"><td>Comp Type</td> <td><input id = "op_paramsetupcomptype" ></input></td>
+    <tr id="param_setupU"><td>U</td> <td><input id = "op_paramU" ></input></td>
+    <tr id="param_setupI"><td>I</td> <td><input id = "op_paramI" ></input></td>
+    <tr id="param_setupPhi"><td>Phi</td> <td><input id = "op_paramPhi" ></input></td>
+    <tr id="param_setupFreq"><td>Frequency</td> <td><input id = "op_paramFreq" ></input></td>
+    <tr id="param_measCompType"><td>Comp Type</td> <td><input id = "op_parammeascomptype" ></input></td>
+    <tr id="param_measU"><td>U</td> <td><input id = "op_parammeasU" ></input></td>
+    <tr id="param_measI"><td>I</td> <td><input id = "op_parammeasI" ></input></td>
+    <tr id="param_measPhi"><td>Phi</td> <td><input id = "op_parammeasPhi" ></input></td>
+    <tr id="param_measFreq"><td>Frequency</td> <td><input id = "op_parammeasFreq" ></input></td>
+    <tr id="param_fwdvoltage"><td>Forward Voltage</td> <td><input id = "op_paramfwdvoltage" ></input></td>
+    <tr id="param_fwdcurrent"><td>Forward Current</td> <td><input id = "op_paramfwdcurrent" ></input></td>
+  </table>  
+  </div>  
+
+  </div>
+  <div id="Layer_MessageLog">
+    <div id="MessageLogObj"></div>
+    <button id="ButtonGridClear" title="Clear content in message window.">Clear</button>
+    <!-- <button id="ButtonDebugLog" title="Creates Debug Window">Start DebugLog</button>         -->
+  </div>
+  
+  <div id="Layer_CanSetup"></div>
+ 
 
 </BODY>
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
   <!-- Popup window ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-  <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-  <!-- Side bar ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-  <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-<script language="JScript" type="text/javascript">
-  var mySidebar = new dhtmlXSideBar({
-   
-      parent:         "sidebarObj",   // id/object, container for sidebar 
-      skin:           "dhx_skyblue",  // string, sidebar skin, optional
-      template:       "details",      // string, used template, "details" by default
-      icons_path:     "icons/",       // string, path to the folder with icons
-      single_cell:    true,           // boolean, true to enable the single cell mode
-      bubble:         6,              // number, marker to show number of notifications 
-      width:          200,            // number, width of the left part
-      header:         true,           // boolean, true to enable the header
-      autohide:       false,          // boolean, true to autohide the navigation bar 
-      //xml:            "sidebar.xml",  // string, path to xml config, optional
-      //json:           "sidebar.json", // string, path to json config, optional
-      //onload:         function(){},   // function, callback for xml/json, optional
-      items: [
-          // items config
-          {
-              id:         "a1",       // item id
-              text:       "Text",     // item text
-              icon:       "a1.png",   // icon used for the item
-              selected:   true        // boolean, true to select an item
-          },
-          {
-              id:         "a2",       // item id
-              text:       "Text2",     // item text
-              icon:       "a1.png",   // icon used for the item
-              selected:   false        // boolean, true to select an item
-          },
-          // separator config
-          {
-              id:         "sep1",     // separator id
-              type:       "separator" // item type, mandatory
-          }   
-      ]
-   
-  });
-</script>  
+
+<!-- Message Log -->
 
 </HTML>
 

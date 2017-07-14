@@ -1,0 +1,65 @@
+<html class = html_Cansetup>
+<head>
+  <meta http-equiv="content-type" content="text/ html;charset=utf-8" />
+  <style>
+  h1 
+  {
+    font-size: 12pt;
+    color:white; 
+    margin:3px 0px 7px 3px; 
+    font-family:arial
+  }
+  .html_Cansetup
+  {
+    background-color:silver;
+  }
+  .select_cansetup
+  {
+    width:200px;
+    text-decoration:20pt;
+    font-size:12pt;
+  }
+  #frame_canconfig   { align:center;padding : 5px 10px 5px 10px; margin-top:10px;}
+  #btn_canconnect
+  {
+    margin-top:5px;
+    height: 0px;
+    width: 150px;
+  }
+  </style>
+</head>
+
+<body>
+  <div align = "center" id="frame_canconfig">
+  <table>
+    <tr>
+      <td><h1>JTF ML2 Configuration</h1></td>
+      <td>
+      <select class="select_cansetup" id="opt_config" selected = "1">
+        <option value ="0">Stand Alone</option>
+        <option value ="1">XFCU</option>
+      </select>
+      </td>
+    </tr>
+    <tr>
+      <td><h1>CAN Net</h1></td>
+      <td>
+        <select class = "select_cansetup" id="opt_cannet">
+          <option value="0">1</option>
+          <option value ="1">2</option>
+          <option value ="2">3</option>
+          <option value ="3">4</option>
+        </select>
+      </td>
+    </tr>
+    <tr><td colspan ="2" align="center"><button id ="btn_CanConnect" onclick="buttonclick()">Connect </button></td></tr>
+  </table>
+  </div>
+  <script>
+    function buttonclick() 
+    {
+      parent.onclick_btncanconnect();
+    }
+  </script>
+</body>
+</html>
