@@ -1,0 +1,65 @@
+
+<HTML>
+
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="dhtmlx/codebase/dhtmlx.css">
+  <script src="dhtmlx/codebase/dhtmlx.js"></script>
+</HEAD>
+
+<BODY>
+
+<div class="Common" id="LayerAndromeda">
+  <div id="sidebarObj" style="position: relative; width: 400px; height: 300px;"></div>
+</div>
+
+<script>
+</script>
+
+</BODY>
+  <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+  <!-- Popup window ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+  <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+  <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+  <!-- Side bar ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+  <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<script language="JScript" type="text/javascript">
+  var mySidebar = new dhtmlXSideBar({
+   
+      parent:         "sidebarObj",   // id/object, container for sidebar 
+      skin:           "dhx_skyblue",  // string, sidebar skin, optional
+      template:       "details",      // string, used template, "details" by default
+      icons_path:     "icons/",       // string, path to the folder with icons
+      single_cell:    true,           // boolean, true to enable the single cell mode
+      bubble:         6,              // number, marker to show number of notifications 
+      width:          200,            // number, width of the left part
+      header:         true,           // boolean, true to enable the header
+      autohide:       false,          // boolean, true to autohide the navigation bar 
+      //xml:            "sidebar.xml",  // string, path to xml config, optional
+      //json:           "sidebar.json", // string, path to json config, optional
+      //onload:         function(){},   // function, callback for xml/json, optional
+      items: [
+          // items config
+          {
+              id:         "a1",       // item id
+              text:       "Text",     // item text
+              icon:       "a1.png",   // icon used for the item
+              selected:   true        // boolean, true to select an item
+          },
+          {
+              id:         "a2",       // item id
+              text:       "Text2",     // item text
+              icon:       "a1.png",   // icon used for the item
+              selected:   false        // boolean, true to select an item
+          },
+          // separator config
+          {
+              id:         "sep1",     // separator id
+              type:       "separator" // item type, mandatory
+          }   
+      ]
+   
+  });
+</script>  
+
+</HTML>
+
