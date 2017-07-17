@@ -347,10 +347,14 @@ Function GetErrorInfo ( CanReadArg )
   End If
   'DebugMessage "Error num: " & String.Format("%2x",ErrCode)
   Select Case ErrCode
+  Case $(ACK_NOK): ErrorMsg = "Command Error (NOK)"
   Case $(ACK_UNKNOWN_CMD): ErrorMsg = "Unknown Command"
-  Case $(ACK_NOT_IMPLEMENTED): ErrorMsg = "Not Implemented"
   Case $(ACK_WRONG_STATE): ErrorMsg = "Wrong State"
+  Case $(ACK_INVALID_PARAM): ErrorMsg = "Invalid Parameters"
+  Case $(ACK_WRONG_LENGTH): ErrorMsg = "Wrong Lenght"
+  Case $(ACK_TOO_MANY_PREPARES): ErrorMsg = "Too many Prepares"
   Case $(ACK_TIMEOUT_SUBSYSTEM): ErrorMsg = "Timeout Subsystem"
+  Case $(ACK_NOT_IMPLEMENTED): ErrorMsg = "Not Implemented"
   'Case $(ACK_WRONG_LENGTH): ErrorMsg = "Wrong Length"      
 
   Case Else: ErrorMsg = "Other errors"
@@ -435,6 +439,7 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
          Next
       End If
       Memory.Set "CANData",CANData
+      Memory.Set "CanReadArg",CanReadArg
       DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
     Else
       LogAdd "Command NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
@@ -447,7 +452,15 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
   End If
   
 End Function
-
+'------------------------------------------------------------------
+Function GetFloatCanData( )
+  Dim Value,RawValue,CANData
+  Memory.Get "CANData",CANData
+  'DebugMessage String.Format("%4X,%4X,%4X,%4X",CANData(2),CANData(3),CANData(4),CANData(5))
+  RawValue = Lang.MakeLong4(CANData(2),CANData(3),CANData(4),CANData(5))
+  Value = Math.CastLong2Float(RawValue)
+  GetFloatCanData = Value
+End Function
 '------------------------------------------------------------------
 Function CANSendGetFeed(Cmd,SubCmd,SlotNo,DataLen)
 

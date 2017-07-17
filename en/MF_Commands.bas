@@ -12,15 +12,22 @@ Const PROCESS_MEASURE = 2
 Const PROCESS_SELFTEST = 3
 Const PROCESS_Calibration = 4
 
+Const PREPARE_NONE = 0
+Const PREPARE_SETUP = 1
+Const PREPARE_MEASURE = 2
+Const PREPARE_SELFTEST = 3
+Const PREPARE_CALIBRATION = 4
+Const PREPARE_AUTO = 6
+
+
 Const TIO_SETUPMEASURE = 6000
 Const TIO_MEASURE = 6000
-Const TIO_CALIBRATTE = 5000
+Const TIO_CALIBRATE = 5000
 Const TIO_SELFTEST = 5000
 
 Function Init_MFCommand ( )
   Dim PrepCmd_Inprogress,PrepCmd_Error,PrepCmd_PrepID,Endurance_Inprogress
   
-  Visual.Select("ip_param_setupExpectedVal").SetValidation VALIDATE_INPUT_MASK_R4,"Red",10
   MeasureChangeVisibility COMP_TYPE_RES
   ResultChangeVisibility PROCESS_NONE
 
@@ -34,11 +41,16 @@ Function Init_MFCommand ( )
   Memory.Set "PrepCmd_PrepID",PrepCmd_PrepID
   
   Visual.Select("ip_param_setupExpectedVal").Value = 100
-
+  Visual.Select("ip_parampolarity").Value = 0
+  Visual.Select("ip_paramresults").Value = 100
+  
+  Visual.Select("ip_param_setupExpectedVal").SetValidation VALIDATE_INPUT_MASK_R4,"Red",10
 End Function
-
+'------------------------------------------------------------------
 Function WaitMeasure ( TimeOut )
 Dim loop_enable,Time,measureOK
+Dim cmd
+
   measureOK = 0
   Time = TimeOut / 100
   loop_enable = 1
@@ -65,11 +77,157 @@ Dim loop_enable,Time,measureOK
     Loop Until loop_enable = 0 
     
     If measureOK = 1 Then
-    
+      ProcessResults
     End If
 End Function 
+'------------------------------------------------------------------
+Function ProcessResults ( )
+  Dim ResultLog,Value, CompType
+  DebugMessage "Process Results"
+  ResultChangeVisibility(Memory.PrepCmd)
+  Select Case Memory.PrepCmd
+    Case PREPARE_NONE : 
+      ResultLog = "Error, no prepare"
+    Case PREPARE_SETUP :
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_COMP_TYPE),SLOT_NO,1,0
+      Value = Memory.CanData(2)
+      Visual.Select("op_paramsetupcomptype").Value = String.Format("%c",Value)
+      ResultLog = "MeasSetup: CompType :" & String.Format("%c",Value)
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_STRAY_CAPACITY),SLOT_NO,1,0
+       Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_paramsetupcapacity").Value = Value
+      ResultLog = ResultLog & " Capacity:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_U),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_paramU").Value = Value
+      ResultLog = ResultLog & " U:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_I),SLOT_NO,1,0
+       Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_paramI").Value = Value
+      ResultLog = ResultLog & " I:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_PHI),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_paramPhi").Value = Value
+      ResultLog = ResultLog & " Phi:" & Value      
+      
+    Case PREPARE_MEASURE :
+      
+      CompType = Visual.Select("optMeasureCommand").Value
+      If Not CompType = 4 Then
+      DebugMessage "Process Measure CRL, PCAP"
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE),SLOT_NO,1,0
+      Value = Memory.CanData(2)
+      Visual.Select("op_parammeascomptype").Value = String.Format("%c",Value)
+      ResultLog = "Meas: CompType :" & String.Format("%c",Value)      
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_parammeasValue").Value = Value
+      ResultLog = ResultLog & " Value:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_U),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_parammeasU").Value = Value
+      ResultLog = ResultLog & " U:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_I),SLOT_NO,1,0
+       Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_parammeasI").Value = Value
+      ResultLog = ResultLog & " I:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_PHI),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_parammeasPhi").Value = Value
+      ResultLog = ResultLog & " Phi:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FREQUENCY),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_parammeasFreq").Value = Value
+      ResultLog = ResultLog & " Freq:" & Value      
+      'Diode
+      Else
+      DebugMessage "Process Measure Diode"
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FWD_VOLTAGE),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_paramfwdvoltage").Value = Value
+      ResultLog = "Meas: FWDVoltage :" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FWD_CURRENT),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_paramfwdcurrent").Value = Value
+      ResultLog = ResultLog & " FWD Current:" & Value
+      End If
+      
+      'End measure
+    Case PREPARE_SELFTEST :
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_CONTACT_RES),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_paramSTcontactres").Value = Value
+      ResultLog = ResultLog & " Value:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_CAPACITY_CM_ID),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_paramSTcapacitance").Value = Value
+      ResultLog = ResultLog & " U:" & Value
 
+    Case PREPARE_CALIBRATION :
+    'NO param to read
+    Case PREPARE_AUTO :
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE),SLOT_NO,1,0
+      Value = Memory.CanData(2)
+      Visual.Select("op_parammeascomptype").Value = String.Format("%c",Value)
+      ResultLog = "AutoMeas: CompType :" & String.Format("%c",Value)      
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_parammeasValue").Value = Value
+      ResultLog = ResultLog & " Value:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_U),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_parammeasU").Value = Value
+      ResultLog = ResultLog & " U:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_I),SLOT_NO,1,0
+       Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_parammeasI").Value = Value
+      ResultLog = ResultLog & " I:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_PHI),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_parammeasPhi").Value = Value
+      ResultLog = ResultLog & " Phi:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FREQUENCY),SLOT_NO,1,0
+      Value = String.Format("%f",GetFloatCanData)
+      Visual.Select("op_parammeasFreq").Value = Value
+      ResultLog = ResultLog & " Freq:" & Value     
+    End Select
+    LogAdd ResultLog      
+End Function 
+'------------------------------------------------------------------
+Function PrepareCommands (Cmd,Context,SlotNo,Division,DataLen,PubEndTimeout)
+  Dim Command
+  Command = PREPARE_NONE
+  'This function is just to set the memory variable PrepCmd.
+  'it is used by ProcessResults to determine which variables to read
+  
+  Select Case Cmd
+    Case $(CMD_PREPARE_SETUP_MEASURE) : Command = PREPARE_SETUP
+    Case $(CMD_PREPARE_MEASURE) : Command = PREPARE_MEASURE
+    Case $(CMD_PREPARE_MEASURE_AUTO) : Command = PREPARE_AUTO
+    Case $(CMD_PREPARE_SELFTEST) : Command = PREPARE_SELFTEST
+    Case $(CMD_PREPARE_CALIBRATION) : Command = PREPARE_CALIBRATION
+  End Select 
+  Memory.Set "PrepCmd", Command
+  PrepareCommands = CANSendPrepareCMD (Cmd,Context,SlotNo,Division,DataLen,PubEndTimeout)  
+End Function
 
+'------------------------------------------------------------------
 Function OnClick_btnAssignCANID( Reason )
   Dim CanReadArg,CanID
   Set CanReadArg = CreateObject("ICAN.CanReadArg")
@@ -83,24 +241,6 @@ Function OnClick_btnAssignCANID( Reason )
   GetFirmwareInfo
 End Function
 
-'------------------------------------------------------------------
-Function Command_Prepare_SetupMeasure (CM_ID, ExpectedValue,ComponentType,TimeOut)
-  Memory.CANData(0) = Lang.GetByte(ExpectedValue,0)
-  Memory.CANData(1) = Lang.GetByte(ExpectedValue,1)
-  Memory.CANData(2) = Lang.GetByte(ExpectedValue,2)
-  Memory.CANData(3) = Lang.GetByte(ExpectedValue,3)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_EXPECTED_RESULT),SLOT_NO,CM_ID,4
-  
-  Memory.CANData(0) = Lang.GetByte(ComponentType,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),SLOT_NO,CM_ID,1  
-   
-  If CANSendPrepareCMD($(CMD_PREPARE_SETUP_MEASURE),1,SLOT_NO,CM_ID,0,250) = True Then
-    LogAdd "Setup Measure command started"
-    System.Start "WaitMeasure",TimeOut
-  Else
-    LogAdd "Setup Measure Error."
-  End If
-End Function
 '------------------------------------------------------------------
 
 Function OnClick_btn_setupmeasure( Reason )
@@ -117,17 +257,81 @@ End Function
 
 '------------------------------------------------------------------
 
-Function OnClick_btn_calibrate ( Reason )
+Function OnClick_btn_measure( Reason )
+  Dim CompType
+  DebugMessage "PrepareMeasure Button"
+  CompType = Visual.Select("optMeasureCommand").Value
+  Select Case CompType
+    Case 1:
+      PrepareMeasureCRL 
+    Case 2:
+      PrepareMeasureCRL    
+    Case 3:
+      PrepareMeasureCRL
+    Case 4:
+      PrepareMeasureDiode
+    Case 5:
+      LogAdd "PCAP not implemented"
+    Case 6:
+      LogAdd "Auto not implemented"    
+  End Select
+End Function
 
-  LogAdd "Calibration: Not Implemented"
+'------------------------------------------------------------------
+
+Function PrepareMeasureCRL ( )
+
+  Dim ExpectedValue, CompType,CM_ID
+  ExpectedValue = Math.CastFloat2Long(Visual.Select("ip_param_setupExpectedVal").Value)
+  CM_ID = Visual.Select("opt_CMID").Value  
+  CompType = Visual.Select("optMeasureCommand").Value
+  If NOT IsNumeric(ExpectedValue) Then
+    LogAdd "Invalid value"
+  Else
+    Command_Prepare_Measure CM_ID,ExpectedValue,CompType,TIO_MEASURE
+  End If
 
 End Function
 '------------------------------------------------------------------
 
-Function OnClick_btn_selftest ( Reason )
+Function PrepareMeasureDiode ( )
 
-  LogAdd "Self Test: Not Implemented"
+  Dim CompType,CM_ID, Current,Voltage,Polarity
+  Voltage = Math.CastFloat2Long(Visual.Select("ip_paramvoltage").Value)
+  Current = Math.CastFloat2Long(Visual.Select("ip_paramcurrent").Value)
   
+  CM_ID = Visual.Select("opt_CMID").Value  
+  CompType = Visual.Select("optMeasureCommand").Value
+  If NOT IsNumeric(Voltage) Then
+    LogAdd "Invalid Voltage value"    
+  Elseif Not IsNumeric(Current) Then
+    LogAdd "Invalid Current value"    
+  Else
+    Command_Prepare_Meas_FWDVOLTAGE CM_ID,Voltage,Current,CompType,TIO_MEASURE
+  End If
+
+End Function
+'------------------------------------------------------------------
+
+Function OnClick_btn_calibrate ( Reason )
+  
+  If PrepareCommands($(CMD_PREPARE_CALIBRATION),1,SLOT_NO,1,0,250) = True Then
+    LogAdd "Calibration command started"
+    System.Start "WaitMeasure",TIO_CALIBRATE
+  Else
+    LogAdd "Calibration Error."
+  End If
+End Function
+'------------------------------------------------------------------
+
+Function OnClick_btn_selftest ( Reason )
+    
+  If PrepareCommands($(CMD_PREPARE_SELFTEST),1,SLOT_NO,1,0,250) = True Then
+    LogAdd "Self Test command started"
+    System.Start "WaitMeasure",TIO_SELFTEST
+  Else
+    LogAdd "Self Test Error."
+  End If
 End Function
 
 '------------------------------------------------------------------
@@ -147,40 +351,68 @@ Function OnChange_optMeasureCommand ( Reason )
   MeasureChangeVisibility CompType
   
 End Function
-
-'-------------------------------------------------------------------
-Function LogAdd ( sMessage )
-  Dim Gridobj
-  Set Gridobj = Visual.Script("LogGrid")
-  Dim MsgId
-  MsgId = Gridobj.uid()
-  If NOT(sMessage = "") Then
-    Gridobj.addRow MsgId, ""& FormatDateTime(Date, vbShortDate) &","& FormatDateTime(Time, vbShortTime)&":"& String.Format("%02d ", Second(Time)) &","& sMessage
-    'Wish of SCM (automatically scroll to newest Msg)
-    Gridobj.showRow( MsgId )
-  End If  
-  'DebugMessage sMessage
+'------------------------------------------------------------------
+Function Command_Prepare_SetupMeasure (CM_ID, ExpectedValue,ComponentType,TimeOut)
+  Memory.CANData(0) = Lang.GetByte(ExpectedValue,0)
+  Memory.CANData(1) = Lang.GetByte(ExpectedValue,1)
+  Memory.CANData(2) = Lang.GetByte(ExpectedValue,2)
+  Memory.CANData(3) = Lang.GetByte(ExpectedValue,3)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_EXPECTED_RESULT),SLOT_NO,CM_ID,4
+  
+  Memory.CANData(0) = Lang.GetByte(ComponentType,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),SLOT_NO,CM_ID,1  
+   
+  If PrepareCommands($(CMD_PREPARE_SETUP_MEASURE),1,SLOT_NO,CM_ID,0,250) = True Then
+    LogAdd "Setup Measure command started"
+    System.Start "WaitMeasure",TimeOut
+  Else
+    LogAdd "Setup Measure Error."
+  End If
 End Function
 
 '------------------------------------------------------------------
-Sub GetFirmwareInfo ( )
-  Dim AppMaj,AppMin
-  Dim App,Bios
-  If Command_GetFW($(PARAM_DL_ZIEL_APPL),AppMaj,AppMin) = 1 Then
-    App = String.Format("%02X.%02X", AppMaj,AppMin)
-  Else
-    App = "??.??"
-  End If
+Function Command_Prepare_Measure (CM_ID,ExpectedValue,ComponentType,TimeOut)
+  Memory.CANData(0) = Lang.GetByte(ExpectedValue,0)
+  Memory.CANData(1) = Lang.GetByte(ExpectedValue,1)
+  Memory.CANData(2) = Lang.GetByte(ExpectedValue,2)
+  Memory.CANData(3) = Lang.GetByte(ExpectedValue,3)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_EXPECTED_RESULT),SLOT_NO,CM_ID,4
   
-  If Command_GetFW($(PARAM_DL_ZIEL_BIOS),AppMaj,AppMin) = 1 Then
-    Bios = String.Format("%02X.%02X", AppMaj,AppMin)
+  Memory.CANData(0) = Lang.GetByte(ComponentType,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),SLOT_NO,CM_ID,1  
+   
+  If PrepareCommands($(CMD_PREPARE_MEASURE),1,SLOT_NO,CM_ID,0,250) = True Then
+    LogAdd "Measure command started"
+    System.Start "WaitMeasure",TimeOut
   Else
-    Bios = "??.??"
+    LogAdd "Measure Command Error."
   End If
-  
-  LogAdd "Firmware version: Bios:"& Bios & " App: " & App
-End Sub
+End Function
 
+'------------------------------------------------------------------
+Function Command_Prepare_Meas_FWDVOLTAGE (CM_ID,Current,Voltage,ComponentType,TimeOut)
+  Memory.CANData(0) = Lang.GetByte(Current,0)
+  Memory.CANData(1) = Lang.GetByte(Current,1)
+  Memory.CANData(2) = Lang.GetByte(Current,2)
+  Memory.CANData(3) = Lang.GetByte(Current,3)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CURRENT),SLOT_NO,CM_ID,4
+  
+  Memory.CANData(0) = Lang.GetByte(Voltage,0)
+  Memory.CANData(1) = Lang.GetByte(Voltage,1)
+  Memory.CANData(2) = Lang.GetByte(Voltage,2)
+  Memory.CANData(3) = Lang.GetByte(Voltage,3)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_VOLTAGE),SLOT_NO,CM_ID,4  
+  
+  Memory.CANData(0) = Lang.GetByte(ComponentType,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),SLOT_NO,CM_ID,1  
+   
+  If PrepareCommands($(CMD_PREPARE_MEASURE),1,SLOT_NO,CM_ID,0,250) = True Then
+    LogAdd "Measure command started"
+    System.Start "WaitMeasure",TimeOut
+  Else
+    LogAdd "Measure Command Error."
+  End If
+End Function
 '------------------------------------------------------------------
 Function Command_GetNumOfSlots( )
   If CANSendGetMC($(CMD_GET_DATA),$(MC_NUMBER_OF_SLOTS),SLOT_NO,1,0) = False Then
@@ -240,13 +472,51 @@ Function Command_GetFW(ByVal AppBios, ByRef MajorValue, ByRef MinValue)
 End Function
 
 
+'-------------------------------------------------------------------
+Function LogAdd ( sMessage )
+  Dim Gridobj
+  Set Gridobj = Visual.Script("LogGrid")
+  Dim MsgId
+  MsgId = Gridobj.uid()
+  If NOT(sMessage = "") Then
+    Gridobj.addRow MsgId, ""& FormatDateTime(Date, vbShortDate) &","& FormatDateTime(Time, vbShortTime)&":"& String.Format("%02d ", Second(Time)) &","& sMessage
+    'Wish of SCM (automatically scroll to newest Msg)
+    Gridobj.showRow( MsgId )
+  End If  
+  'DebugMessage sMessage
+End Function
 
-Function ResultChangeVisibility ( ProcessType )
-  Select Case ProcessType 
-  Case PROCESS_NONE:
+'------------------------------------------------------------------
+Sub GetFirmwareInfo ( )
+  Dim AppMaj,AppMin
+  Dim App,Bios,App2
+  If Command_GetFW($(PARAM_DL_ZIEL_APPL),AppMaj,AppMin) = 1 Then
+    App = String.Format("%02X.%02X", AppMaj,AppMin)
+  Else
+    App = "??.??"
+  End If
+  
+  If Command_GetFW($(PARAM_DL_ZIEL_BIOS),AppMaj,AppMin) = 1 Then
+    Bios = String.Format("%02X.%02X", AppMaj,AppMin)
+  Else
+    Bios = "??.??"
+  End If
+  
+  If Command_GetFW($(PARAM_DL_ZIEL_APPL_2),AppMaj,AppMin) = 1 Then
+    App2 = String.Format("%02X.%02X", AppMaj,AppMin)
+  Else
+    App2 = "??.??"
+  End If
+  LogAdd "Firmware version: Bios:"& Bios & " App: " & App & " App2 " & App2
+End Sub
+'------------------------------------------------------------------
+Function ResultChangeVisibility ( ProcessType )  
+  Visual.Select("LayerResults").Style.Display = "None"
+  'Set all to none
   Visual.Select("param_STcontactres").Style.Display = "None"
   Visual.Select("param_STCapacity").Style.Display = "None"
   Visual.Select("param_setupCompType").Style.Display = "None"
+  Visual.Select("param_setupCapacity").Style.Display = "None"
   Visual.Select("param_setupU").Style.Display = "None"
   Visual.Select("param_setupI").Style.Display = "None"
   Visual.Select("param_setupPhi").Style.Display = "None"
@@ -256,102 +526,64 @@ Function ResultChangeVisibility ( ProcessType )
   Visual.Select("param_measI").Style.Display = "None"  
   Visual.Select("param_measPhi").Style.Display = "None"  
   Visual.Select("param_measFreq").Style.Display = "None"  
+  Visual.Select("param_measValue").Style.Display = "None"  
   Visual.Select("param_fwdvoltage").Style.Display = "None"  
   Visual.Select("param_fwdcurrent").Style.Display = "None"  
-  Case PROCESS_SETUP:
-  Visual.Select("param_STcontactres").Style.Display = "None"
-  Visual.Select("param_STCapacity").Style.Display = "None"
+  Select Case ProcessType 
+  Case PREPARE_NONE:
+  'none
+  Case PREPARE_SETUP:
   Visual.Select("param_setupCompType").Style.Display = "Block"
+  Visual.Select("param_setupCapacity").Style.Display = "Block"
   Visual.Select("param_setupU").Style.Display = "Block"
   Visual.Select("param_setupI").Style.Display = "Block"
   Visual.Select("param_setupPhi").Style.Display = "Block"
-  Visual.Select("param_setupFreq").Style.Display = "Block"
-  Visual.Select("param_measCompType").Style.Display = "None"  
-  Visual.Select("param_measU").Style.Display = "None"  
-  Visual.Select("param_measI").Style.Display = "None"  
-  Visual.Select("param_measPhi").Style.Display = "None"  
-  Visual.Select("param_measFreq").Style.Display = "None"  
-  Visual.Select("param_fwdvoltage").Style.Display = "None"  
-  Visual.Select("param_fwdcurrent").Style.Display = "None"  
-  Case PROCESS_MEASURE:
-  Visual.Select("param_STcontactres").Style.Display = "None"
-  Visual.Select("param_STCapacity").Style.Display = "None"
-  Visual.Select("param_setupCompType").Style.Display = "None"
-  Visual.Select("param_setupU").Style.Display = "None"
-  Visual.Select("param_setupI").Style.Display = "None"
-  Visual.Select("param_setupPhi").Style.Display = "None"
-  Visual.Select("param_setupFreq").Style.Display = "None"
-  Visual.Select("param_measCompType").Style.Display = "None"  
+  Case PREPARE_MEASURE:
   Visual.Select("param_measU").Style.Display = "Block"
   Visual.Select("param_measI").Style.Display = "Block"
   Visual.Select("param_measPhi").Style.Display = "Block"
   Visual.Select("param_measFreq").Style.Display = "Block" 
-  Visual.Select("param_fwdvoltage").Style.Display = "None"  
-  Visual.Select("param_fwdcurrent").Style.Display = "None"
-  Case PROCESS_SELFTEST:  
+  Visual.Select("param_measValue").Style.Display = "Block" 
+  Case PREPARE_SELFTEST:  
   Visual.Select("param_STcontactres").Style.Display = "Block"
   Visual.Select("param_STCapacity").Style.Display = "Block"
-  Visual.Select("param_setupCompType").Style.Display = "None"
-  Visual.Select("param_setupU").Style.Display = "None"
-  Visual.Select("param_setupI").Style.Display = "None"
-  Visual.Select("param_setupPhi").Style.Display = "None"
-  Visual.Select("param_setupFreq").Style.Display = "None"
-  Visual.Select("param_measCompType").Style.Display = "None"  
-  Visual.Select("param_measU").Style.Display = "None"  
-  Visual.Select("param_measI").Style.Display = "None"  
-  Visual.Select("param_measPhi").Style.Display = "None"  
-  Visual.Select("param_measFreq").Style.Display = "None"  
-  Visual.Select("param_fwdvoltage").Style.Display = "None"  
-  Visual.Select("param_fwdcurrent").Style.Display = "None"  
-  End Select
+  End Select  
+  Visual.Select("LayerResults").Style.Display = "Block"
 End Function
-
+'------------------------------------------------------------------
 Function MeasureChangeVisibility ( CompType )
   DebugMessage "Change:" & CompType
-  'DebugMessage "Change:" & Visual.select("optMeasureCommand").Value
-  
-  Select Case CompType
-  Case COMP_TYPE_RES:
-    Visual.Select("param_voltage").Style.Display = "None"
-    Visual.Select("param_current").Style.Display  = "None"
-    Visual.Select("param_result").Style.Display  = "block"
-    Visual.Select("param_maxvoltage").Style.Display  = "None"
-    Visual.Select("param_numofcycle").Style.Display  = "block"
-    Visual.Select("param_polarity").Style.Display  = "None"
-  Case COMP_TYPE_CAP:
-    Visual.Select("param_voltage").Style.Display = "None"
-    Visual.Select("param_current").Style.Display  = "None"
-    Visual.Select("param_result").Style.Display  = "block"
-    Visual.Select("param_maxvoltage").Style.Display  = "None"
-    Visual.Select("param_numofcycle").Style.Display  = "block"
-    Visual.Select("param_polarity").Style.Display  = "None"
-  Case COMP_TYPE_IND:
-    Visual.Select("param_voltage").Style.Display = "None"
-    Visual.Select("param_current").Style.Display  = "None"
-    Visual.Select("param_result").Style.Display  = "block"
-    Visual.Select("param_maxvoltage").Style.Display  = "None"
-    Visual.Select("param_numofcycle").Style.Display  = "block"
-    Visual.Select("param_polarity").Style.Display  = "None"
-  Case COMP_TYPE_DIODE:
-    Visual.Select("param_voltage").Style.Display = "block"
-    Visual.Select("param_current").Style.Display  = "block"
-    Visual.Select("param_result").Style.Display  = "None"
-    Visual.Select("param_maxvoltage").Style.Display  = "None"
-    Visual.Select("param_numofcycle").Style.Display  = "None"
-    Visual.Select("param_polarity").Style.Display  = "block"
-  Case COMP_TYPE_PCAP:
-    Visual.Select("param_voltage").Style.Display = "None"
-    Visual.Select("param_current").Style.Display  = "None"
-    Visual.Select("param_result").Style.Display  =  "block"
-    Visual.Select("param_maxvoltage").Style.Display  = "block"
-    Visual.Select("param_numofcycle").Style.Display  = "None"
-    Visual.Select("param_polarity").Style.Display  = "block"
-  Case COMP_TYPE_AUTO:
+  'Set all fields to none
     Visual.Select("param_voltage").Style.Display = "None"
     Visual.Select("param_current").Style.Display  = "None"
     Visual.Select("param_result").Style.Display  =  "None"
     Visual.Select("param_maxvoltage").Style.Display  = "None"
     Visual.Select("param_numofcycle").Style.Display  = "None"
-    Visual.Select("param_polarity").Style.Display  = "None"
+    Visual.Select("param_polarity").Style.Display  = "None"  
+  Select Case CompType
+  'Res
+  Case 1:
+    Visual.Select("param_result").Style.Display  = "block"
+    Visual.Select("param_numofcycle").Style.Display  = "block"
+  'Cap
+  Case 2:
+    Visual.Select("param_result").Style.Display  = "block"
+    Visual.Select("param_numofcycle").Style.Display  = "block"
+  'Inductor
+  Case 3:
+    Visual.Select("param_result").Style.Display  = "block"
+    Visual.Select("param_numofcycle").Style.Display  = "block"
+  'Diode
+  Case 4:
+    Visual.Select("param_voltage").Style.Display = "block"
+    Visual.Select("param_current").Style.Display  = "block"
+    Visual.Select("param_polarity").Style.Display  = "block"
+  'PCAP
+  Case 5:
+    Visual.Select("param_result").Style.Display  =  "block"
+    Visual.Select("param_maxvoltage").Style.Display  = "block"
+    Visual.Select("param_polarity").Style.Display  = "block"
+  Case 6:
+    'case auto: all none
   End Select
 End Function 

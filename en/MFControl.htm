@@ -33,8 +33,8 @@
   select {width:150px;}   
   #ButtonGridClear {margin-top:4px;float:left; width: 100px;height:34px;align:right;}
   //#ButtonDebugLog  {margin-top:4px;float:right; width: 150px;height:34px;}  
-  #Layer_TabStrip  { padding:3px 5px 1px 5px; height:70%; width:100%;}
-  #Layer_MessageLog { padding:1px 5px;height:28%; width :100%;}
+  #Layer_TabStrip  { padding: 0px; height:60%; width:100%;}
+  #Layer_MessageLog { padding:0px 5px;height:40%; width :100%;}
   #MessageLogObj { height:80%; width :100%;}  
   #LayerCommand {float:left;width :49%; height:90%}
   #LayerReply {float:left;width :49%;height:90%}
@@ -46,7 +46,7 @@
     filter:           progid:DXImageTransform.Microsoft.Gradient(startColorStr='#AA312C',endColorStr='#A4312C',gradientType='1');
     Background-color: #AA312C;
     margin:           2px;
-    padding:          3px;
+    padding:          2px;
   }
   </STYLE>
 </HEAD>
@@ -55,8 +55,8 @@
 
 <div id="Layer_TabStrip" class = "GrpFrame">
   <table>
-    <td><span style = "color = white;font-size = 10pt;font-family=arial;margin=0px;">0x</span></td>
-    <td><input id = "inputCANID" ></input></td>
+    <td><span style = "color = white;font-size = 10pt;font-family=arial;margin=0px;">Can ID: 0x</span></td>
+    <td><input id = "inputCANID" style = "width: 27px"></input></td>
     <td><button id = "btnAssignCANID" class = "ButtonInfo">Assign CANID</button></td>
     <td><button id = "btnGetApp" class = "ButtonInfo">Read Info</button></td>
     <td><button id = "btnReset" class = "ButtonInfo">Reset</button></td>
@@ -64,7 +64,7 @@
   
   <div id="LayerCommand" class = "GrpFrame">
   <!-- Measure Component~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-    <div id="SubLayerMeasure" class = "GrpFrame">
+    <div id="SubLayerMeasure" >
       <h1>Measurement</h1>
      <table> 
      <tr><td>Contact Module</td>
@@ -90,7 +90,7 @@
       </tr>
     <tr><td><button id="btn_setupmeasure"> Setup Measure</button></tr>
     </table>
-    <br>
+    <hr> 
     <table>
     <tr id="param_voltage"><td>Voltage</td> <td><input id = "ip_paramvoltage" ></input></td>    
     <tr id="param_current"><td>Current</td> <td><input id = "ip_paramcurrent" ></input></td>
@@ -101,8 +101,8 @@
     <tr><td><button id="btn_measure"> Measure </button>    
     </table>
     </div>
-    
-    <div id="SubLayerTools" class = "GrpFrame">
+    <hr> 
+    <div id="SubLayerTools" >
       <h1> Functions </h1>
       <button style="width:150px" id="btn_calibrate"> Calibration </button>    
       <br>
@@ -111,23 +111,27 @@
   </div>
   
   <div id="LayerReply" class = "GrpFrame">
-  <h1>Results</h1>
-  <table>
-    <tr id="param_STcontactres"><td>Contact Res</td> <td><input id = "op_paramSTcontactres" ></input></td>    
-    <tr id="param_STCapacity"><td>Capacitance</td> <td><input id = "op_paramSTcapacitance" ></input></td>
-    <tr id="param_setupCompType"><td>Comp Type</td> <td><input id = "op_paramsetupcomptype" ></input></td>
-    <tr id="param_setupU"><td>U</td> <td><input id = "op_paramU" ></input></td>
-    <tr id="param_setupI"><td>I</td> <td><input id = "op_paramI" ></input></td>
-    <tr id="param_setupPhi"><td>Phi</td> <td><input id = "op_paramPhi" ></input></td>
-    <tr id="param_setupFreq"><td>Frequency</td> <td><input id = "op_paramFreq" ></input></td>
-    <tr id="param_measCompType"><td>Comp Type</td> <td><input id = "op_parammeascomptype" ></input></td>
-    <tr id="param_measU"><td>U</td> <td><input id = "op_parammeasU" ></input></td>
-    <tr id="param_measI"><td>I</td> <td><input id = "op_parammeasI" ></input></td>
-    <tr id="param_measPhi"><td>Phi</td> <td><input id = "op_parammeasPhi" ></input></td>
-    <tr id="param_measFreq"><td>Frequency</td> <td><input id = "op_parammeasFreq" ></input></td>
-    <tr id="param_fwdvoltage"><td>Forward Voltage</td> <td><input id = "op_paramfwdvoltage" ></input></td>
-    <tr id="param_fwdcurrent"><td>Forward Current</td> <td><input id = "op_paramfwdcurrent" ></input></td>
-  </table>  
+    <h1>Results</h1>
+    <div id= "LayerResults">
+    <table>
+      <tr id="param_STcontactres"><td>Contact Res</td> <td><input id = "op_paramSTcontactres" ></input></td>    
+      <tr id="param_STCapacity"><td>Capacitance</td> <td><input id = "op_paramSTcapacitance" ></input></td>
+      <tr id="param_setupCompType"><td>Comp Type</td> <td><input id = "op_paramsetupcomptype" ></input></td>
+      <tr id="param_setupCapacity"><td>Capacity</td> <td><input id = "op_paramsetupcapacity" ></input></td>
+      <tr id="param_setupU"><td>U</td> <td><input id = "op_paramU" ></input></td>
+      <tr id="param_setupI"><td>I</td> <td><input id = "op_paramI" ></input></td>
+      <tr id="param_setupPhi"><td>Phi</td> <td><input id = "op_paramPhi" ></input></td>
+      <tr id="param_setupFreq"><td>Frequency</td> <td><input id = "op_paramFreq" ></input></td>
+      <tr id="param_measCompType"><td>Comp Type</td> <td><input id = "op_parammeascomptype" ></input></td>
+      <tr id="param_measValue"><td>Comp Type</td> <td><input id = "op_parammeasValue" ></input></td>
+      <tr id="param_measU"><td>U</td> <td><input id = "op_parammeasU" ></input></td>
+      <tr id="param_measI"><td>I</td> <td><input id = "op_parammeasI" ></input></td>
+      <tr id="param_measPhi"><td>Phi</td> <td><input id = "op_parammeasPhi" ></input></td>
+      <tr id="param_measFreq"><td>Frequency</td> <td><input id = "op_parammeasFreq" ></input></td>
+      <tr id="param_fwdvoltage"><td>Forward Voltage</td> <td><input id = "op_paramfwdvoltage" ></input></td>
+      <tr id="param_fwdcurrent"><td>Forward Current</td> <td><input id = "op_paramfwdcurrent" ></input></td>
+    </table>  
+    </div>  
   </div>  
 
   </div>
