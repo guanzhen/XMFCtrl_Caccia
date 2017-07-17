@@ -42,6 +42,7 @@ Function Init_MFCommand ( )
   
   Visual.Select("ip_param_setupExpectedVal").Value = 100
   Visual.Select("ip_parampolarity").Value = 0
+  Visual.Select("ip_paramnumofcycles").Value = 10
   Visual.Select("ip_paramresults").Value = 100
   
   Visual.Select("ip_param_setupExpectedVal").SetValidation VALIDATE_INPUT_MASK_R4,"Red",10
@@ -511,6 +512,7 @@ Sub GetFirmwareInfo ( )
 End Sub
 '------------------------------------------------------------------
 Function ResultChangeVisibility ( ProcessType )  
+  Dim CompType
   Visual.Select("LayerResults").Style.Display = "None"
   'Set all to none
   Visual.Select("param_STcontactres").Style.Display = "None"
@@ -539,11 +541,18 @@ Function ResultChangeVisibility ( ProcessType )
   Visual.Select("param_setupI").Style.Display = "Block"
   Visual.Select("param_setupPhi").Style.Display = "Block"
   Case PREPARE_MEASURE:
+  CompType = Visual.Select("optMeasureCommand").Value
+  'Not Diode
+  If Not CompType = 4 Then
   Visual.Select("param_measU").Style.Display = "Block"
   Visual.Select("param_measI").Style.Display = "Block"
   Visual.Select("param_measPhi").Style.Display = "Block"
   Visual.Select("param_measFreq").Style.Display = "Block" 
   Visual.Select("param_measValue").Style.Display = "Block" 
+  Else
+  Visual.Select("param_fwdvoltage").Style.Display = "Block"
+  Visual.Select("param_fwdcurrent").Style.Display = "Block"  
+  End If
   Case PREPARE_SELFTEST:  
   Visual.Select("param_STcontactres").Style.Display = "Block"
   Visual.Select("param_STCapacity").Style.Display = "Block"
