@@ -258,6 +258,12 @@ End Function
 
 '------------------------------------------------------------------
 
+Sub OnClick_ButtonGridClear( Reason )
+  Visual.Script( "LogGrid").clearAll()
+End Sub
+
+'------------------------------------------------------------------
+
 Function OnClick_btn_measure( Reason )
   Dim CompType
   DebugMessage "PrepareMeasure Button"
