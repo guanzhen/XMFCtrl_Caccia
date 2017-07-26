@@ -28,7 +28,7 @@ Const TIO_SELFTEST = 5000
 Function Init_MFCommand ( )
   Dim PrepCmd_Inprogress,PrepCmd_Error,PrepCmd_PrepID,Endurance_Inprogress
   
-  MeasureChangeVisibility COMP_TYPE_RES
+  ComponentChangeVisibility COMP_TYPE_RES
   ResultChangeVisibility PROCESS_NONE
 
   PrepCmd_Inprogress = 0
@@ -261,6 +261,27 @@ End Function
 Sub OnClick_ButtonGridClear( Reason )
   Visual.Script( "LogGrid").clearAll()
 End Sub
+'------------------------------------------------------------------
+Sub OnClick_btnGetApp( Reason )  
+  GetFirmwareInfo
+End Sub
+
+'------------------------------------------------------------------
+Function OnClick_btnReset ( Reason )
+  Dim CanSendArg,CanReadArg,CANConfig
+  Dim encodersel
+  Set CanSendArg = CreateObject("ICAN.CanSendArg")
+  Set CanReadArg = CreateObject("ICAN.CanReadArg")
+
+  If Memory.Exists( "CanManager" ) Then
+    Memory.Get "CANConfig",CANConfig
+    CanSendArg.CanId = CANConfig.CANIDcmd
+    CanSendArg.Data(0) = &h06
+    CanSendArg.Length = 1
+    Memory.CanManager.Send CanSendArg
+    LogAdd "Resetting Tesla!" 
+  End if
+End Function
 
 '------------------------------------------------------------------
 
@@ -355,7 +376,7 @@ Function OnChange_optMeasureCommand ( Reason )
   Case "6" : CompType = COMP_TYPE_AUTO
   End Select
   Memory.Set "CompType", CompType
-  MeasureChangeVisibility CompType
+  ComponentChangeVisibility CompType
   
 End Function
 '------------------------------------------------------------------
@@ -555,6 +576,7 @@ Function ResultChangeVisibility ( ProcessType )
   Visual.Select("param_measPhi").Style.Display = "Block"
   Visual.Select("param_measFreq").Style.Display = "Block" 
   Visual.Select("param_measValue").Style.Display = "Block" 
+  Visual.Select("param_measCompType").Style.Display = "Block" 
   Else
   Visual.Select("param_fwdvoltage").Style.Display = "Block"
   Visual.Select("param_fwdcurrent").Style.Display = "Block"  
@@ -566,7 +588,7 @@ Function ResultChangeVisibility ( ProcessType )
   Visual.Select("LayerResults").Style.Display = "Block"
 End Function
 '------------------------------------------------------------------
-Function MeasureChangeVisibility ( CompType )
+Function ComponentChangeVisibility ( CompType )
   DebugMessage "Change:" & CompType
   'Set all fields to none
     Visual.Select("param_voltage").Style.Display = "None"
