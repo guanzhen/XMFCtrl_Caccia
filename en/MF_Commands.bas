@@ -46,6 +46,9 @@ Function Init_MFCommand ( )
   Visual.Select("ip_paramresults").Value = 100
   
   Visual.Select("ip_param_setupExpectedVal").SetValidation VALIDATE_INPUT_MASK_R4,"Red",10
+  
+  PrepCmd_MeasureInProgress = 0
+  Memory.Set "PrepCmd_MeasureInProgress",PrepCmd_MeasureInProgress
 End Function
 '------------------------------------------------------------------
 Function WaitMeasure ( TimeOut )
@@ -62,7 +65,9 @@ Dim cmd
         loop_enable = 0       
       'Check button stop condition.
       Elseif Memory.PrepCmd_Inprogress = 0 Then
-        LogAdd "Measurement Complete"
+        If Not Memory.Exists("sig_ERexternalstop") Then
+          LogAdd "Measurement Complete"
+        End If
         measureOK = 1
         loop_enable = 0
       End If
@@ -71,6 +76,7 @@ Dim cmd
       If Time = 0 Then
         loop_enable = 0
         LogAdd "Measurement timeout"
+        Command_ChangeLED 1
       Else
         System.Delay(100)
       End If
@@ -79,7 +85,9 @@ Dim cmd
     
     If measureOK = 1 Then
       ProcessResults
-    End If
+    End If    
+    Memory.Set "measureOK",measureOK
+    Memory.PrepCmd_MeasureInProgress = 0
 End Function 
 '------------------------------------------------------------------
 Function ProcessResults ( )
@@ -240,6 +248,13 @@ Function OnClick_btnAssignCANID( Reason )
   System.Delay(100)
   Command_GetNumOfSlots
   GetFirmwareInfo
+  'Set Green LED
+  Memory.CANData(0) = 1 
+  Memory.CANData(1) = 2 
+  CANSendGetMC $(CMD_SEND_DATA),$(MC_SET_LED),SLOT_NO,1,2
+  Memory.CANData(0) = 1 
+  CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS),SLOT_NO,1,1
+  
 End Function
 
 '------------------------------------------------------------------
@@ -259,7 +274,7 @@ End Function
 '------------------------------------------------------------------
 
 Sub OnClick_ButtonGridClear( Reason )
-  Visual.Script( "LogGrid").clearAll()
+  Visual.Script("LogGrid").clearAll()
 End Sub
 '------------------------------------------------------------------
 Sub OnClick_btnGetApp( Reason )  
@@ -363,6 +378,70 @@ Function OnClick_btn_selftest ( Reason )
 End Function
 
 '------------------------------------------------------------------
+
+Function OnClick_btn_endurance ( Reason )
+
+System.Start Endurance(5000)
+
+End Function
+
+Function OnClick_btn_endu_stop ( Reason )
+If Memory.Exists("sig_ERexternalstop") Then
+  LogAdd "Endurance Run Stopping..."
+  Memory.sig_ERexternalstop.Set
+Else
+  LogAdd "No Endurance run to stop."
+End If
+End Function
+
+Function Endurance ( TimeOut )
+  Dim looping
+  Dim count
+  Dim sig_ERexternalstop
+  Dim TIO
+  
+  TIO = Timeout / 100
+  Set sig_ERexternalstop = Signal.Create
+  Memory.Set "sig_ERexternalstop", sig_ERexternalstop
+  looping = 1
+  Do While looping = 1
+    'LED On Cycle
+    Command_ChangeLED 2
+    PrepareMeasureCRL    
+    Do    
+      If sig_ERexternalstop.wait(50) Then
+        looping = 0
+      End If
+      System.Delay(100)
+    Loop Until Memory.PrepCmd_MeasureInProgress = 0
+    
+    If Memory.measureOK = 0 Then
+      looping = 0
+      Exit Do
+    End If    
+    System.Delay(1500)
+    'LED Off Cycle
+    PrepareMeasureCRL    
+    Command_ChangeLED 0
+    Do
+      If sig_ERexternalstop.wait(50) Then
+        looping = 0
+      End If
+      
+      System.Delay(100)
+    Loop Until Memory.PrepCmd_MeasureInProgress = 0
+    If Memory.measureOK = 0 Then
+      looping = 0
+      Exit Do
+    End If
+
+    System.Delay(1500)
+
+  Loop
+  Memory.Free "sig_ERexternalstop"
+  LogAdd "Endurance Run Stopped"
+End Function
+'------------------------------------------------------------------
 Function OnChange_optMeasureCommand ( Reason )
   Dim CompType
   DebugMessage "Select:" & Visual.select("optMeasureCommand").Value
@@ -408,12 +487,15 @@ Function Command_Prepare_Measure (CM_ID,ExpectedValue,ComponentType,TimeOut)
   
   Memory.CANData(0) = Lang.GetByte(ComponentType,0)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),SLOT_NO,CM_ID,1  
-   
   If PrepareCommands($(CMD_PREPARE_MEASURE),1,SLOT_NO,CM_ID,0,250) = True Then
-    LogAdd "Measure command started"
+    If Not Memory.Exists("sig_ERexternalstop") Then        
+      LogAdd "Measure command started"
+    End If
+    Memory.PrepCmd_MeasureInProgress = 1
     System.Start "WaitMeasure",TimeOut
   Else
     LogAdd "Measure Command Error."
+    Command_ChangeLED 1
   End If
 End Function
 
@@ -535,7 +617,7 @@ Sub GetFirmwareInfo ( )
   Else
     App2 = "??.??"
   End If
-  LogAdd "Firmware version: Bios:"& Bios & " App: " & App & " App2 " & App2
+  LogAdd "Firmware version: Bios:"& Bios & " App: " & App & " App2: " & App2
 End Sub
 '------------------------------------------------------------------
 Function ResultChangeVisibility ( ProcessType )  
@@ -624,3 +706,13 @@ Function ComponentChangeVisibility ( CompType )
     'case auto: all none
   End Select
 End Function 
+
+Function Command_ChangeLED ( Colour )
+    Memory.CANData(0) = 1 
+    CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS_CANCEL),SLOT_NO,1,1
+    Memory.CANData(0) = 1 
+    Memory.CANData(1) = Colour
+    CANSendGetMC $(CMD_SEND_DATA),$(MC_SET_LED),SLOT_NO,1,2        
+    Memory.CANData(0) = 1 
+    CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS),SLOT_NO,1,1
+End Function

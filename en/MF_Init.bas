@@ -42,8 +42,8 @@ Sub OnLoadFrame()
   'ReadConfigParam
   '~~~ Disable elements for input only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   'DisableComponents
-'  Visual.SerScopeGrid.AddRows 10,10, True, 1
-  CreateDebugLogWindow
+  'Visual.SerScopeGrid.AddRows 10,10, True, 1
+  'CreateDebugLogWindow
   Init_MFCommand
   Visual.Script("win").attachEvent "onClose" , Lang.GetRef( "btn_CanConnect" , 1)
 End Sub
