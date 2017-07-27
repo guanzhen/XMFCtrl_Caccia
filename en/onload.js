@@ -43,6 +43,7 @@ function load_messagebox()
   LogGrid.enableResizing ("false,false,false");
   LogGrid.enableMultiselect(false);
   LogGrid.enableAutoWidth (true);
+  LogGrid.enableSmartRendering(true);
   LogGrid.init();
 };
 
