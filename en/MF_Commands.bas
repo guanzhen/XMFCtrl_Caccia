@@ -27,7 +27,7 @@ Const TIO_SELFTEST = 5000
 
 Function Init_MFCommand ( )
   Dim PrepCmd_Inprogress,PrepCmd_Error,PrepCmd_PrepID,Endurance_Inprogress
-  
+  Dim PrepCmd_MeasureInProgress
   ComponentChangeVisibility COMP_TYPE_RES
   ResultChangeVisibility PROCESS_NONE
 
@@ -104,22 +104,22 @@ Function ProcessResults ( )
       ResultLog = "MeasSetup: CompType :" & String.Format("%c",Value)
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_STRAY_CAPACITY),SLOT_NO,1,0
-       Value = String.Format("%f",GetFloatCanData)
+       Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_paramsetupcapacity").Value = Value
       ResultLog = ResultLog & " Capacity:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_U),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_paramU").Value = Value
       ResultLog = ResultLog & " U:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_I),SLOT_NO,1,0
-       Value = String.Format("%f",GetFloatCanData)
+       Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_paramI").Value = Value
       ResultLog = ResultLog & " I:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_PHI),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_paramPhi").Value = Value
       ResultLog = ResultLog & " Phi:" & Value      
       
@@ -134,39 +134,39 @@ Function ProcessResults ( )
       ResultLog = "Meas: CompType :" & String.Format("%c",Value)      
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_parammeasValue").Value = Value
       ResultLog = ResultLog & " Value:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_U),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_parammeasU").Value = Value
       ResultLog = ResultLog & " U:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_I),SLOT_NO,1,0
-       Value = String.Format("%f",GetFloatCanData)
+       Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_parammeasI").Value = Value
       ResultLog = ResultLog & " I:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_PHI),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_parammeasPhi").Value = Value
       ResultLog = ResultLog & " Phi:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FREQUENCY),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_parammeasFreq").Value = Value
       ResultLog = ResultLog & " Freq:" & Value      
       'Diode
       Else
       DebugMessage "Process Measure Diode"
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FWD_VOLTAGE),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_paramfwdvoltage").Value = Value
       ResultLog = "Meas: FWDVoltage :" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FWD_CURRENT),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_paramfwdcurrent").Value = Value
       ResultLog = ResultLog & " FWD Current:" & Value
       End If
@@ -174,12 +174,12 @@ Function ProcessResults ( )
       'End measure
     Case PREPARE_SELFTEST :
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_CONTACT_RES),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_paramSTcontactres").Value = Value
       ResultLog = ResultLog & " Value:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_CAPACITY_CM_ID),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_paramSTcapacitance").Value = Value
       ResultLog = ResultLog & " U:" & Value
 
@@ -192,27 +192,27 @@ Function ProcessResults ( )
       ResultLog = "AutoMeas: CompType :" & String.Format("%c",Value)      
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_parammeasValue").Value = Value
       ResultLog = ResultLog & " Value:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_U),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_parammeasU").Value = Value
       ResultLog = ResultLog & " U:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_I),SLOT_NO,1,0
-       Value = String.Format("%f",GetFloatCanData)
+       Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_parammeasI").Value = Value
       ResultLog = ResultLog & " I:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_PHI),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_parammeasPhi").Value = Value
       ResultLog = ResultLog & " Phi:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FREQUENCY),SLOT_NO,1,0
-      Value = String.Format("%f",GetFloatCanData)
+      Value = String.Format("%.3G",GetFloatCanData)
       Visual.Select("op_parammeasFreq").Value = Value
       ResultLog = ResultLog & " Freq:" & Value     
     End Select
@@ -294,7 +294,7 @@ Function OnClick_btnReset ( Reason )
     CanSendArg.Data(0) = &h06
     CanSendArg.Length = 1
     Memory.CanManager.Send CanSendArg
-    LogAdd "Resetting Tesla!" 
+    LogAdd "Resetting XMF!" 
   End if
 End Function
 
@@ -415,9 +415,10 @@ Function Endurance ( TimeOut )
       System.Delay(100)
     Loop Until Memory.PrepCmd_MeasureInProgress = 0
     
-    If Memory.measureOK = 0 Then
-      looping = 0
-      Exit Do
+    If Memory.measureOK = 0 Then                                                   
+      'looping = 0
+      Command_ChangeLED 1
+      'Exit Do
     End If    
     System.Delay(1500)
     'LED Off Cycle
@@ -431,8 +432,9 @@ Function Endurance ( TimeOut )
       System.Delay(100)
     Loop Until Memory.PrepCmd_MeasureInProgress = 0
     If Memory.measureOK = 0 Then
-      looping = 0
-      Exit Do
+      'looping = 0
+      Command_ChangeLED 1
+      'Exit Do
     End If
 
     System.Delay(1500)
