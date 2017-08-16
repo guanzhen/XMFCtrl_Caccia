@@ -11,9 +11,6 @@
 *  \b Description: \n
 */
 
-#ifndef PTKL_MF_H_
-#define PTKL_MF_H_
-
     //Service Commands
 
     //Prepare Commands
@@ -74,5 +71,3 @@
         #define EEPROM_CM_1                       0x05
         #define EEPROM_CM_2                       0x06
         #define EEPROM_CM_3                       0x07
-
-#endif /* PTKL_MF_H_ */

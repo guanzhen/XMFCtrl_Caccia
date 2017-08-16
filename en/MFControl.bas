@@ -10,6 +10,8 @@
 Option Explicit   
 
 #include <can.bas>
+#include <PTKL_c.h>
+#include <PTKL_be.h>
 #include <LedCtrl.bas>
 #include <Math.bas>
 #include <System.bas>
@@ -17,7 +19,9 @@ Option Explicit
 #include <GridCtrl.bas>
 #include "DebugLog.bas"
 #include "MF_Init.bas"
-
+#include "ptkl_mf.h"
+#include "can.bas"
+#include "MF_Commands.bas"
 
 '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '~~~ Select memory size ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
