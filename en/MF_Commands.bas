@@ -104,22 +104,22 @@ Function ProcessResults ( )
       ResultLog = "MeasSetup: CompType :" & String.Format("%c",Value)
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_STRAY_CAPACITY),SLOT_NO,1,0
-       Value = String.Format("%.3G",GetFloatCanData)
+       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramsetupcapacity").Value = Value
       ResultLog = ResultLog & " Capacity:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_U),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramU").Value = Value
       ResultLog = ResultLog & " U:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_I),SLOT_NO,1,0
-       Value = String.Format("%.3G",GetFloatCanData)
+       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramI").Value = Value
       ResultLog = ResultLog & " I:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_PHI),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramPhi").Value = Value
       ResultLog = ResultLog & " Phi:" & Value      
       
@@ -134,39 +134,39 @@ Function ProcessResults ( )
       ResultLog = "Meas: CompType :" & String.Format("%c",Value)      
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_parammeasValue").Value = Value
       ResultLog = ResultLog & " Value:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_U),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_parammeasU").Value = Value
       ResultLog = ResultLog & " U:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_I),SLOT_NO,1,0
-       Value = String.Format("%.3G",GetFloatCanData)
+       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_parammeasI").Value = Value
       ResultLog = ResultLog & " I:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_PHI),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_parammeasPhi").Value = Value
       ResultLog = ResultLog & " Phi:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FREQUENCY),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_parammeasFreq").Value = Value
       ResultLog = ResultLog & " Freq:" & Value      
       'Diode
       Else
       DebugMessage "Process Measure Diode"
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FWD_VOLTAGE),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramfwdvoltage").Value = Value
       ResultLog = "Meas: FWDVoltage :" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FWD_CURRENT),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramfwdcurrent").Value = Value
       ResultLog = ResultLog & " FWD Current:" & Value
       End If
@@ -174,12 +174,12 @@ Function ProcessResults ( )
       'End measure
     Case PREPARE_SELFTEST :
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_CONTACT_RES),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramSTcontactres").Value = Value
       ResultLog = ResultLog & " Value:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_CAPACITY_CM_ID),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramSTcapacitance").Value = Value
       ResultLog = ResultLog & " U:" & Value
 
@@ -192,27 +192,27 @@ Function ProcessResults ( )
       ResultLog = "AutoMeas: CompType :" & String.Format("%c",Value)      
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_parammeasValue").Value = Value
       ResultLog = ResultLog & " Value:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_U),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_parammeasU").Value = Value
       ResultLog = ResultLog & " U:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_I),SLOT_NO,1,0
-       Value = String.Format("%.3G",GetFloatCanData)
+       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_parammeasI").Value = Value
       ResultLog = ResultLog & " I:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_PHI),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_parammeasPhi").Value = Value
       ResultLog = ResultLog & " Phi:" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FREQUENCY),SLOT_NO,1,0
-      Value = String.Format("%.3G",GetFloatCanData)
+      Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_parammeasFreq").Value = Value
       ResultLog = ResultLog & " Freq:" & Value     
     End Select
