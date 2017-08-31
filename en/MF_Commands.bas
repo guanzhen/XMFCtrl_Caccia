@@ -488,7 +488,7 @@ Function Command_Prepare_Measure (CM_ID,ExpectedValue,ComponentType,TimeOut)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_EXPECTED_RESULT),SLOT_NO,CM_ID,4
   
   Memory.CANData(0) = Lang.GetByte(ComponentType,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),SLOT_NO,CM_ID,1  
+  'CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),SLOT_NO,CM_ID,1  
   If PrepareCommands($(CMD_PREPARE_MEASURE),1,SLOT_NO,CM_ID,0,250) = True Then
     If Not Memory.Exists("sig_ERexternalstop") Then        
       LogAdd "Measure command started"
@@ -557,7 +557,7 @@ Function Command_GetFW(ByVal AppBios, ByRef MajorValue, ByRef MinValue)
     'XFCU
     .Data(0) = $(CMD_DOWNLOAD_VERSION) + &h10
     .Data(1) = AppBios
-    .Data(2) = 29
+    .Data(2) = SLOT_NO
     .length = 3
     End If
   End With
