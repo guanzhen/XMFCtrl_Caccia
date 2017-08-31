@@ -560,7 +560,7 @@ Function Command_GetFW(ByVal AppBios, ByRef MajorValue, ByRef MinValue)
     'XFCU
     .Data(0) = $(CMD_DOWNLOAD_VERSION) + &h10
     .Data(1) = AppBios
-    .Data(2) = 29
+    .Data(2) = SLOT_NO
     .length = 3
     End If
   End With
