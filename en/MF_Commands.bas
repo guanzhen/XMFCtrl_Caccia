@@ -324,14 +324,15 @@ End Function
 
 Function PrepareMeasureCRL ( )
 
-  Dim ExpectedValue, CompType,CM_ID
+  Dim ExpectedValue, CompType,NumofCycles,CM_ID
   ExpectedValue = Math.CastFloat2Long(Visual.Select("ip_param_setupExpectedVal").Value)
   CM_ID = Visual.Select("opt_CMID").Value  
   CompType = Visual.Select("optMeasureCommand").Value
+  NumofCycles = Visual.Select("ip_paramnumofcycles").Value
   If NOT IsNumeric(ExpectedValue) Then
     LogAdd "Invalid value"
   Else
-    Command_Prepare_Measure CM_ID,ExpectedValue,CompType,TIO_MEASURE
+    Command_Prepare_Measure CM_ID,ExpectedValue,CompType,NumofCycles,TIO_MEASURE
   End If
 
 End Function
@@ -480,7 +481,7 @@ Function Command_Prepare_SetupMeasure (CM_ID, ExpectedValue,ComponentType,TimeOu
 End Function
 
 '------------------------------------------------------------------
-Function Command_Prepare_Measure (CM_ID,ExpectedValue,ComponentType,TimeOut)
+Function Command_Prepare_Measure (CM_ID,ExpectedValue,ComponentType,NumofCycles,TimeOut)
   Memory.CANData(0) = Lang.GetByte(ExpectedValue,0)
   Memory.CANData(1) = Lang.GetByte(ExpectedValue,1)
   Memory.CANData(2) = Lang.GetByte(ExpectedValue,2)
@@ -488,7 +489,9 @@ Function Command_Prepare_Measure (CM_ID,ExpectedValue,ComponentType,TimeOut)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_EXPECTED_RESULT),SLOT_NO,CM_ID,4
   
   Memory.CANData(0) = Lang.GetByte(ComponentType,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),SLOT_NO,CM_ID,1  
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),SLOT_NO,CM_ID,1
+   Memory.CANData(0) = Lang.GetByte(NumofCycles,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_NUM_OF_CYCLES),SLOT_NO,CM_ID,1  
   If PrepareCommands($(CMD_PREPARE_MEASURE),1,SLOT_NO,CM_ID,0,250) = True Then
     If Not Memory.Exists("sig_ERexternalstop") Then        
       LogAdd "Measure command started"
