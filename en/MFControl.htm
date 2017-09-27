@@ -6,10 +6,6 @@
   <script src="../../../codebase/dhtmlxcommon.js"></script>
   <script src="../../../codebase/dhtmlxcontainer.js"></script>
 
-  <!-- Dhtmlx TabBar -->
-  <link rel="stylesheet" type="text/css" href="../../../codebase/tabbar/dhtmlxtabbar.css">
-  <script src="../../../codebase/tabbar/dhtmlxtabbar.js"></script>
-  
   <!-- Dhtmlx Grid -->
   <link rel="stylesheet" type="text/css" href="../../../codebase/grid/skins/dhtmlxgrid_dhx_skyblue.css">
   <link rel="stylesheet" type="text/css" href="../../../codebase/grid/dhtmlxgrid.css">
@@ -147,6 +143,40 @@
  
 
 </BODY>
+<script language="JScript" type="text/javascript">
+</script>  
+
+<script language="JScript" type="text/javascript">
+  var LogGrid = new dhtmlXGridObject('MessageLogObj');
+  LogGrid.load_messagebox = function()
+  {
+    LogGrid.setHeader("Date,Time,Information");
+    LogGrid.setImagePath("../../../codebase/grid/imgs/");
+    LogGrid.setInitWidths( "100,100,*");
+    LogGrid.setColAlign ("center,center,left");
+    LogGrid.setColTypes ("ro,ro,ro");
+    LogGrid.setColSorting ("na,na,na");
+    LogGrid.setSkin ("red_gray");
+    LogGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
+    LogGrid.enableTooltips ("true,true,true");
+    LogGrid.enableResizing ("false,false,false");
+    LogGrid.enableMultiselect(false);
+    LogGrid.enableAutoWidth (true);
+    LogGrid.enableSmartRendering(true);
+    LogGrid.init();
+  } 
+</script>  
+
+ 
+ <!--  <script language="JScript" type="text/javascript">
+  
+  
+  </script>
+  
+  <script language="JScript" type="text/javascript">
+  
+  
+  </script> -->
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
   <!-- Popup window ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->

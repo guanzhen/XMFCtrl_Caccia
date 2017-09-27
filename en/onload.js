@@ -1,51 +1,5 @@
-var LogGrid
-var tabbar
 var dhxWins,win,winframe
 var opt_net,opt_config
-function load_tabbar()
-{
-  tabbar = new dhtmlXTabBar("tabbar_main","top");
-  tabbar.enableAutoReSize( true );
-  tabbar.setImagePath("../../../codebase/tabbar/imgs/");
-  tabbar.setSkin("silver");
-  tabbar.addTab("main_tab1","Commands");
-  tabbar.addTab("main_tab2","Axis Control");
-  tabbar.addTab("main_tab3","IOs");
-  tabbar.addTab("main_tab4","Endurance Test");
-  tabbar.addTab("main_tab5","Debug");
-  tabbar.hideTab("main_tab5");
-  tabbar.setContent( "main_tab1", Frame_Commands);
-  tabbar.setContent( "main_tab2", Frame_AxisControl);
-  tabbar.setContent( "main_tab3", Frame_IOs);
-  tabbar.setContent( "main_tab4", Frame_Test);
-  tabbar.setContent( "main_tab5", Frame_Debug);
-
-  for ( var i = 1; i <= tabbar.getNumberOfTabs(); i++ )
-  {
-    tabbar.setCustomStyle( 'main_tab' + i, 'gray', 'black', 'font-size:10pt;font-family:Arial;font-weight: bold;' );
-  }
-
-  tabbar.setTabActive("main_tab1");
-};
-
-function load_messagebox()
-{
-  LogGrid = new dhtmlXGridObject('MessageLogObj');
-  LogGrid.setHeader("Date,Time,Information");
-  LogGrid.setImagePath("../../../codebase/grid/imgs/");
-  LogGrid.setInitWidths( "100,100,*");
-  LogGrid.setColAlign ("center,center,left");
-  LogGrid.setColTypes ("ro,ro,ro");
-  LogGrid.setColSorting ("na,na,na");
-  LogGrid.setSkin ("red_gray");
-  LogGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
-  LogGrid.enableTooltips ("true,true,true");
-  LogGrid.enableResizing ("false,false,false");
-  LogGrid.enableMultiselect(false);
-  LogGrid.enableAutoWidth (true);
-  LogGrid.enableSmartRendering(true);
-  LogGrid.init();
-};
 
 function load_CANsetup()
 {
@@ -79,8 +33,7 @@ winframe = win.getFrame();
 
 dhtmlxEvent(window,"load",function()
 {
-  load_messagebox();
-  //load_tabbar();
+  LogGrid.load_messagebox();
   load_CANsetup();  
   Layer_TabStrip.style.display = "none";
   Layer_MessageLog.style.display = "none";
