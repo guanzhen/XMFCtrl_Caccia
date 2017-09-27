@@ -4,7 +4,7 @@ Const CANCMD_SETBRAKE           = &H02
 Const CANCMD_Command_AxisRefRun = &h04
 Const CANCMD_test = &h06
 
-Const SLOT_NO = 1
+Const SLOT_NO = 13
 
 Function btn_CanConnect( id, id1 )
   Dim Net,Baud,CANConfig, CANID,CANData,i
@@ -28,7 +28,7 @@ If CANConfig.Config = 0 Then
     Visual.Select("inputCANID").Value = "608"
   Elseif CANConfig.Config = 1 Then
     CANConfig.Baudrate = "1000"
-    Visual.Select("inputCANID").Value = "500"
+    Visual.Select("inputCANID").Value = "510"
     text = "[XFCU]"
     Visual.Select("btnAssignCANID").Style.Display  = "none"
   End If
@@ -386,12 +386,11 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
         .Data(0) = Cmd + &h10
         .Data(1) = SubCmd        
         .Data(2) = SlotNo
-        .Data(3) = Division
       For i = 0 to DataLen - 1
-        .Data(4+i) = CANData.Data(i)
+        .Data(3+i) = CANData.Data(i)
         DebugMessage "Copy Data " & i
       Next
-      .Length = 4 + DataLen      
+      .Length = 3 + DataLen      
     End With
   'Standalone
   Else
