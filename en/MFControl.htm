@@ -6,10 +6,6 @@
   <script src="../../../codebase/dhtmlxcommon.js"></script>
   <script src="../../../codebase/dhtmlxcontainer.js"></script>
 
-  <!-- Dhtmlx TabBar -->
-  <link rel="stylesheet" type="text/css" href="../../../codebase/tabbar/dhtmlxtabbar.css">
-  <script src="../../../codebase/tabbar/dhtmlxtabbar.js"></script>
-  
   <!-- Dhtmlx Grid -->
   <link rel="stylesheet" type="text/css" href="../../../codebase/grid/skins/dhtmlxgrid_dhx_skyblue.css">
   <link rel="stylesheet" type="text/css" href="../../../codebase/grid/dhtmlxgrid.css">
@@ -23,7 +19,6 @@
   <link rel="stylesheet" type="text/css" href="../../../codebase/windows/dhtmlxwindows.css">
   <script src="../../../codebase/windows/dhtmlxwindows.js"></script>
   
-  <script src="onload.js" ></script>
   
   <STYLE>
   html { background-color : #97A0A5;}
@@ -147,11 +142,66 @@
  
 
 </BODY>
-  <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-  <!-- Popup window ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-  <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<!-- Message Log -->
+<!-- Create DHTMLX pop up CAN setup window -->
+<script language="JScript" type="text/javascript">
+  var dhxWins,win,winframe,dhxForm,formStructure,menu
+  var opt_net,opt_config
+
+  formStructure = [
+
+    {type:"settings",position:"label-top"},
+    {type: "fieldset",name:"cansetup", label: "Can Setup", list:[
+      {type: "combo", label: "Net", name: "combonet", options:[
+      {text: "1", value: "0",selected: true},
+      {text: "2", value: "1" }
+      ]},
+      {type:"newcolumn"},
+      {type: "combo", label: "Configuration", name: "comboconfig",  inputLeft:50,  options:[
+      {text: "Upstream", value: "0", selected: true},
+      {text: "DownStream", value: "1" }
+      ]},
+      {type:"button", name:"Connect",width:100,offsetTop:10,offsetLeft:100, value:"Connect"}
+    ]}
+  ];
+  dhxWins = new dhtmlXWindows();
+  dhxWins.load_cansetup = function()
+  {
+    win = dhxWins.createWindow("cansetup", 100, 100, 500 , 200);
+    win.setText("CAN Setup");
+    win.attachURL("CanSetup.html");
+    win.center();
+    winframe = win.getFrame();
+  }
+  dhxWins.canconnect = function()
+  {
+    opt_config = winframe.contentWindow.document.getElementById("opt_config").value;
+    opt_net = winframe.contentWindow.document.getElementById("opt_cannet").value;
+    win.close();
+  }
+</script> 
+
+<!-- Create message log DHTMLX object-->
+<script language="JScript" type="text/javascript">
+  var LogGrid = new dhtmlXGridObject('MessageLogObj');
+  LogGrid.load_messagebox = function()
+  {
+    LogGrid.setHeader("Date,Time,Information");
+    LogGrid.setImagePath("../../../codebase/grid/imgs/");
+    LogGrid.setInitWidths( "100,100,*");
+    LogGrid.setColAlign ("center,center,left");
+    LogGrid.setColTypes ("ro,ro,ro");
+    LogGrid.setColSorting ("na,na,na");
+    LogGrid.setSkin ("red_gray");
+    LogGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
+    LogGrid.enableTooltips ("true,true,true");
+    LogGrid.enableResizing ("false,false,false");
+    LogGrid.enableMultiselect(false);
+    LogGrid.enableAutoWidth (true);
+    LogGrid.enableSmartRendering(true);
+    LogGrid.init();
+  }
+</script>
 
 </HTML>
 
