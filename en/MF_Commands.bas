@@ -28,7 +28,7 @@ Const TIO_SELFTEST = 5000
 Function Init_MFCommand ( )
   Dim PrepCmd_Inprogress,PrepCmd_Error,PrepCmd_PrepID,Endurance_Inprogress
   Dim PrepCmd_MeasureInProgress
-  ComponentChangeVisibility COMP_TYPE_RES
+  ChangeVisibility_ComponentSelect COMP_TYPE_RES
   ResultChangeVisibility PROCESS_NONE
 
   PrepCmd_Inprogress = 0
@@ -50,8 +50,35 @@ Function Init_MFCommand ( )
   PrepCmd_MeasureInProgress = 0
   Memory.Set "PrepCmd_MeasureInProgress",PrepCmd_MeasureInProgress
 End Function
+
 '------------------------------------------------------------------
-Function WaitMeasure ( TimeOut )
+
+Sub GetFirmwareInfo ( )
+  Dim AppMaj,AppMin
+  Dim App,Bios,App2
+  If Command_GetFW($(PARAM_DL_ZIEL_APPL),AppMaj,AppMin) = 1 Then
+    App = String.Format("%02X.%02X", AppMaj,AppMin)
+  Else
+    App = "??.??"
+  End If
+  
+  If Command_GetFW($(PARAM_DL_ZIEL_BIOS),AppMaj,AppMin) = 1 Then
+    Bios = String.Format("%02X.%02X", AppMaj,AppMin)
+  Else
+    Bios = "??.??"
+  End If
+  
+  If Command_GetFW($(PARAM_DL_ZIEL_APPL_2),AppMaj,AppMin) = 1 Then
+    App2 = String.Format("%02X.%02X", AppMaj,AppMin)
+  Else
+    App2 = "??.??"
+  End If
+  LogAdd "Firmware version: Bios:"& Bios & " App: " & App & " App2: " & App2
+End Sub
+
+'------------------------------------------------------------------
+
+Function Wait_Measurement ( TimeOut )
 Dim loop_enable,Time,measureOK
 Dim cmd
 
@@ -84,13 +111,13 @@ Dim cmd
     Loop Until loop_enable = 0 
     
     If measureOK = 1 Then
-      ProcessResults
+      Get_Measurements
     End If    
     Memory.Set "measureOK",measureOK
     Memory.PrepCmd_MeasureInProgress = 0
 End Function 
 '------------------------------------------------------------------
-Function ProcessResults ( )
+Function Get_Measurements ( )
   Dim ResultLog,Value, CompType
   DebugMessage "Process Results"
   ResultChangeVisibility(Memory.PrepCmd)
@@ -315,11 +342,12 @@ Function ProcessResults ( )
     LogAdd ResultLog      
 End Function 
 '------------------------------------------------------------------
+
 Function PrepareCommands (Cmd,Context,SlotNo,Division,DataLen,PubEndTimeout)
   Dim Command
   Command = PREPARE_NONE
   'This function is just to set the memory variable PrepCmd.
-  'it is used by ProcessResults to determine which variables to read
+  'it is used by Get_Measurements to determine which variables to read
   
   Select Case Cmd
     Case $(CMD_PREPARE_SETUP_MEASURE) : Command = PREPARE_SETUP
@@ -333,6 +361,7 @@ Function PrepareCommands (Cmd,Context,SlotNo,Division,DataLen,PubEndTimeout)
 End Function
 
 '------------------------------------------------------------------
+
 Function OnClick_btnAssignCANID( Reason )
   Dim CanReadArg,CanID
   Set CanReadArg = CreateObject("ICAN.CanReadArg")
@@ -456,8 +485,9 @@ End Function
 Function OnClick_btn_calibrate ( Reason )
   
   If PrepareCommands($(CMD_PREPARE_CALIBRATION),1,SLOT_NO,1,0,250) = True Then
+    Memory.Set "PrepCmd", $(CMD_PREPARE_CALIBRATION)
     LogAdd "Calibration command started"
-    System.Start "WaitMeasure",TIO_CALIBRATE
+    System.Start "Wait_Measurement",TIO_CALIBRATE
   Else
     LogAdd "Calibration Error."
   End If
@@ -467,8 +497,9 @@ End Function
 Function OnClick_btn_selftest ( Reason )
     
   If PrepareCommands($(CMD_PREPARE_SELFTEST),1,SLOT_NO,1,0,250) = True Then
+    Memory.Set "PrepCmd", $(CMD_PREPARE_SELFTEST)
     LogAdd "Self Test command started"
-    System.Start "WaitMeasure",TIO_SELFTEST
+    System.Start "Wait_Measurement",TIO_SELFTEST
   Else
     LogAdd "Self Test Error."
   End If
@@ -491,56 +522,6 @@ Else
 End If
 End Function
 
-Function Endurance ( TimeOut )
-  Dim looping
-  Dim count
-  Dim sig_ERexternalstop
-  Dim TIO
-  
-  TIO = Timeout / 100
-  Set sig_ERexternalstop = Signal.Create
-  Memory.Set "sig_ERexternalstop", sig_ERexternalstop
-  looping = 1
-  Do While looping = 1
-    'LED On Cycle
-    Command_ChangeLED 2
-    PrepareMeasureCRL    
-    Do    
-      If sig_ERexternalstop.wait(50) Then
-        looping = 0
-      End If
-      System.Delay(100)
-    Loop Until Memory.PrepCmd_MeasureInProgress = 0
-    
-    If Memory.measureOK = 0 Then                                                   
-      'looping = 0
-      Command_ChangeLED 1
-      'Exit Do
-    End If    
-    System.Delay(1500)
-    'LED Off Cycle
-    PrepareMeasureCRL    
-    Command_ChangeLED 0
-    Do
-      If sig_ERexternalstop.wait(50) Then
-        looping = 0
-      End If
-      
-      System.Delay(100)
-    Loop Until Memory.PrepCmd_MeasureInProgress = 0
-    If Memory.measureOK = 0 Then
-      'looping = 0
-      Command_ChangeLED 1
-      'Exit Do
-    End If
-
-    System.Delay(1500)
-
-  Loop
-  Memory.Free "sig_ERexternalstop"
-  LogAdd "Endurance Run Stopped"
-End Function
-'------------------------------------------------------------------
 Function OnChange_optMeasureCommand ( Reason )
   Dim CompType
   DebugMessage "Select:" & Visual.select("optMeasureCommand").Value
@@ -554,7 +535,7 @@ Function OnChange_optMeasureCommand ( Reason )
   Case "6" : CompType = COMP_TYPE_AUTO
   End Select
   Memory.Set "CompType", CompType
-  ComponentChangeVisibility CompType
+  ChangeVisibility_ComponentSelect CompType
   
 End Function
 '------------------------------------------------------------------
@@ -570,7 +551,7 @@ Function Command_Prepare_SetupMeasure (CM_ID, ExpectedValue,ComponentType,TimeOu
    
   If PrepareCommands($(CMD_PREPARE_SETUP_MEASURE),1,SLOT_NO,CM_ID,0,250) = True Then
     LogAdd "Setup Measure command started"
-    System.Start "WaitMeasure",TimeOut
+    System.Start "Wait_Measurement",TimeOut
   Else
     LogAdd "Setup Measure Error."
   End If
@@ -593,7 +574,7 @@ Function Command_Prepare_Measure (CM_ID,ExpectedValue,ComponentType,NumofCycles,
       LogAdd "Measure command started"
     End If
     Memory.PrepCmd_MeasureInProgress = 1
-    System.Start "WaitMeasure",TimeOut
+    System.Start "Wait_Measurement",TimeOut
   Else
     LogAdd "Measure Command Error."
     Command_ChangeLED 1
@@ -619,7 +600,7 @@ Function Command_Prepare_Meas_FWDVOLTAGE (CM_ID,Current,Voltage,ComponentType,Ti
    
   If PrepareCommands($(CMD_PREPARE_MEASURE),1,SLOT_NO,CM_ID,0,250) = True Then
     LogAdd "Measure command started"
-    System.Start "WaitMeasure",TimeOut
+    System.Start "Wait_Measurement",TimeOut
   Else
     LogAdd "Measure Command Error."
   End If
@@ -682,45 +663,21 @@ Function Command_GetFW(ByVal AppBios, ByRef MajorValue, ByRef MinValue)
   End If
 End Function
 
-
 '-------------------------------------------------------------------
-Function LogAdd ( sMessage )
-  Dim Gridobj
-  Set Gridobj = Visual.Script("LogGrid")
-  Dim MsgId
-  MsgId = Gridobj.uid()
-  If NOT(sMessage = "") Then
-    Gridobj.addRow MsgId, ""& FormatDateTime(Date, vbShortDate) &","& FormatDateTime(Time, vbShortTime)&":"& String.Format("%02d ", Second(Time)) &","& sMessage
-    'Wish of SCM (automatically scroll to newest Msg)
-    Gridobj.showRow( MsgId )
-  End If  
-  'DebugMessage sMessage
+
+Function Command_ChangeLED ( Colour )
+    Memory.CANData(0) = 1 
+    CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS_CANCEL),SLOT_NO,1,1
+    Memory.CANData(0) = 1 
+    Memory.CANData(1) = Colour
+    CANSendGetMC $(CMD_SEND_DATA),$(MC_SET_LED),SLOT_NO,1,2        
+    Memory.CANData(0) = 1 
+    CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS),SLOT_NO,1,1
 End Function
 
-'------------------------------------------------------------------
-Sub GetFirmwareInfo ( )
-  Dim AppMaj,AppMin
-  Dim App,Bios,App2
-  If Command_GetFW($(PARAM_DL_ZIEL_APPL),AppMaj,AppMin) = 1 Then
-    App = String.Format("%02X.%02X", AppMaj,AppMin)
-  Else
-    App = "??.??"
-  End If
-  
-  If Command_GetFW($(PARAM_DL_ZIEL_BIOS),AppMaj,AppMin) = 1 Then
-    Bios = String.Format("%02X.%02X", AppMaj,AppMin)
-  Else
-    Bios = "??.??"
-  End If
-  
-  If Command_GetFW($(PARAM_DL_ZIEL_APPL_2),AppMaj,AppMin) = 1 Then
-    App2 = String.Format("%02X.%02X", AppMaj,AppMin)
-  Else
-    App2 = "??.??"
-  End If
-  LogAdd "Firmware version: Bios:"& Bios & " App: " & App & " App2: " & App2
-End Sub
-'------------------------------------------------------------------
+
+
+
 Function ResultChangeVisibility ( ProcessType )  
   Dim CompType
   Visual.Select("LayerResults").Style.Display = "None"
@@ -781,7 +738,7 @@ Function ResultChangeVisibility ( ProcessType )
   Visual.Select("LayerResults").Style.Display = "Block"
 End Function
 '------------------------------------------------------------------
-Function ComponentChangeVisibility ( CompType )
+Function ChangeVisibility_ComponentSelect ( CompType )
   DebugMessage "Change:" & CompType
   'Set all fields to none
     Visual.Select("param_voltage").Style.Display = "None"
@@ -817,18 +774,64 @@ Function ComponentChangeVisibility ( CompType )
     'case auto: all none
   End Select
 End Function 
+
 '------------------------------------------------------------------
-Function Command_ChangeLED ( Colour )
-    Memory.CANData(0) = 1 
-    CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS_CANCEL),SLOT_NO,1,1
-    Memory.CANData(0) = 1 
-    Memory.CANData(1) = Colour
-    CANSendGetMC $(CMD_SEND_DATA),$(MC_SET_LED),SLOT_NO,1,2        
-    Memory.CANData(0) = 1 
-    CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS),SLOT_NO,1,1
+' Endurance Run Function ------------------------------------------
+'------------------------------------------------------------------
+
+Function Endurance ( TimeOut )
+  Dim looping
+  Dim count
+  Dim sig_ERexternalstop
+  Dim TIO
+  
+  TIO = Timeout / 100
+  Set sig_ERexternalstop = Signal.Create
+  Memory.Set "sig_ERexternalstop", sig_ERexternalstop
+  looping = 1
+  Do While looping = 1
+    'LED On Cycle
+    Command_ChangeLED 2
+    PrepareMeasureCRL    
+    Do    
+      If sig_ERexternalstop.wait(50) Then
+        looping = 0
+      End If
+      System.Delay(100)
+    Loop Until Memory.PrepCmd_MeasureInProgress = 0
+    
+    If Memory.measureOK = 0 Then                                                   
+      'looping = 0
+      Command_ChangeLED 1
+      'Exit Do
+    End If    
+    System.Delay(1500)
+    'LED Off Cycle
+    PrepareMeasureCRL    
+    Command_ChangeLED 0
+    Do
+      If sig_ERexternalstop.wait(50) Then
+        looping = 0
+      End If
+      
+      System.Delay(100)
+    Loop Until Memory.PrepCmd_MeasureInProgress = 0
+    If Memory.measureOK = 0 Then
+      'looping = 0
+      Command_ChangeLED 1
+      'Exit Do
+    End If
+
+    System.Delay(1500)
+
+  Loop
+  Memory.Free "sig_ERexternalstop"
+  LogAdd "Endurance Run Stopped"
 End Function
+'------------------------------------------------------------------
 
-
+'------------------------------------------------------------------
+' Auxillary Functions ---------------------------------------------
 '------------------------------------------------------------------
 Function GetFloatCanData( )
   Dim Value,RawValue,CANData
@@ -837,4 +840,18 @@ Function GetFloatCanData( )
   RawValue = Lang.MakeLong4(CANData(2),CANData(3),CANData(4),CANData(5))
   Value = Math.CastLong2Float(RawValue)
   GetFloatCanData = Value
+End Function
+
+'-------------------------------------------------------------------
+Function LogAdd ( sMessage )
+  Dim Gridobj
+  Set Gridobj = Visual.Script("LogGrid")
+  Dim MsgId
+  MsgId = Gridobj.uid()
+  If NOT(sMessage = "") Then
+    Gridobj.addRow MsgId, ""& FormatDateTime(Date, vbShortDate) &","& FormatDateTime(Time, vbShortTime)&":"& String.Format("%02d ", Second(Time)) &","& sMessage
+    'Wish of SCM (automatically scroll to newest Msg)
+    Gridobj.showRow( MsgId )
+  End If  
+  'DebugMessage sMessage
 End Function
