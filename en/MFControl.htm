@@ -102,6 +102,7 @@
       <h1> Functions </h1>
       <button style="width:150px" id="btn_calibrate"> Calibration </button><br>
       <button style="width:150px" id="btn_selftest"> Self Test </button><br>
+      <hr> 
       <button style="width:150px" id="btn_endurance"> Endurance</button>
       <button style="width:150px" id="btn_endu_stop"> Stop </button>
     </div>
@@ -111,22 +112,29 @@
     <h1>Results</h1>
     <div id= "LayerResults">
     <table>
-      <tr id="param_STcontactres"><td>Contact Res</td> <td><input id = "op_paramSTcontactres" ></input></td>    
-      <tr id="param_STCapacity"><td>Capacitance</td> <td><input id = "op_paramSTcapacitance" ></input></td>
-      <tr id="param_setupCompType"><td>Comp Type</td> <td><input id = "op_paramsetupcomptype" ></input></td>
-      <tr id="param_setupCapacity"><td>Capacity</td> <td><input id = "op_paramsetupcapacity" ></input></td>
-      <tr id="param_setupU"><td>U</td> <td><input id = "op_paramU" ></input></td>
-      <tr id="param_setupI"><td>I</td> <td><input id = "op_paramI" ></input></td>
-      <tr id="param_setupPhi"><td>Phi</td> <td><input id = "op_paramPhi" ></input></td>
-      <tr id="param_setupFreq"><td>Frequency</td> <td><input id = "op_paramFreq" ></input></td>
-      <tr id="param_measCompType"><td>Comp Type</td> <td><input id = "op_parammeascomptype" ></input></td>
-      <tr id="param_measValue"><td>Value</td> <td><input id = "op_parammeasValue" ></input></td>
-      <tr id="param_measU"><td>U</td> <td><input id = "op_parammeasU" ></input></td>
-      <tr id="param_measI"><td>I</td> <td><input id = "op_parammeasI" ></input></td>
-      <tr id="param_measPhi"><td>Phi</td> <td><input id = "op_parammeasPhi" ></input></td>
-      <tr id="param_measFreq"><td>Frequency</td> <td><input id = "op_parammeasFreq" ></input></td>
-      <tr id="param_fwdvoltage"><td>Forward Voltage</td> <td><input id = "op_paramfwdvoltage" ></input></td>
-      <tr id="param_fwdcurrent"><td>Forward Current</td> <td><input id = "op_paramfwdcurrent" ></input></td>
+      <!-- For Selftest and setup measure -->
+      <tr id="param_ContactRes">  <td>Contact Res</td>          <td><input id = "op_paramContactres" ></input></td>    
+      <tr id="param_CapacityCM">    <td>Capacitance CM</td>     <td><input id = "op_paramCapacityCM" ></input></td>
+      <tr id="param_ResistanceCM">  <td>Resistance CM</td>      <td><input id = "op_paramResistanceCM" ></input></td>
+      
+      <!-- For measurements -->
+      <tr id="param_CompType1">     <td>Primary Attribute</td>      <td><input id = "op_paramcomptype1" ></input></td>
+      <tr id="param_Type1Value">    <td>Parameter 1 value</td>      <td><input id = "op_paramType1Value" ></input></td>
+      <tr id="param_Type1ValueMin"> <td>Parameter 1 value Min</td>  <td><input id = "op_paramType1ValueMin" ></input></td>
+      <tr id="param_Type1ValueMax"> <td>Parameter 1 value Max</td>  <td><input id = "op_paramType1ValueMax" ></input></td>
+      <tr id="param_CompType2">     <td>Secondary Attribute</td>    <td><input id = "op_paramcomptype2" ></input></td>
+      <tr id="param_Type2Value">    <td>Parameter 2 value</td>      <td><input id = "op_paramType2Value" ></input></td>
+      <tr id="param_Type2ValueMin"> <td>Parameter 2 value Min</td>  <td><input id = "op_paramType2ValueMin" ></input></td>
+      <tr id="param_Type2ValueMax"> <td>Parameter 2 value Max</td>  <td><input id = "op_paramType2ValueMax" ></input></td>
+      <tr id="param_fwdvoltage">    <td>Forward Voltage</td>        <td><input id = "op_paramfwdvoltage" ></input></td>
+      <tr id="param_fwdcurrent">    <td>Forward Current</td>        <td><input id = "op_paramfwdcurrent" ></input></td>
+      
+      <!-- For selftest,setup measure and measurements -->
+      <tr id="param_U">        <td>Voltage</td>                <td><input id = "op_paramU" ></input></td>
+      <tr id="param_I">        <td>Current </td>               <td><input id = "op_paramI" ></input></td>
+      <tr id="param_Phi">      <td>Phase</td>                  <td><input id = "op_paramPhi" ></input></td>
+      <tr id="param_Freq">     <td>Frequency</td>              <td><input id = "op_paramFreq" ></input></td>
+      
     </table>  
     </div>  
   </div>  
@@ -168,6 +176,9 @@
   dhxWins.load_cansetup = function()
   {
     win = dhxWins.createWindow("cansetup", 100, 100, 500 , 200);
+    win.button("minmax1").hide();
+    win.button("park").hide();
+    win.button("close").hide();
     win.setText("CAN Setup");
     win.attachURL("CanSetup.html");
     win.center();

@@ -452,15 +452,6 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
   
 End Function
 '------------------------------------------------------------------
-Function GetFloatCanData( )
-  Dim Value,RawValue,CANData
-  Memory.Get "CANData",CANData
-  'DebugMessage String.Format("%4X,%4X,%4X,%4X",CANData(2),CANData(3),CANData(4),CANData(5))
-  RawValue = Lang.MakeLong4(CANData(2),CANData(3),CANData(4),CANData(5))
-  Value = Math.CastLong2Float(RawValue)
-  GetFloatCanData = Value
-End Function
-'------------------------------------------------------------------
 Function CANSendGetFeed(Cmd,SubCmd,SlotNo,DataLen)
 
   Dim CanManager,CanConfig,CanSendArg,CanReadArg,CANData
