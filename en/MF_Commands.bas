@@ -18,6 +18,7 @@ Const PREPARE_MEASURE = 2
 Const PREPARE_SELFTEST = 3
 Const PREPARE_CALIBRATION = 4
 Const PREPARE_AUTO = 6
+Const PREPARE_ALL = 6
 
 
 Const TIO_SETUPMEASURE = 6000
@@ -44,6 +45,9 @@ Function Init_MFCommand ( )
   Visual.Select("ip_parampolarity").Value = 0
   Visual.Select("ip_paramnumofcycles").Value = 10
   Visual.Select("ip_paramresults").Value = 100
+  Visual.Select("ip_paramvoltage").Value = 3
+  Visual.Select("ip_paramcurrent").Value = 0.01
+  
   
   Visual.Select("ip_param_setupExpectedVal").SetValidation VALIDATE_INPUT_MASK_R4,"Red",10
   
@@ -736,7 +740,27 @@ Function ResultChangeVisibility ( ProcessType )
   Visual.Select("param_I").Style.Display = "Block"
   Visual.Select("param_Phi").Style.Display = "Block"
   Visual.Select("param_Freq").Style.Display = "Block"
-  End Select  
+  'For debug
+  Case PREPARE_ALL:
+  Visual.Select("param_ContactRes").Style.Display = "Block"
+  Visual.Select("param_CapacityCM").Style.Display = "Block"
+  Visual.Select("param_ResistanceCM").Style.Display = "Block"
+  Visual.Select("param_CompType1").Style.Display = "Block"
+  Visual.Select("param_CompType2").Style.Display = "Block"
+  Visual.Select("param_Type1Value").Style.Display = "Block"
+  Visual.Select("param_Type1ValueMin").Style.Display = "Block"
+  Visual.Select("param_Type1ValueMax").Style.Display = "Block"
+  Visual.Select("param_Type2Value").Style.Display = "Block"  
+  Visual.Select("param_Type2ValueMin").Style.Display = "Block"  
+  Visual.Select("param_Type2ValueMax").Style.Display = "Block"  
+  Visual.Select("param_fwdvoltage").Style.Display = "Block"  
+  Visual.Select("param_fwdcurrent").Style.Display = "Block"  
+  Visual.Select("param_U").Style.Display = "Block"  
+  Visual.Select("param_I").Style.Display = "Block"  
+  Visual.Select("param_Phi").Style.Display = "Block"  
+  Visual.Select("param_Freq").Style.Display = "Block"  
+  
+  End Select
   Visual.Select("LayerResults").Style.Display = "Block"
 End Function
 '------------------------------------------------------------------
