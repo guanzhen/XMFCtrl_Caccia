@@ -100,8 +100,23 @@
     <hr> 
     <div id="SubLayerTools" >
       <h1> Functions </h1>
-      <button style="width:150px" id="btn_calibrate"> Calibration </button><br>
-      <button style="width:150px" id="btn_selftest"> Self Test </button><br>
+      <table>
+      <tr><td>
+      <button style="width:150px" id="btn_calibrate"> Calibration </button></td>
+      <td>
+        <select style = "width:180px;" id = "opt_SubCmd">
+        <option value = "0x01">1: Closed Loop</option>
+        <option value = "0x02">2: Closed Loop Cal</option>
+        <option value = "0x03">3: Open Loop</option>
+        <option value = "0x04">4: Restore Calibrated Data</option>
+        </select>
+      </td>
+      <br>
+      </tr>
+      <tr>
+      <td><button style="width:150px" id="btn_selftest"> Self Test </button><br></td>
+      </tr>
+      </table>
       <hr> 
       <button style="width:150px" id="btn_endurance"> Endurance</button>
       <button style="width:150px" id="btn_endu_stop"> Stop </button>

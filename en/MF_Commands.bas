@@ -483,8 +483,10 @@ End Function
 '------------------------------------------------------------------
 
 Function OnClick_btn_calibrate ( Reason )
-  
-  If PrepareCommands($(CMD_PREPARE_CALIBRATION),1,SLOT_NO,1,0,250) = True Then
+  Dim SubCmd
+   SubCmd = Visual.Select("opt_SubCmd").Value
+   Memory.CANData(0) = SubCmd
+  If PrepareCommands($(CMD_PREPARE_CALIBRATION),1,SLOT_NO,1,1,250) = True Then
     Memory.Set "PrepCmd", $(CMD_PREPARE_CALIBRATION)
     LogAdd "Calibration command started"
     System.Start "Wait_Measurement",TIO_CALIBRATE
