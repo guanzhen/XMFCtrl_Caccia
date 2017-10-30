@@ -4,8 +4,6 @@ Const CANCMD_SETBRAKE           = &H02
 Const CANCMD_Command_AxisRefRun = &h04
 Const CANCMD_test = &h06
 
-Const SLOT_NO = 13
-
 Function btn_CanConnect( id, id1 )
   Dim Net,Baud,CANConfig, CANID,CANData,i
   Dim text
@@ -26,11 +24,13 @@ If CANConfig.Config = 0 Then
     CANConfig.Baudrate = "250"
     text = "[Standalone]"
     Visual.Select("inputCANID").Value = "608"
+    Visual.Select("opt_SlotNum").Style.Display  = "none"
   Elseif CANConfig.Config = 1 Then
     CANConfig.Baudrate = "1000"
     Visual.Select("inputCANID").Value = "510"
     text = "[XFCU]"
     Visual.Select("btnAssignCANID").Style.Display  = "none"
+    Visual.Select("opt_SlotNum").Style.Display  = "block"    
   End If
   
   DebugMessage "Selected Config :"&CANConfig.Config

@@ -13,11 +13,6 @@ Const PROCESS_SELFTEST = 3
 Const PROCESS_Calibration = 4
 
 Const PREPARE_NONE = 0
-Const PREPARE_SETUP = 1
-Const PREPARE_MEASURE = 2
-Const PREPARE_SELFTEST = 3
-Const PREPARE_CALIBRATION = 4
-Const PREPARE_AUTO = 6
 Const PREPARE_ALL = 6
 
 
@@ -28,7 +23,7 @@ Const TIO_SELFTEST = 5000
 
 Function Init_MFCommand ( )
   Dim PrepCmd_Inprogress,PrepCmd_Error,PrepCmd_PrepID,Endurance_Inprogress
-  Dim PrepCmd_MeasureInProgress
+  Dim PrepCmd_MeasureInProgress,counter
   ChangeVisibility_ComponentSelect COMP_TYPE_RES
   ResultChangeVisibility PROCESS_NONE
 
@@ -43,12 +38,17 @@ Function Init_MFCommand ( )
   
   Visual.Select("ip_param_setupExpectedVal").Value = 100
   Visual.Select("ip_parampolarity").Value = 0
-  Visual.Select("ip_paramnumofcycles").Value = 10
+  Visual.Select("ip_paramnumofcycles").Value = 0
   Visual.Select("ip_paramresults").Value = 100
   Visual.Select("ip_paramvoltage").Value = 3
   Visual.Select("ip_paramcurrent").Value = 0.01
   
-  
+  For counter = 1 To 60
+    Visual.Select("opt_SlotNum").addItem counter,counter
+  Next
+  Memory.Set "SLOT_NO",Visual.Select("opt_SlotNum").SelectedItemAttribute("Value")
+  DebugMessage "SLOT_NO :" & Memory.SLOT_NO
+    
   Visual.Select("ip_param_setupExpectedVal").SetValidation VALIDATE_INPUT_MASK_R4,"Red",10
   
   PrepCmd_MeasureInProgress = 0
@@ -128,241 +128,223 @@ Function Get_Measurements ( )
   Select Case Memory.PrepCmd
     Case PREPARE_NONE : 
       ResultLog = "Error, no prepare"
-    Case PREPARE_SETUP :
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_CONTACT_RES),SLOT_NO,1,0
+    Case $(CMD_PREPARE_SETUP_MEASURE) :
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_CONTACT_RES),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramContactres").Value = String.Format("%G",Value)
       ResultLog = "Setup Measure: Contact Res :" & String.Format("%c",Value)
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_CAPACITY),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_CAPACITY),Memory.SLOT_NO,1,0
        Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramCapacityCM").Value = Value
       ResultLog = ResultLog & " Cap:" & Value
 
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_RESISTANCE),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_RESISTANCE),Memory.SLOT_NO,1,0
        Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramResistanceCM").Value = Value
       ResultLog = ResultLog & " Res:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_U),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_U),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramU").Value = Value
       ResultLog = ResultLog & " U:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_I),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_I),Memory.SLOT_NO,1,0
        Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramI").Value = Value
       ResultLog = ResultLog & " I:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_PHI),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_PHI),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramPhi").Value = Value
       ResultLog = ResultLog & " Phi:" & Value 
 
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_FREQ),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_FREQ),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramFreq").Value = Value
       ResultLog = ResultLog & " Freq:" & Value      
       
-    Case PREPARE_MEASURE :
+    Case $(CMD_PREPARE_MEASURE) :
       
       CompType = Visual.Select("optMeasureCommand").Value
       If Not CompType = 4 Then
       DebugMessage "Process Measure CRL, PCAP"
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE1),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE1),Memory.SLOT_NO,1,0
       Value = Memory.CanData(2)
       Visual.Select("op_paramcomptype1").Value = String.Format("%c",Value)
       ResultLog = "Meas: CompType1 :" & String.Format("%c",Value)      
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE1),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE1),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramType1Value").Value = Value
       ResultLog = ResultLog & " Value:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MIN1),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MIN1),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramType1ValueMin").Value = Value
       ResultLog = ResultLog & " Min:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MAX1),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MAX1),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramType1ValueMax").Value = Value
       ResultLog = ResultLog & " Max :" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE2),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE2),Memory.SLOT_NO,1,0
       Value = Memory.CanData(2)
       Visual.Select("op_paramcomptype2").Value = String.Format("%c",Value)
       ResultLog = "CompType2 :" & String.Format("%c",Value)      
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE2),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE2),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramType2Value").Value = Value
       ResultLog = ResultLog & " Value:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MIN2),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MIN2),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramType2ValueMin").Value = Value
       ResultLog = ResultLog & " Min:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MAX2),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MAX2),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramType2ValueMax").Value = Value
       ResultLog = ResultLog & " Max :" & Value      
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_U),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_U),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramU").Value = Value
       ResultLog = ResultLog & " U:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_I),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_I),Memory.SLOT_NO,1,0
        Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramI").Value = Value
       ResultLog = ResultLog & " I:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_PHI),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_PHI),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramPhi").Value = Value
       ResultLog = ResultLog & " Phi:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FREQUENCY),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FREQUENCY),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramFreq").Value = Value
       ResultLog = ResultLog & " Freq:" & Value      
       'Diode
       Else
       DebugMessage "Process Measure Diode"
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FWD_VOLTAGE),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FWD_VOLTAGE),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramfwdvoltage").Value = Value
       ResultLog = "Meas: FWD Voltage :" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FWD_CURRENT),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FWD_CURRENT),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramfwdcurrent").Value = Value
       ResultLog = ResultLog & " FWD Current:" & Value
       End If
       
       'End measure
-    Case PREPARE_SELFTEST :
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_CONTACT_RES),SLOT_NO,1,0
+    Case $(CMD_PREPARE_SELFTEST) :
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_CONTACT_RES),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramContactres").Value = Value
       ResultLog = ResultLog & " Contact Res:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_CAPACITY),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_CAPACITY),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramCapacityCM").Value = Value
       ResultLog = ResultLog & " Cap:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_RESISTANCE),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_RESISTANCE),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramResistanceCM").Value = Value
       ResultLog = ResultLog & " Res:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_U),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_U),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramU").Value = Value
       ResultLog = ResultLog & " U:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_I),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_I),Memory.SLOT_NO,1,0
        Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramI").Value = Value
       ResultLog = ResultLog & " I:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_PHI),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_PHI),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramPhi").Value = Value
       ResultLog = ResultLog & " Phi:" & Value 
 
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_FREQ),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_SELFTEST_FREQ),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramFreq").Value = Value
       ResultLog = ResultLog & " Freq:" & Value    
       
       
-    Case PREPARE_CALIBRATION :
+    Case $(CMD_PREPARE_CALIBRATION) :
     'NO param to read
-    Case PREPARE_AUTO :
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE1),SLOT_NO,1,0
+    Case $(CMD_PREPARE_MEASURE_AUTO) :
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE1),Memory.SLOT_NO,1,0
       Value = Memory.CanData(2)
       Visual.Select("op_paramcomptype1").Value = String.Format("%c",Value)
       ResultLog = "Cal: CompType1 :" & String.Format("%c",Value)      
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE1),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE1),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramType1Value").Value = Value
       ResultLog = ResultLog & " Value:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MIN1),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MIN1),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramType1ValueMin").Value = Value
       ResultLog = ResultLog & " Min:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MAX1),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MAX1),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramType1ValueMax").Value = Value
       ResultLog = ResultLog & " Max :" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE2),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE2),Memory.SLOT_NO,1,0
       Value = Memory.CanData(2)
       Visual.Select("op_paramcomptype2").Value = String.Format("%c",Value)
       ResultLog = "CompType2 :" & String.Format("%c",Value)      
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE2),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE2),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramType2Value").Value = Value
       ResultLog = ResultLog & " Value:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MIN2),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MIN2),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramType2ValueMin").Value = Value
       ResultLog = ResultLog & " Min:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MAX2),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE_MAX2),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramType2ValueMax").Value = Value
       ResultLog = ResultLog & " Max :" & Value      
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_U),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_U),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramU").Value = Value
       ResultLog = ResultLog & " U:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_I),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_I),Memory.SLOT_NO,1,0
        Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramI").Value = Value
       ResultLog = ResultLog & " I:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_PHI),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_PHI),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramPhi").Value = Value
       ResultLog = ResultLog & " Phi:" & Value
       
-      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FREQUENCY),SLOT_NO,1,0
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_FREQUENCY),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramFreq").Value = Value
       ResultLog = ResultLog & " Freq:" & Value      
     End Select
     LogAdd ResultLog      
 End Function 
-'------------------------------------------------------------------
-
-Function PrepareCommands (Cmd,Context,SlotNo,Division,DataLen,PubEndTimeout)
-  Dim Command
-  Command = PREPARE_NONE
-  'This function is just to set the memory variable PrepCmd.
-  'it is used by Get_Measurements to determine which variables to read
-  
-  Select Case Cmd
-    Case $(CMD_PREPARE_SETUP_MEASURE) : Command = PREPARE_SETUP
-    Case $(CMD_PREPARE_MEASURE)       : Command = PREPARE_MEASURE
-    Case $(CMD_PREPARE_MEASURE_AUTO)  : Command = PREPARE_AUTO
-    Case $(CMD_PREPARE_SELFTEST)      : Command = PREPARE_SELFTEST
-    Case $(CMD_PREPARE_CALIBRATION)   : Command = PREPARE_CALIBRATION
-  End Select 
-  Memory.Set "PrepCmd", Command
-  PrepareCommands = CANSendPrepareCMD (Cmd,Context,SlotNo,Division,DataLen,PubEndTimeout)  
-End Function
 
 '------------------------------------------------------------------
 
@@ -380,11 +362,27 @@ Function OnClick_btnAssignCANID( Reason )
   'Set Green LED
   Memory.CANData(0) = 1 
   Memory.CANData(1) = 2 
-  CANSendGetMC $(CMD_SEND_DATA),$(MC_SET_LED),SLOT_NO,1,2
+  CANSendGetMC $(CMD_SEND_DATA),$(MC_SET_LED),Memory.SLOT_NO,1,2
   Memory.CANData(0) = 1 
-  CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS),SLOT_NO,1,1
+  CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS),Memory.SLOT_NO,1,1
   
 End Function
+
+'------------------------------------------------------------------
+
+Function OnBlur_inputCANID ( Reason )
+  Dim CANID   
+  CANID = CLng("&h" & Visual.Select("inputCANID").Value)
+  If CANID_Validate (CANID) = True Then  
+    DebugMessage "Changed CAN ID:" & String.Format("%3X",CANID)
+    CANID_Set CANID
+    Memory.CANConfig.CANIDvalid = 1
+  Else
+    Memory.CANConfig.CANIDvalid = 0
+  End If
+  
+End Function
+
 
 '------------------------------------------------------------------
 
@@ -490,7 +488,7 @@ Function OnClick_btn_calibrate ( Reason )
   Dim SubCmd
    SubCmd = Visual.Select("opt_SubCmd").Value
    Memory.CANData(0) = SubCmd
-  If PrepareCommands($(CMD_PREPARE_CALIBRATION),1,SLOT_NO,1,1,250) = True Then
+  If CANSendPrepareCMD($(CMD_PREPARE_CALIBRATION),1,Memory.SLOT_NO,1,1,250) = True Then
     Memory.Set "PrepCmd", $(CMD_PREPARE_CALIBRATION)
     LogAdd "Calibration command started"
     System.Start "Wait_Measurement",TIO_CALIBRATE
@@ -502,7 +500,7 @@ End Function
 
 Function OnClick_btn_selftest ( Reason )
     
-  If PrepareCommands($(CMD_PREPARE_SELFTEST),1,SLOT_NO,1,0,250) = True Then
+  If CANSendPrepareCMD($(CMD_PREPARE_SELFTEST),1,Memory.SLOT_NO,1,0,250) = True Then
     Memory.Set "PrepCmd", $(CMD_PREPARE_SELFTEST)
     LogAdd "Self Test command started"
     System.Start "Wait_Measurement",TIO_SELFTEST
@@ -528,6 +526,13 @@ Else
 End If
 End Function
 
+'------------------------------------------------------------------
+Function OnChange_opt_SlotNum ( Reason )
+  Memory.Set "SLOT_NO",Visual.Select("opt_SlotNum").SelectedItemAttribute("Value")
+  DebugMessage "SLOT_NO" & Memory.SLOT_NO
+End Function
+'------------------------------------------------------------------
+
 Function OnChange_optMeasureCommand ( Reason )
   Dim CompType
   DebugMessage "Select:" & Visual.select("optMeasureCommand").Value
@@ -550,12 +555,13 @@ Function Command_Prepare_SetupMeasure (CM_ID, ExpectedValue,ComponentType,TimeOu
   Memory.CANData(1) = Lang.GetByte(ExpectedValue,1)
   Memory.CANData(2) = Lang.GetByte(ExpectedValue,2)
   Memory.CANData(3) = Lang.GetByte(ExpectedValue,3)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_EXPECTED_RESULT),SLOT_NO,CM_ID,4
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_EXPECTED_RESULT),Memory.SLOT_NO,CM_ID,4
   
   Memory.CANData(0) = Lang.GetByte(ComponentType,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),SLOT_NO,CM_ID,1  
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),Memory.SLOT_NO,CM_ID,1  
    
-  If PrepareCommands($(CMD_PREPARE_SETUP_MEASURE),1,SLOT_NO,CM_ID,0,250) = True Then
+  If CANSendPrepareCMD($(CMD_PREPARE_SETUP_MEASURE),1,Memory.SLOT_NO,CM_ID,0,250) = True Then
+    Memory.Set "PrepCmd", $(CMD_PREPARE_SETUP_MEASURE)
     LogAdd "Setup Measure command started"
     System.Start "Wait_Measurement",TimeOut
   Else
@@ -569,16 +575,17 @@ Function Command_Prepare_Measure (CM_ID,ExpectedValue,ComponentType,NumofCycles,
   Memory.CANData(1) = Lang.GetByte(ExpectedValue,1)
   Memory.CANData(2) = Lang.GetByte(ExpectedValue,2)
   Memory.CANData(3) = Lang.GetByte(ExpectedValue,3)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_EXPECTED_RESULT),SLOT_NO,CM_ID,4
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_EXPECTED_RESULT),Memory.SLOT_NO,CM_ID,4
   
   Memory.CANData(0) = Lang.GetByte(ComponentType,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),SLOT_NO,CM_ID,1
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),Memory.SLOT_NO,CM_ID,1
    Memory.CANData(0) = Lang.GetByte(NumofCycles,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_NUM_OF_CYCLES),SLOT_NO,CM_ID,1  
-  If PrepareCommands($(CMD_PREPARE_MEASURE),1,SLOT_NO,CM_ID,0,250) = True Then
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_NUM_OF_CYCLES),Memory.SLOT_NO,CM_ID,1  
+  If CANSendPrepareCMD($(CMD_PREPARE_MEASURE),1,Memory.SLOT_NO,CM_ID,0,250) = True Then
     If Not Memory.Exists("sig_ERexternalstop") Then        
       LogAdd "Measure command started"
     End If
+    Memory.Set "PrepCmd", $(CMD_PREPARE_MEASURE)
     Memory.PrepCmd_MeasureInProgress = 1
     System.Start "Wait_Measurement",TimeOut
   Else
@@ -593,18 +600,19 @@ Function Command_Prepare_Meas_FWDVOLTAGE (CM_ID,Current,Voltage,ComponentType,Ti
   Memory.CANData(1) = Lang.GetByte(Current,1)
   Memory.CANData(2) = Lang.GetByte(Current,2)
   Memory.CANData(3) = Lang.GetByte(Current,3)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CURRENT),SLOT_NO,CM_ID,4
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CURRENT),Memory.SLOT_NO,CM_ID,4
   
   Memory.CANData(0) = Lang.GetByte(Voltage,0)
   Memory.CANData(1) = Lang.GetByte(Voltage,1)
   Memory.CANData(2) = Lang.GetByte(Voltage,2)
   Memory.CANData(3) = Lang.GetByte(Voltage,3)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_VOLTAGE),SLOT_NO,CM_ID,4  
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_VOLTAGE),Memory.SLOT_NO,CM_ID,4  
   
   Memory.CANData(0) = Lang.GetByte(ComponentType,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),SLOT_NO,CM_ID,1  
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),Memory.SLOT_NO,CM_ID,1  
    
-  If PrepareCommands($(CMD_PREPARE_MEASURE),1,SLOT_NO,CM_ID,0,250) = True Then
+  If CANSendPrepareCMD($(CMD_PREPARE_MEASURE),1,Memory.SLOT_NO,CM_ID,0,250) = True Then
+    Memory.Set "PrepCmd", $(CMD_PREPARE_MEASURE)
     LogAdd "Measure command started"
     System.Start "Wait_Measurement",TimeOut
   Else
@@ -613,7 +621,7 @@ Function Command_Prepare_Meas_FWDVOLTAGE (CM_ID,Current,Voltage,ComponentType,Ti
 End Function
 '------------------------------------------------------------------
 Function Command_GetNumOfSlots( )
-  If CANSendGetMC($(CMD_GET_DATA),$(MC_NUMBER_OF_SLOTS),SLOT_NO,1,0) = False Then
+  If CANSendGetMC($(CMD_GET_DATA),$(MC_NUMBER_OF_SLOTS),Memory.SLOT_NO,1,0) = False Then
     LogAdd "Get Number of Slot command Error!"
   End If
 End Function
@@ -643,7 +651,7 @@ Function Command_GetFW(ByVal AppBios, ByRef MajorValue, ByRef MinValue)
     'XFCU
     .Data(0) = $(CMD_DOWNLOAD_VERSION) + &h10
     .Data(1) = AppBios
-    .Data(2) = SLOT_NO
+    .Data(2) = Memory.SLOT_NO
     .length = 3
     End If
   End With
@@ -673,12 +681,12 @@ End Function
 
 Function Command_ChangeLED ( Colour )
     Memory.CANData(0) = 1 
-    CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS_CANCEL),SLOT_NO,1,1
+    CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS_CANCEL),Memory.SLOT_NO,1,1
     Memory.CANData(0) = 1 
     Memory.CANData(1) = Colour
-    CANSendGetMC $(CMD_SEND_DATA),$(MC_SET_LED),SLOT_NO,1,2        
+    CANSendGetMC $(CMD_SEND_DATA),$(MC_SET_LED),Memory.SLOT_NO,1,2        
     Memory.CANData(0) = 1 
-    CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS),SLOT_NO,1,1
+    CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS),Memory.SLOT_NO,1,1
 End Function
 
 
@@ -708,7 +716,7 @@ Function ResultChangeVisibility ( ProcessType )
   Select Case ProcessType 
   Case PREPARE_NONE:
   'none
-  Case PREPARE_SETUP:
+  Case $(CMD_PREPARE_SETUP_MEASURE):
   Visual.Select("param_ContactRes").Style.Display = "Block"
   Visual.Select("param_CapacityCM").Style.Display = "Block"
   Visual.Select("param_ResistanceCM").Style.Display = "Block"
@@ -716,7 +724,7 @@ Function ResultChangeVisibility ( ProcessType )
   Visual.Select("param_I").Style.Display = "Block"
   Visual.Select("param_Phi").Style.Display = "Block"
   Visual.Select("param_Freq").Style.Display = "Block"
-  Case PREPARE_MEASURE:
+  Case $(CMD_PREPARE_MEASURE):
   CompType = Visual.Select("optMeasureCommand").Value
   'Not Diode
   If Not CompType = 4 Then
@@ -732,7 +740,7 @@ Function ResultChangeVisibility ( ProcessType )
     Visual.Select("param_fwdvoltage").Style.Display = "Block"
     Visual.Select("param_fwdcurrent").Style.Display = "Block"  
   End If
-  Case PREPARE_SELFTEST:  
+  Case $(CMD_PREPARE_SELFTEST) :  
   Visual.Select("param_ContactRes").Style.Display = "Block"
   Visual.Select("param_CapacityCM").Style.Display = "Block"
   Visual.Select("param_ResistanceCM").Style.Display = "Block"
@@ -765,7 +773,7 @@ Function ResultChangeVisibility ( ProcessType )
 End Function
 '------------------------------------------------------------------
 Function ChangeVisibility_ComponentSelect ( CompType )
-  DebugMessage "Change:" & CompType
+  'DebugMessage "Change:" & CompType
   'Set all fields to none
     Visual.Select("param_voltage").Style.Display = "None"
     Visual.Select("param_current").Style.Display  = "None"
