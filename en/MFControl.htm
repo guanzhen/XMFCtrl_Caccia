@@ -23,17 +23,17 @@
   <STYLE>
   html { background-color : #97A0A5;}
   h1 {font-size: 12pt;color:white;margin:5px 0px 5px 0px;font-family:arial}
-  body {font-size: 12pt;color:white;font-family:arial}
+  body {margin:2px;font-size: 12pt;color:white;font-family:arial}
   button {width:150px}
   input {width:150px;}
   select {width:150px;}   
   #ButtonGridClear {margin-top:4px;float:left; width: 100px;height:34px;align:right;}
   //#ButtonDebugLog  {margin-top:4px;float:right; width: 150px;height:34px;}  
-  #Layer_TabStrip  { padding: 0px; height:60%; width:100%;}
-  #Layer_MessageLog { padding:0px 5px;height:40%; width :100%;}
+  #Layer_TabStrip  { padding: 0px; height:62.5%; width:100%;}
+  #Layer_MessageLog { padding:2px;height:37 %; width :100%;}
   #MessageLogObj { height:80%; width :100%;}  
-  #LayerCommand {float:left;width :49%; height:90%}
-  #LayerReply {float:left;width :49%;height:90%}
+  #LayerCommand {float:left;width :49%; height:380px}
+  #LayerReply   {float:left;width :49%;height:380px}
   .GrpFrame
   {
     border-color:     white;
@@ -102,8 +102,7 @@
     <div id="SubLayerTools" >
       <h1> Functions </h1>
       <table>
-      <tr><td>
-      <button style="width:150px" id="btn_calibrate"> Calibration </button></td>
+      <tr><td><button style="width:150px" id="btn_calibrate"> Calibration </button></td>
       <td>
         <select style = "width:180px;" id = "opt_SubCmd">
         <option value = "0x01">1: Closed Loop</option>
@@ -112,7 +111,6 @@
         <option value = "0x04">4: Restore Calibrated Data</option>
         </select>
       </td>
-      <br>
       </tr>
       <tr>
       <td><button style="width:150px" id="btn_selftest"> Self Test </button><br></td>
