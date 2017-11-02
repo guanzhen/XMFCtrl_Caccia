@@ -1,8 +1,6 @@
 
 'These are definations of the CAN commands, as per the interface specification
-Const CANCMD_SETBRAKE           = &H02
-Const CANCMD_Command_AxisRefRun = &h04
-Const CANCMD_test = &h06
+Const PARAM_SCIDATA = &h70
 
 Function btn_CanConnect( id, id1 )
   Dim Net,Baud,CANConfig, CANID,CANData,i
@@ -14,7 +12,8 @@ Function btn_CanConnect( id, id1 )
   	CANData.Add(0)
   Next
   Memory.Set "CANData",CANData
-  
+  Memory.Set "CANDataLen",0
+   
   DebugMessage"Launch Can Connect"
   CANConfig.Net = Visual.Script("opt_net")
   CANConfig.Config = Visual.Script("opt_config")
@@ -452,7 +451,7 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
   
 End Function
 '------------------------------------------------------------------
-Function CANSendGetFeed(Cmd,SubCmd,SlotNo,DataLen)
+Function CANSendGetFeed(Cmd,SubCmd,SlotNo,Division,DataLen)
 
   Dim CanManager,CanConfig,CanSendArg,CanReadArg,CANData
   Dim i,Result
@@ -503,36 +502,37 @@ Function CANSendGetFeed(Cmd,SubCmd,SlotNo,DataLen)
     Memory.Get "CanManager",CanManager        
     Result = CanManager.SendCmd(CanSendArg,1000,SC_CHECK_ERROR_BYTE,CanReadArg)
     
-    If  Result = SCA_NO_ERROR Then      
-      DebugMessage "GetFeed OK: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
+    DebugMessage "GetFeed OK: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
+    If Result = SCA_NO_ERROR Then
       CANSendGetFeed = True
-      'XFCU
-      If CANConfig.Config = 1 Then
-        'StandAlone Prepare Commands
-          'DebugMessage "Reading XFCU Get Feed Reply"
-          'Data(0) = CMD
-          'Data(1) = ACK
-          'Data(2) = Data 1
-          'Data(3) = Data 2
-          'Data(4) = Data 3
-          'Data(5) = Data 4
-          CANData.Data(2) = CanReadArg.Data(3) 
-          CANData.Data(3) = CanReadArg.Data(4)
-          CANData.Data(4) = CanReadArg.Data(5)
-          CANData.Data(5) = CanReadArg.Data(6)
-      Else
-        'DebugMessage "Standalone Cmd Reply"
-        'No need to process data, just copy
-         For i = 0 to 7
-          CANData.Data(i) = CanReadArg.Data(i)
-         Next
-      End If
-      Memory.Set "CANData",CANData
-      'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
-    ElseIf Result = SCA_ERROR_MSG Then
-      LogAdd "Command NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
+    Else
       CANSendGetFeed = False
     End If
+    'XFCU
+    If CANConfig.Config = 1 Then
+      'StandAlone Prepare Commands
+        'DebugMessage "Reading XFCU Get Feed Reply"
+        'Data(0) = CMD
+        'Data(1) = ACK
+        'Data(2) = Data 1
+        'Data(3) = Data 2
+        'Data(4) = Data 3
+        'Data(5) = Data 4
+        CANData.Data(2) = CanReadArg.Data(3) 
+        CANData.Data(3) = CanReadArg.Data(4)
+        CANData.Data(4) = CanReadArg.Data(5)
+        CANData.Data(5) = CanReadArg.Data(6)
+    Else
+      'DebugMessage "Standalone Cmd Reply"
+      'No need to process data, just copy
+       For i = 0 to 7
+        CANData.Data(i) = CanReadArg.Data(i)
+       Next
+    End If
+    Memory.Set "CANData",CANData      
+    Memory.CANDataLen = CanReadArg.Length
+    DebugMessage Memory.CANDataLen
+    'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
     CanManager.Deliver = True
   Else
     DebugMessage "CANSendGetFeed Error"
@@ -711,7 +711,7 @@ Function CANSendTACMD(Cmd,SubCmd,SlotNo,Division,DataLen)
         DebugMessage "Standalone Cmd Reply"
         'No need to process data, just copy
          For i = 0 to 7
-          CANData.Data(i) = CanReadArg.Data(i)
+          CANData.Data(i) = CanReadArg.Data(i)          
          Next
       End If
       Memory.Set "CANData",CANData
@@ -727,3 +727,39 @@ Function CANSendTACMD(Cmd,SubCmd,SlotNo,Division,DataLen)
   End If  
 End Function
 '------------------------------------------------------------------
+
+Function GetMultiLineData ( Reason )
+  dim SCIArray,i,exitloop,Timeout
+  Set SCIArray = CreateObject( "MATH.Array" )
+  
+  exitloop = 0
+  Timeout = 10
+ 'Get SCI TX
+  Memory.CANData(0) = $(PARAM_START)
+  Memory.CANData(1) = 0
+  DebugMessage "ML:Start"
+  If CANSendGetFeed($(FEED_GET_DATA),PARAM_SCIDATA, Memory.SLOT_NO,1,2) = True Then      
+      Do
+        DebugMessage "ML:Line"        
+        Memory.CANData(0) = $(PARAM_LINE)
+        CANSendGetFeed$(FEED_GET_DATA),PARAM_SCIDATA, Memory.SLOT_NO,1,1
+        For i = 2 To Memory.CANDataLen-1
+          DebugMessage "ML:" & i
+          SCIArray.Add(Memory.CANData.Data(i))
+        Next
+        If Not Memory.CANDataLen = 8 Then
+          exitloop = 1
+        End If
+        Timeout = Timeout - 1
+        If Timeout = 0 Then
+          exitloop = 1
+          DebugMessage "ML:TimeOut"
+        End If
+      Loop Until exitloop = 1
+      DebugMessage "SCI Size:" & SCIArray.Size      
+  Else
+    DebugMessage "Error"
+  End If
+
+
+End Function

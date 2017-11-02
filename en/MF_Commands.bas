@@ -401,7 +401,8 @@ End Function
 '------------------------------------------------------------------
 
 Sub OnClick_ButtonGridClear( Reason )
-  Visual.Script("LogGrid").clearAll()
+  Visual.Script("LogGrid").clearAll()  
+  GetMultiLineData 1
 End Sub
 '------------------------------------------------------------------
 Sub OnClick_btnGetApp( Reason )  
