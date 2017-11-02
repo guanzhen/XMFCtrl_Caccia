@@ -657,8 +657,8 @@ Function Command_GetFW(ByVal AppBios, ByRef MajorValue, ByRef MinValue)
   End With
   If Memory.Exists("CanManager") AND CanConfig.CANIDvalid = 1 Then    
     Memory.Get "CanManager",CanManager        
-    DebugMessage "SendCmd:" & CanSendArg.Format
     Result = CanManager.SendCmd(CanSendArg,250,SC_CHECK_ERROR_BYTE,CanReadArg)
+    DebugMessage "GetVer: " & "(TX: " & CanSendArg.Format & ") (RX:" & CanReadArg.Format & ")"
     'DebugMessage "Result" & Result
     If Result = SCA_NO_ERROR Then
       Command_GetFW = 1
