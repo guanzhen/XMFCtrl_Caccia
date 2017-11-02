@@ -381,14 +381,14 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
   'XFCU
   If CANConfig.Config = 1 Then
     With CanSendArg
-        DebugMessage "In Machine GetSendMCData command"
+        'DebugMessage "In Machine GetSendMCData command"
         .CanId = CANID
         .Data(0) = Cmd + &h10
         .Data(1) = SubCmd        
         .Data(2) = SlotNo
       For i = 0 to DataLen - 1
         .Data(3+i) = CANData.Data(i)
-        DebugMessage "Copy Data " & i
+        'DebugMessage "Copy Data " & i
       Next
       .Length = 3 + DataLen      
     End With
@@ -396,13 +396,13 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
   Else
     With CanSendArg
       .CanId = CANID
-        DebugMessage "Standalone GetSend MC Data command"
+        'DebugMessage "Standalone GetSend MC Data command"
         .Data(0) = Cmd
         .Data(1) = SubCmd
         If DataLen > 0 Then
           For i = 0 to DataLen - 1
             .Data(2+i) = CANData.Data(i)
-            DebugMessage "Copy Data " & i
+            'DebugMessage "Copy Data " & i
           Next  
         End If
         .Length = 2 + DataLen
@@ -419,7 +419,7 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
       CANSendGetMC = True
       'XFCU
       If CANConfig.Config = 1 Then
-           DebugMessage "Reading XFCU GetSend MC Data Reply"
+          'DebugMessage "Reading XFCU GetSend MC Data Reply"
           'Data(0) = CMD
           'Data(1) = ACK
           'Data(2) = Data 1
@@ -431,7 +431,7 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
           CANData.Data(4) = CanReadArg.Data(5)
           CANData.Data(5) = CanReadArg.Data(6)
       Else
-        DebugMessage "Standalone Cmd Reply"
+        'DebugMessage "Standalone Cmd Reply"
         'No need to process data, just copy
          For i = 0 to 7
           CANData.Data(i) = CanReadArg.Data(i)
@@ -439,7 +439,7 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
       End If
       Memory.Set "CANData",CANData
       Memory.Set "CanReadArg",CanReadArg
-      DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
+      'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
     Else
       LogAdd "Command NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
       CANSendGetMC = False
@@ -470,14 +470,14 @@ Function CANSendGetFeed(Cmd,SubCmd,SlotNo,DataLen)
   'XFCU 
   If CANConfig.Config = 1 Then
     With CanSendArg
-      DebugMessage "XFCU Get Feeder Data Command"
+      'DebugMessage "XFCU Get Feeder Data Command"
       .CanId = CANID+2
       .Data(0) = Cmd + &h10
       .Data(1) = SubCmd        
       .Data(2) = SlotNo
       For i = 0 to DataLen - 1
         .Data(3+i) = CANData.Data(i)
-        DebugMessage "Copy Data " & i
+        'DebugMessage "Copy Data " & i
       Next
       .Length = 3 + DataLen      
     End With
@@ -485,13 +485,13 @@ Function CANSendGetFeed(Cmd,SubCmd,SlotNo,DataLen)
   Else
     With CanSendArg
       .CanId = CANID
-      DebugMessage "Standalone Get Feeder Data Cmd"
+      'DebugMessage "Standalone Get Feeder Data Cmd"
       .Data(0) = Cmd
       .Data(1) = SubCmd
       If DataLen > 0 Then
         For i = 0 to DataLen - 1
           .Data(2+i) = CANData.Data(i)
-          DebugMessage "Copy Data " & i
+          'DebugMessage "Copy Data " & i
         Next  
       End If
       .Length = 2 + DataLen
@@ -509,7 +509,7 @@ Function CANSendGetFeed(Cmd,SubCmd,SlotNo,DataLen)
       'XFCU
       If CANConfig.Config = 1 Then
         'StandAlone Prepare Commands
-           DebugMessage "Reading XFCU Get Feed Reply"
+          'DebugMessage "Reading XFCU Get Feed Reply"
           'Data(0) = CMD
           'Data(1) = ACK
           'Data(2) = Data 1
@@ -521,14 +521,14 @@ Function CANSendGetFeed(Cmd,SubCmd,SlotNo,DataLen)
           CANData.Data(4) = CanReadArg.Data(5)
           CANData.Data(5) = CanReadArg.Data(6)
       Else
-        DebugMessage "Standalone Cmd Reply"
+        'DebugMessage "Standalone Cmd Reply"
         'No need to process data, just copy
          For i = 0 to 7
           CANData.Data(i) = CanReadArg.Data(i)
          Next
       End If
       Memory.Set "CANData",CANData
-      DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
+      'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
     ElseIf Result = SCA_ERROR_MSG Then
       LogAdd "Command NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
       CANSendGetFeed = False
@@ -584,7 +584,7 @@ Function CANSendPrepareCMD(Cmd,Context,SlotNo,Division,DataLen,PubEndTimeout)
       .Data(0) = Cmd      
       .Data(1) = Division
       If DataLen > 0 Then
-        DebugMessage "Prepare Command with " & DataLen & " data"
+        'DebugMessage "Prepare Command with " & DataLen & " data"
         For i = 0 to DataLen - 1
           .Data(2+i) = CANData.Data(i)
         Next
@@ -715,7 +715,7 @@ Function CANSendTACMD(Cmd,SubCmd,SlotNo,Division,DataLen)
          Next
       End If
       Memory.Set "CANData",CANData
-      DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
+      'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
     Else
       LogAdd "Command NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
       CANSendTACMD = False
@@ -725,4 +725,5 @@ Function CANSendTACMD(Cmd,SubCmd,SlotNo,Division,DataLen)
     DebugMessage "CANSendTACMD Error"
     CANSendTACMD = False
   End If  
-End Function'------------------------------------------------------------------
+End Function
+'------------------------------------------------------------------
