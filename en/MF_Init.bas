@@ -46,8 +46,9 @@ Sub OnLoadFrame()
   CreateDebugLogWindow
   Visual.Script("dhxWins").load_cansetup
   Visual.Script("LogGrid").load_messagebox  
-  Visual.Select("Layer_TabStrip").style.display = "none"
-  Visual.Select("Layer_MessageLog").style.display = "none"  
+  Visual.Script("SCIGrid").load_messagebox  
+  Visual.Select("Layer_Main").style.display = "none"
+  Visual.Select("Layer_Logs").style.display = "none"  
   Init_MFCommand
   Visual.Script("win").attachEvent "onClose" , Lang.GetRef( "btn_CanConnect" , 1)
 End Sub

@@ -74,6 +74,7 @@ Sub GetFirmwareInfo ( )
   
   If Command_GetFW($(PARAM_DL_ZIEL_APPL_2),AppMaj,AppMin) = 1 Then
     App2 = String.Format("%02X.%02X", AppMaj,AppMin)
+    GetSCILog "Firmware version:"
   Else
     App2 = "??.??"
   End If
@@ -395,6 +396,7 @@ Dim ExpectedValue ,CM_ID, CompType
     LogAdd "Invalid value"
   Else    
     Command_Prepare_SetupMeasure CM_ID,ExpectedValue,CompType,TIO_SETUPMEASURE
+    GetSCILog "Setup Meas"
   End If
 End Function
 
@@ -402,7 +404,7 @@ End Function
 
 Sub OnClick_ButtonGridClear( Reason )
   Visual.Script("LogGrid").clearAll()  
-  GetMultiLineData 1
+  Visual.Script("SCIGrid").clearAll()
 End Sub
 '------------------------------------------------------------------
 Sub OnClick_btnGetApp( Reason )  
@@ -446,6 +448,7 @@ Function OnClick_btn_measure( Reason )
     Case 6:
       LogAdd "Auto not implemented"    
   End Select
+  GetSCILog "Measure" 
 End Function
 
 '------------------------------------------------------------------
@@ -493,6 +496,7 @@ Function OnClick_btn_calibrate ( Reason )
     Memory.Set "PrepCmd", $(CMD_PREPARE_CALIBRATION)
     LogAdd "Calibration command started"
     System.Start "Wait_Measurement",TIO_CALIBRATE
+    GetSCILog "Calibrate"
   Else
     LogAdd "Calibration Error."
   End If
@@ -505,6 +509,7 @@ Function OnClick_btn_selftest ( Reason )
     Memory.Set "PrepCmd", $(CMD_PREPARE_SELFTEST)
     LogAdd "Self Test command started"
     System.Start "Wait_Measurement",TIO_SELFTEST
+    GetSCILog "SelfTest"
   Else
     LogAdd "Self Test Error."
   End If
@@ -884,9 +889,57 @@ Function LogAdd ( sMessage )
   Dim MsgId
   MsgId = Gridobj.uid()
   If NOT(sMessage = "") Then
-    Gridobj.addRow MsgId, ""& FormatDateTime(Date, vbShortDate) &","& FormatDateTime(Time, vbShortTime)&":"& String.Format("%02d ", Second(Time)) &","& sMessage
+    Gridobj.addRow MsgId, ""& FormatDateTime(Date, vbShortDate) &","& FormatDateTime(Time, vbShortTime)&":"& String.Format("%02d ", Second(Time)) &","& sMessage,0
     'Wish of SCM (automatically scroll to newest Msg)
     Gridobj.showRow( MsgId )
   End If  
   'DebugMessage sMessage
+End Function
+
+'-------------------------------------------------------------------
+Function GetSCILog ( Log )
+  Dim scitx,scirx,i
+ 
+  scitx = " TX: "
+  scirx = ")   RX: "
+  
+  'Get TX sci data'
+  GetSCIDataML 0  
+  If Memory.SCIArray.size > 0 Then  
+    scitx = scitx & Memory.SCIArray.size & " ("
+    For i = 0 To Memory.SCIArray.size - 1
+      scitx = scitx & String.Format ("%02X ",Memory.SCIArray.Data(i))
+      If i > 50 Then
+        DebugMessage "Too much data!"
+        Exit For
+      End If    
+    Next
+  
+  End If
+  'Get RX sci data
+  GetSCIDataML 1
+  If Memory.SCIArray.size > 0 Then  
+    scirx = scirx & Memory.SCIArray.size & " ("
+    For i = 0 To Memory.SCIArray.size - 1
+      scirx = scirx & String.Format ("%02X ",Memory.SCIArray.Data(i))
+      If i > 50 Then
+        DebugMessage "Too much data!"
+        Exit For
+      End If    
+    Next
+  End If
+  SCIMsg Log & scitx & scirx & ")"
+
+End Function
+'-------------------------------------------------------------------
+
+Function SCIMsg( sMessage )
+  Dim Gridobj
+  Set Gridobj = Visual.Script("SCIGrid")
+  Dim MsgId
+    If NOT(sMessage = "") Then
+    Gridobj.addRow MsgId, ""& FormatDateTime(Date, vbShortDate) &","& FormatDateTime(Time, vbShortTime)&":"& String.Format("%02d ", Second(Time)) &","& sMessage
+    'Wish of SCM (automatically scroll to newest Msg)
+    Gridobj.showRow( MsgId )
+  End If 
 End Function

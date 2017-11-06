@@ -30,6 +30,7 @@ If CANConfig.Config = 0 Then
     text = " [XFCU]"
     Visual.Select("btnAssignCANID").Style.Display  = "none"
     Visual.Select("opt_SlotNum").Style.Display  = "block"    
+    Visual.Select("btnReset").Style.Display  = "none"    
   End If
   
   DebugMessage "Selected Config :"&CANConfig.Config
@@ -45,8 +46,8 @@ If CANConfig.Config = 0 Then
   If InitCAN(CANID,CANConfig.Config) = 1 Then
     Visual.Script("dhxWins").unload()
     Visual.Select("Layer_CanSetup").Style.Display = "none"
-    Visual.Select("Layer_MessageLog").Style.Display = "block"
-    Visual.Select("Layer_TabStrip").Style.Display = "block"    
+    Visual.Select("Layer_Main").style.display = "block"
+    Visual.Select("Layer_Logs").Style.Display = "block"    
   Else
     MsgBox "Cannot Open CAN Manager on Net " & CANConfig.Net + 1 & "!"
   End If
@@ -728,15 +729,16 @@ Function CANSendTACMD(Cmd,SubCmd,SlotNo,Division,DataLen)
 End Function
 '------------------------------------------------------------------
 
-Function GetMultiLineData ( Reason )
+Function GetSCIDataML ( selection )
   dim SCIArray,i,exitloop,Timeout
+  dim scitx,scirx
   Set SCIArray = CreateObject( "MATH.Array" )
   
   exitloop = 0
   Timeout = 10
  'Get SCI TX
   Memory.CANData(0) = $(PARAM_START)
-  Memory.CANData(1) = 0
+  Memory.CANData(1) = selection
   DebugMessage "ML:Start"
   If CANSendGetFeed($(FEED_GET_DATA),PARAM_SCIDATA, Memory.SLOT_NO,1,2) = True Then      
       Do
@@ -744,7 +746,7 @@ Function GetMultiLineData ( Reason )
         Memory.CANData(0) = $(PARAM_LINE)
         CANSendGetFeed$(FEED_GET_DATA),PARAM_SCIDATA, Memory.SLOT_NO,1,1
         For i = 2 To Memory.CANDataLen-1
-          DebugMessage "ML:" & i
+          'DebugMessage "ML:" & i
           SCIArray.Add(Memory.CANData.Data(i))
         Next
         If Not Memory.CANDataLen = 8 Then
@@ -756,10 +758,10 @@ Function GetMultiLineData ( Reason )
           DebugMessage "ML:TimeOut"
         End If
       Loop Until exitloop = 1
-      DebugMessage "SCI Size:" & SCIArray.Size      
   Else
     DebugMessage "Error"
   End If
+  Memory.Set "SCIArray",SCIArray
 
 
 End Function

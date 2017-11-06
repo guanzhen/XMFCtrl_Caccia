@@ -19,7 +19,10 @@
   <link rel="stylesheet" type="text/css" href="../../../codebase/windows/dhtmlxwindows.css">
   <script src="../../../codebase/windows/dhtmlxwindows.js"></script>
   
-  
+  <!-- Dhtmlx TabBar -->
+  <link rel="stylesheet" type="text/css" href="../../../codebase/tabbar/dhtmlxtabbar.css">
+  <script src="../../../codebase/tabbar/dhtmlxtabbar.js"></script>
+
   <STYLE>
   html { background-color : #97A0A5;}
   h1 {font-size: 12pt;color:white;margin:5px 0px 5px 0px;font-family:arial}
@@ -29,11 +32,12 @@
   select {width:150px;}   
   #ButtonGridClear {margin-top:4px;float:left; width: 100px;height:34px;align:right;}
   //#ButtonDebugLog  {margin-top:4px;float:right; width: 150px;height:34px;}  
-  #Layer_TabStrip  { padding: 0px; height:62.5%; width:100%;}
-  #Layer_MessageLog { padding:2px;height:37 %; width :100%;}
-  #MessageLogObj { height:80%; width :100%;}  
-  #LayerCommand {float:left;width :49%; height:380px}
-  #LayerReply   {float:left;width :49%;height:380px}
+  #Layer_Main   {padding: 0px; height:62.5%; width:100%;}
+  #Layer_TabStrip   {padding: 2px; height:85% ;width:100%;}
+  #Layer_MessageLog {padding: 0px; height:100% ; width:100%;}
+  #MessageLogObj {height:100%; width :100%;}  
+  #LayerCommand  {float:left;width :49.5%; height:380px}
+  #LayerReply    {float:left;width :49.5%;height:380px}
   .GrpFrame
   {
     border-color:     white;
@@ -44,12 +48,13 @@
     margin:           2px;
     padding:          2px;
   }
+  #Layer_Logs   {padding: 0px; height:37% ;width:100%;}
   </STYLE>
 </HEAD>
 
 <BODY>
 
-<div id="Layer_TabStrip" class = "GrpFrame">
+  <div id="Layer_Main" class = "GrpFrame">
   <table>
     <td><span style = "color = white;font-size = 10pt;font-family=arial;margin=0px;">Can ID: 0x</span></td>
     <td><input id = "inputCANID" style = "width: 27px"></input></td>
@@ -154,13 +159,23 @@
   </div>  
 
   </div>
-  <div id="Layer_MessageLog">
-    <div id="MessageLogObj"></div>
-    <button id="ButtonGridClear" title="Clear content in message window.">Clear</button>
-    <!-- <button id="ButtonDebugLog" title="Creates Debug Window">Start DebugLog</button>         -->
-  </div>
   
+  
+  <div id="Layer_Logs">
+    <div id="Layer_TabStrip"  class = "GrpFrame">
+      <div id="Layer_MessageLog">
+        <div id="MessageLogObj"></div>
+        <!-- <button id="ButtonDebugLog" title="Creates Debug Window">Start DebugLog</button>         -->
+      </div>
+      <div id="Layer_SCILog">
+        <div id="SCILogObj"></div>
+      SCI Log
+      </div>
+    </div>
+    <button id="ButtonGridClear" title="Clear content in message window.">Clear</button>  
+  </div>
   <div id="Layer_CanSetup"></div>
+  
  
 
 </BODY>
@@ -228,5 +243,43 @@
   }
 </script>
 
+<!-- Create message log DHTMLX object-->
+<script language="JScript" type="text/javascript">
+  var SCIGrid = new dhtmlXGridObject('SCILogObj');
+  SCIGrid.load_messagebox = function()
+  {
+    SCIGrid.setHeader("Date,Time,Information");
+    SCIGrid.setImagePath("../../../codebase/grid/imgs/");
+    SCIGrid.setInitWidths( "100,100,*");
+    SCIGrid.setColAlign ("center,center,left");
+    SCIGrid.setColTypes ("ro,ro,ro");
+    SCIGrid.setColSorting ("na,na,na");
+    SCIGrid.setSkin ("red_gray");
+    SCIGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
+    SCIGrid.enableTooltips ("true,true,true");
+    SCIGrid.enableResizing ("false,false,false");
+    SCIGrid.enableMultiselect(false);
+    SCIGrid.enableAutoWidth (true);
+    SCIGrid.enableSmartRendering(true);
+    SCIGrid.init();
+  }
+</script>
+
+<script language = "JScript" type="text/javascript"> 
+  tabbar = new dhtmlXTabBar("Layer_TabStrip","top");
+  tabbar.enableAutoReSize( true );
+  tabbar.setImagePath("../../../codebase/tabbar/imgs/");
+  tabbar.setSkin("silver");
+  tabbar.addTab("main_tab1","Message Log");
+  tabbar.addTab("main_tab2","SCI Log");
+  tabbar.setContent( "main_tab1", Layer_MessageLog);
+  tabbar.setContent( "main_tab2", Layer_SCILog);
+
+  for ( var i = 1; i <= tabbar.getNumberOfTabs(); i++ )
+  {
+    tabbar.setCustomStyle( 'main_tab' + i, 'gray', 'black', 'font-size:10pt;font-family:Arial;font-weight: bold;' );
+  }
+  tabbar.setTabActive("main_tab1");
+</script>
 </HTML>
 
