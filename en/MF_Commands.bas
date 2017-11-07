@@ -543,6 +543,16 @@ Else
   LogAdd "No Endurance run to stop."
 End If
 End Function
+'------------------------------------------------------------------
+
+Function OnClick_ButtonDebugLog ( Reason )
+  If Memory.Exists("DebugLogWindow") Then
+    DebugWindowClose
+  Else 
+    CreateDebugLogWindow
+  End If
+
+End Function
 
 '------------------------------------------------------------------
 Function OnChange_opt_SlotNum ( Reason )
@@ -949,9 +959,10 @@ Function SCIMsg( sMessage )
   Dim Gridobj
   Set Gridobj = Visual.Script("SCIGrid")
   Dim MsgId
-    If NOT(sMessage = "") Then
+  If NOT(sMessage = "") Then
     Gridobj.addRow MsgId, ""& FormatDateTime(Date, vbShortDate) &","& FormatDateTime(Time, vbShortTime)&":"& String.Format("%02d ", Second(Time)) &","& sMessage
     'Wish of SCM (automatically scroll to newest Msg)
     Gridobj.showRow( MsgId )
+    DebugMessage sMessage
   End If 
 End Function
