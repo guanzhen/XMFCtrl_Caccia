@@ -117,9 +117,25 @@ Dim cmd
     
     If measureOK = 1 Then
       Get_Measurements
-    End If    
+    End If
     Memory.Set "measureOK",measureOK
     Memory.PrepCmd_MeasureInProgress = 0
+    Dim LogMsg
+    Select Case Memory.PrepCmd
+      Case PREPARE_NONE :
+      
+      Case $(CMD_PREPARE_SETUP_MEASURE) :
+        LogMsg = "Setup Measure"
+      Case $(CMD_PREPARE_MEASURE) :
+        LogMsg = "Prepare Measure"
+      Case $(CMD_PREPARE_SELFTEST) :
+        LogMsg = "Selftest"
+      Case $(CMD_PREPARE_CALIBRATION) :
+        LogMsg = "Calibration"
+      Case $(CMD_PREPARE_MEASURE_AUTO) :
+        LogMsg = "Auto Meas"
+    End Select
+    GetSCILog LogMsg
 End Function 
 '------------------------------------------------------------------
 Function Get_Measurements ( )
@@ -396,7 +412,6 @@ Dim ExpectedValue ,CM_ID, CompType
     LogAdd "Invalid value"
   Else    
     Command_Prepare_SetupMeasure CM_ID,ExpectedValue,CompType,TIO_SETUPMEASURE
-    GetSCILog "Setup Meas"
   End If
 End Function
 
@@ -448,7 +463,6 @@ Function OnClick_btn_measure( Reason )
     Case 6:
       LogAdd "Auto not implemented"    
   End Select
-  GetSCILog "Measure" 
 End Function
 
 '------------------------------------------------------------------
@@ -496,7 +510,6 @@ Function OnClick_btn_calibrate ( Reason )
     Memory.Set "PrepCmd", $(CMD_PREPARE_CALIBRATION)
     LogAdd "Calibration command started"
     System.Start "Wait_Measurement",TIO_CALIBRATE
-    GetSCILog "Calibrate"
   Else
     LogAdd "Calibration Error."
   End If
@@ -509,7 +522,6 @@ Function OnClick_btn_selftest ( Reason )
     Memory.Set "PrepCmd", $(CMD_PREPARE_SELFTEST)
     LogAdd "Self Test command started"
     System.Start "Wait_Measurement",TIO_SELFTEST
-    GetSCILog "SelfTest"
   Else
     LogAdd "Self Test Error."
   End If
