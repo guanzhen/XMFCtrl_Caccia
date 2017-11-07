@@ -532,7 +532,7 @@ Function CANSendGetFeed(Cmd,SubCmd,SlotNo,Division,DataLen)
     End If
     Memory.Set "CANData",CANData      
     Memory.CANDataLen = CanReadArg.Length
-    DebugMessage Memory.CANDataLen
+    'DebugMessage Memory.CANDataLen
     'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
     CanManager.Deliver = True
   Else
@@ -739,10 +739,10 @@ Function GetSCIDataML ( selection )
  'Get SCI TX
   Memory.CANData(0) = $(PARAM_START)
   Memory.CANData(1) = selection
-  DebugMessage "ML:Start"
+  'DebugMessage "ML:Start"
   If CANSendGetFeed($(FEED_GET_DATA),PARAM_SCIDATA, Memory.SLOT_NO,1,2) = True Then      
       Do
-        DebugMessage "ML:Line"        
+        'DebugMessage "ML:Line"        
         Memory.CANData(0) = $(PARAM_LINE)
         CANSendGetFeed$(FEED_GET_DATA),PARAM_SCIDATA, Memory.SLOT_NO,1,1
         For i = 2 To Memory.CANDataLen-1
@@ -759,7 +759,7 @@ Function GetSCIDataML ( selection )
         End If
       Loop Until exitloop = 1
   Else
-    DebugMessage "Error"
+    'DebugMessage "Error"
   End If
   Memory.Set "SCIArray",SCIArray
 

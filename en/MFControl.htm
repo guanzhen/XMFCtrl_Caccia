@@ -30,7 +30,7 @@
   button {width:150px}
   input {width:150px;}
   select {width:150px;}   
-  #ButtonGridClear {margin-top:134px;float:right; width: 100px;height:34px;align:right;}
+  #ButtonGridClear {margin-top:20px;float:right; width: 100px;height:34px;align:right;}
   #ButtonDebugLog  {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
   #Layer_Main   {padding: 0px; height:62.5%; width:100%;}
   #Layer_TabStrip   {padding: 2px; height:89% ;width:100%;}
@@ -67,7 +67,7 @@
   <div id="LayerCommand" class = "GrpFrame">
   <!-- Measure Component~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     <div id="SubLayerMeasure" >
-      <h1>Measurement</h1>
+      <h1>Measurement Controls</h1>
      <table> 
      <tr><td>Contact Module</td>
         <td><select id = "opt_CMID">
@@ -101,6 +101,10 @@
     <tr id="param_numofcycle"><td>NumOfCycles(opt)</td> <td><input id = "ip_paramnumofcycles" ></input></td>
     <tr id="param_polarity"><td>Polarity(Opt)</td> <td><input id = "ip_parampolarity" ></input></td>
     <tr><td><button id="btn_measure"> Measure </button>    
+    <tr>
+     <td><button style="width:150px" id="btn_endurance"> Endurance</button>
+     <td><button style="width:150px" id="btn_endu_stop"> Stop </button>
+    </tr>
     </table>
     </div>
     <hr> 
@@ -121,9 +125,6 @@
       <td><button style="width:150px" id="btn_selftest"> Self Test </button><br></td>
       </tr>
       </table>
-      <hr> 
-      <button style="width:150px" id="btn_endurance"> Endurance</button>
-      <button style="width:150px" id="btn_endu_stop"> Stop </button>
     </div>
   </div>
   

@@ -963,6 +963,6 @@ Function SCIMsg( sMessage )
     Gridobj.addRow MsgId, ""& FormatDateTime(Date, vbShortDate) &","& FormatDateTime(Time, vbShortTime)&":"& String.Format("%02d ", Second(Time)) &","& sMessage
     'Wish of SCM (automatically scroll to newest Msg)
     Gridobj.showRow( MsgId )
-    DebugMessage sMessage
+    DebugMessage "SCI: " & sMessage
   End If 
 End Function
