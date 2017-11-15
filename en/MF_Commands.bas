@@ -960,7 +960,7 @@ Function SCIMsg( sMessage )
   Set Gridobj = Visual.Script("SCIGrid")
   Dim MsgId
   If NOT(sMessage = "") Then
-    Gridobj.addRow MsgId, ""& FormatDateTime(Date, vbShortDate) &","& FormatDateTime(Time, vbShortTime)&":"& String.Format("%02d ", Second(Time)) &","& sMessage
+    Gridobj.addRow MsgId, ""& FormatDateTime(Date, vbShortDate) &","& FormatDateTime(Time, vbShortTime)&":"& String.Format("%02d ", Second(Time)) &","& sMessage,0
     'Wish of SCM (automatically scroll to newest Msg)
     Gridobj.showRow( MsgId )
     DebugMessage "SCI: " & sMessage

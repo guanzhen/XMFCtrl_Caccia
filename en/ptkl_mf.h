@@ -13,11 +13,10 @@
 *                     0.03 , Added PARAM_MEAS_VALUE_MIN and PARAM_MEAS_VALUE_MAX
 *                     2017-10-05
 *                     0.04 , Renumber params 0x80 - 0x97, to align with Interfacespec_MeasurementFeeder_MB_V3f.
+*                     2017-11-14
+*                     0.05 , Added default parameters 0x63 to 0x67
 *  \b Description: \n
 */
-
-#ifndef PTKL_MF_H_
-#define PTKL_MF_H_
 
     //Service Commands
 
@@ -39,10 +38,15 @@
         #define PUB_CM_NOT_CONNECTED              0xD1
         #define PUB_WRONG_POLARITY                0xD2
         #define PUB_MAX_VOLTAGE                   0xD3
+        #define PUB_MB_ERROR                      0xD4
+        #define PUB_ERROR_ST_CM_CAP               0xD5
+        #define PUB_ERROR_ST_CM_RES               0xD6
+        #define PUB_ERROR_ST_SC_RES               0xD7
 
     //Params : IOs
 
         #define PARAM_INP_COVER                   0x30
+        #define PARAM_MB_TEMP                     0x31
 
     //Param: Send
         #define PARAM_MAX_VOLTAGE                 0x70
@@ -90,12 +94,15 @@
 
         #define PARAM_DEFAULT_CURRENT             0x60
         #define PARAM_DEFAULT_VOLTAGE             0x61
-        #define MEAS_TOLERANCE_HIGHEND            0x62
-        #define MEAS_TOLERANCE_MIDRANGE           0x63
+        #define PARAM_TOLERANCE_HIGHEND           0x62
+        #define PARAM_TOLERANCE_MIDRANGE          0x63
+        #define PARAM_DEFAULT_RES_ALL_WIRE        0x64
+        #define PARAM_DEFAULT_RES_CONTACT_BLK     0x65
+        #define PARAM_DEFAULT_CAP_CONTACT_BLK     0x66
+        #define PARAM_DEFAULT_RES_SHORTCIRCUIT    0x67
+        
 
     // Param : EEPROM Targets
         #define EEPROM_CM_1                       0x05
         #define EEPROM_CM_2                       0x06
         #define EEPROM_CM_3                       0x07
-
-#endif

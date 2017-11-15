@@ -232,8 +232,8 @@ Function Handle_PubMsg_FCU( CanReadArg )
   End If
   
   If Bit_Error = 1 Then
-    OutputDebug = OutputDebug & "NOK:" & GetErrorInfo( CanReadArg )
-    OutputLog = OutputLog & "NOK:" & GetErrorInfo( CanReadArg )
+    OutputDebug = OutputDebug & "NOK:" & GetErrorInfo( CanReadArg ) & "(" & CanReadArg.Format(CFM_SHORT) & ")"
+    OutputLog = OutputLog & "NOK:" & GetErrorInfo( CanReadArg ) & "(" & CanReadArg.Format(CFM_SHORT) & ")"
   Else
     OutputDebug = OutputDebug & "OK ("  & CanReadArg.Format(CFM_SHORT) & ")"
     OutputLog = OutputLog & "OK ("  & CanReadArg.Format(CFM_SHORT) & ")"
@@ -258,7 +258,8 @@ Function Handle_PubMsg_FCU( CanReadArg )
     
     Memory.PrepCmd_Error = Bit_Error
     If Bit_Error = 1 Then
-      Memory.Set "CanErr",CanReadArg.Data(1)
+      Memory.Set "CanErr",CanReadArg.Data(1)      
+      LogAdd OutputLog
     End If
 
   End If
@@ -285,7 +286,7 @@ Function Handle_PubMsg_Standalone( CanReadArg )
     End If
   Else
     OutputDebug = "Sync Pub Msg "
-    If Bit_Start = 1 Then
+    If Bit_Active = 1 Then
       OutputDebug = OutputDebug & "start: "
       OutputLog = OutputLog & "Operation started  "
     Else
@@ -295,10 +296,10 @@ Function Handle_PubMsg_Standalone( CanReadArg )
   End If
   
   If Bit_Error = 1 Then
-    OutputDebug = OutputDebug & "NOK:" & GetErrorInfo( CanReadArg )
-    OutputLog = OutputLog & "NOK:" & GetErrorInfo( CanReadArg )
+    OutputDebug = OutputDebug & "NOK: " & GetErrorInfo( CanReadArg ) & "(" & CanReadArg.Format(CFM_SHORT) & ")"
+    OutputLog = OutputLog & "NOK: " & GetErrorInfo( CanReadArg ) & "(" & CanReadArg.Format(CFM_SHORT) & ")"
   Else
-    OutputDebug = OutputDebug & "OK ("  & CanReadArg.Format(CFM_SHORT) & ")"
+    OutputDebug = OutputDebug & "OK ("  & CanReadArg.Format(CFM_SHORT) & ")" 
     OutputLog = OutputLog & "OK ("  & CanReadArg.Format(CFM_SHORT) & ")"
   End If    
   
@@ -319,6 +320,7 @@ Function Handle_PubMsg_Standalone( CanReadArg )
     Memory.PrepCmd_Error = Bit_Error
     If Bit_Error = 1 Then
       Memory.Set "CanErr",CanReadArg.Data(1)
+      LogAdd OutputLog
     End If
 
   End If
@@ -345,6 +347,7 @@ Function GetErrorInfo ( CanReadArg )
       ErrData2 = CanReadArg.Data(CanReadArg.Length-1)  
     End If
   End If
+  
   'DebugMessage "Error num: " & String.Format("%2x",ErrCode)
   Select Case ErrCode
   Case $(ACK_NOK): ErrorMsg = "Command Error (NOK)"
@@ -355,6 +358,14 @@ Function GetErrorInfo ( CanReadArg )
   Case $(ACK_TOO_MANY_PREPARES): ErrorMsg = "Too many Prepares"
   Case $(ACK_TIMEOUT_SUBSYSTEM): ErrorMsg = "Timeout Subsystem"
   Case $(ACK_NOT_IMPLEMENTED): ErrorMsg = "Not Implemented"
+  
+  Case $(PUB_ERROR_ST_CM_CAP): ErrorMsg = "Self Test Contact Module Capacitance too High"
+  Case $(PUB_ERROR_ST_CM_RES): ErrorMsg = "Self Test Contact Module Resistance too High"
+  Case $(PUB_ERROR_ST_SC_RES): ErrorMsg = "Self Test Short Circuit Resistance too High"
+  Case $(PUB_MAX_VOLTAGE): ErrorMsg = "Max Voltage too high"
+  Case $(PUB_WRONG_POLARITY): ErrorMsg = "Wrong component polarity"
+  Case $(PUB_CM_NOT_CONNECTED): ErrorMsg = "Contact Module not present"
+  
   'Case $(ACK_WRONG_LENGTH): ErrorMsg = "Wrong Length"      
 
   Case Else: ErrorMsg = "Other errors"
