@@ -115,9 +115,9 @@ Dim cmd
     'End Loop Do while Memory.PrepCmd_Inprogress = 1     
     Loop Until loop_enable = 0 
     
-    If measureOK = 1 Then
+    'If measureOK = 1 Then
       Get_Measurements
-    End If
+    'End If
     Memory.Set "measureOK",measureOK
     Memory.PrepCmd_MeasureInProgress = 0
     Dim LogMsg
@@ -149,7 +149,7 @@ Function Get_Measurements ( )
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_CONTACT_RES),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
       Visual.Select("op_paramContactres").Value = String.Format("%G",Value)
-      ResultLog = "Setup Measure: Contact Res :" & String.Format("%c",Value)
+      ResultLog = "Setup Measure: Contact Res :" & Value
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_SETUP_MEAS_CAPACITY),Memory.SLOT_NO,1,0
        Value = String.Format("%G",GetFloatCanData)
@@ -209,7 +209,7 @@ Function Get_Measurements ( )
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE2),Memory.SLOT_NO,1,0
       Value = Memory.CanData(2)
       Visual.Select("op_paramcomptype2").Value = String.Format("%c",Value)
-      ResultLog = "CompType2 :" & String.Format("%c",Value)      
+      ResultLog = ResultLog & " CompType2 :" & String.Format("%c",Value)      
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE2),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
@@ -323,7 +323,7 @@ Function Get_Measurements ( )
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE2),Memory.SLOT_NO,1,0
       Value = Memory.CanData(2)
       Visual.Select("op_paramcomptype2").Value = String.Format("%c",Value)
-      ResultLog = "CompType2 :" & String.Format("%c",Value)      
+      ResultLog = ResultLog & " CompType2 :" & String.Format("%c",Value)      
       
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_VALUE2),Memory.SLOT_NO,1,0
       Value = String.Format("%G",GetFloatCanData)
@@ -443,6 +443,11 @@ Function OnClick_btnReset ( Reason )
   End if
 End Function
 
+'------------------------------------------------------------------
+
+Function OnClick_ButtonGetSCIbuffer( Reason )
+  GetSCILog "Data: "
+End Function 
 '------------------------------------------------------------------
 
 Function OnClick_btn_measure( Reason )
