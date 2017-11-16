@@ -38,7 +38,8 @@
   #Layer_MessageLog {padding: 0px; height:100% ; width:100%;}
   #MessageLogObj {height:100%; width :100%;}  
   #LayerCommand  {float:left;width :49.5%; height:380px}
-  #LayerReply    {float:left;width :49.5%;height:380px}
+  #LayerReply    {float:left;width :49.5%;height:380px}  
+  #LayerPeripherals { position: absolute; top:301px;}
   .GrpFrame
   {
     border-color:     white;
@@ -157,7 +158,15 @@
       <tr id="param_Freq">     <td>Frequency</td>              <td><input id = "op_paramFreq" ></input> Hz</td>
       
     </table>  
-    </div>  
+    </div>
+    <div id="LayerPeripherals">
+      <hr>
+      <h1>Peripherals</h1>
+      <table>
+      <tr><td><button style="width:150px" id="btn_getcover"> Get Cover Status </button></td><td><img id="ledcover" class="LedImgStyle"  src="./icon/led_black.png"></img></td></tr>
+      <tr><td><button style="width:150px" id="btn_gettemp"> Get Temperature</button></td><td><input id = "op_paramtemp" style ="width:50px;"> Degrees</input></td></tr>
+      </table>
+    </div>
   </div>  
 
   </div>
@@ -178,8 +187,7 @@
       </div>
     </div>
   </div>
-  <div id="Layer_CanSetup"></div>
-  
+  <div id="Layer_CanSetup"></div> 
  
 
 </BODY>

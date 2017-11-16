@@ -449,7 +449,6 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
          Next
       End If
       Memory.Set "CANData",CANData
-      Memory.Set "CanReadArg",CanReadArg
       'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
     Else
       LogAdd "Command NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
@@ -460,6 +459,7 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
     DebugMessage "CANSendGetMC Error"
     CANSendGetMC = False
   End If
+  Memory.Set "CanReadArg",CanReadArg
   
 End Function
 '------------------------------------------------------------------

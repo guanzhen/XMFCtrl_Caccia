@@ -548,6 +548,42 @@ Else
   LogAdd "No Endurance run to stop."
 End If
 End Function
+
+'------------------------------------------------------------------
+
+Function OnClick_btn_getcover ( Reason )
+  Dim CM_ID, CanReadArg
+  CM_ID = Visual.Select("opt_CMID").Value  
+  If CANSendGetMC ($(CMD_GET_DATA),$(PARAM_INP_COVER),Memory.SLOT_NO,CM_ID,0) = True Then
+    If Memory.CanReadArg.Data(2) = 1 Then
+      ChgLedStatus "ledcover",1
+    Else
+      ChgLedStatus "ledcover",0
+    End If
+  Else
+    Memory.Get "CanReadArg",CanReadArg
+    LogAdd "Error: " & GetErrorInfo( CanReadArg )
+    ChgLedStatus "ledcover",0
+  End If
+  
+End Function
+
+'------------------------------------------------------------------
+
+Function OnClick_btn_gettemp ( Reason )
+  Dim CM_ID, CanReadArg, Temp
+  CM_ID = Visual.Select("opt_CMID").Value  
+  If CANSendGetMC ($(CMD_GET_DATA),$(PARAM_MB_TEMP),Memory.SLOT_NO,CM_ID,0) = True Then
+    Temp = Lang.MakeInt(Memory.CanReadArg.Data(2),Memory.CanReadArg.Data(3))
+    Visual.Select("op_paramtemp").Value = Temp
+  Else
+    Memory.Get "CanReadArg",CanReadArg
+    LogAdd "Error: " & GetErrorInfo( CanReadArg )
+    Temp = "??"
+  End If
+  Visual.Select("op_paramtemp").Value = Temp
+End Function
+
 '------------------------------------------------------------------
 
 Function OnClick_ButtonDebugLog ( Reason )
@@ -841,6 +877,16 @@ Function ChangeVisibility_ComponentSelect ( CompType )
     'case auto: all none
   End Select
 End Function 
+
+Function ChgLedStatus ( Var_ID , OnOff )
+		If OnOff = 1 Then
+  		Visual.Select(Var_ID).Src = "./icon/led_green.png"
+		ElseIf OnOff = 0 Then
+      Visual.Select(Var_ID).Src = "./icon/led_black.png"
+    Else
+      Visual.Select(Var_ID).Src = "./icon/led_black.png"
+		End If
+End Function
 
 '------------------------------------------------------------------
 ' Endurance Run Function ------------------------------------------
