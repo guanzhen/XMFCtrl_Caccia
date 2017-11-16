@@ -557,15 +557,18 @@ Function OnClick_btn_getcover ( Reason )
   If CANSendGetMC ($(CMD_GET_DATA),$(PARAM_INP_COVER),Memory.SLOT_NO,CM_ID,0) = True Then
     If Memory.CanReadArg.Data(2) = 1 Then
       ChgLedStatus "ledcover",1
+      LogAdd "Cover Open"
     Else
       ChgLedStatus "ledcover",0
+      LogAdd "Cover Closed"
+
     End If
   Else
     Memory.Get "CanReadArg",CanReadArg
     LogAdd "Error: " & GetErrorInfo( CanReadArg )
     ChgLedStatus "ledcover",0
   End If
-  
+  GetSCILog "Get Cover Slot: "
 End Function
 
 '------------------------------------------------------------------
@@ -576,12 +579,15 @@ Function OnClick_btn_gettemp ( Reason )
   If CANSendGetMC ($(CMD_GET_DATA),$(PARAM_MB_TEMP),Memory.SLOT_NO,CM_ID,0) = True Then
     Temp = Lang.MakeInt(Memory.CanReadArg.Data(2),Memory.CanReadArg.Data(3))
     Visual.Select("op_paramtemp").Value = Temp
+    LogAdd "Temperature: " & Temp
+
   Else
     Memory.Get "CanReadArg",CanReadArg
     LogAdd "Error: " & GetErrorInfo( CanReadArg )
     Temp = "??"
   End If
   Visual.Select("op_paramtemp").Value = Temp
+  GetSCILog "Get Cover Temp: "
 End Function
 
 '------------------------------------------------------------------
