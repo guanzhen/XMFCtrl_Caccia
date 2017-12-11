@@ -15,6 +15,8 @@
 *                     0.04 , Renumber params 0x80 - 0x97, to align with Interfacespec_MeasurementFeeder_MB_V3f.
 *                     2017-11-14
 *                     0.05 , Added default parameters 0x63 to 0x67
+*                     2017-12-11
+*                     0.06 , Added PARAM_DL_ZIEL_APPL_3 0x30
 *  \b Description: \n
 */
 
@@ -60,6 +62,8 @@
         #define PARAM_NOMINAL_CAPACITY            0x78 
 
     //Param: Get
+        #define PARAM_DL_ZIEL_APPL_3              0x30
+        
         #define PARAM_SELFTEST_CONTACT_RES        0x80
         #define PARAM_SELFTEST_CAPACITY           0x81
         #define PARAM_SELFTEST_RESISTANCE         0x82

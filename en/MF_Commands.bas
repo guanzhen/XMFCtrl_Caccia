@@ -59,11 +59,11 @@ End Function
 
 Sub GetFirmwareInfo ( )
   Dim AppMaj,AppMin
-  Dim App,Bios,App2
+  Dim Bios,App1,App2,App3
   If Command_GetFW($(PARAM_DL_ZIEL_APPL),AppMaj,AppMin) = 1 Then
-    App = String.Format("%02X.%02X", AppMaj,AppMin)
+    App1 = String.Format("%02X.%02X", AppMaj,AppMin)
   Else
-    App = "??.??"
+    App1 = "??.??"
   End If
   
   If Command_GetFW($(PARAM_DL_ZIEL_BIOS),AppMaj,AppMin) = 1 Then
@@ -74,11 +74,18 @@ Sub GetFirmwareInfo ( )
   
   If Command_GetFW($(PARAM_DL_ZIEL_APPL_2),AppMaj,AppMin) = 1 Then
     App2 = String.Format("%02X.%02X", AppMaj,AppMin)
-    GetSCILog "Firmware version:"
+    GetSCILog "Firmware App2:"
   Else
     App2 = "??.??"
   End If
-  LogAdd "Firmware version: Bios:"& Bios & " App: " & App & " App2: " & App2
+  
+  If Command_GetFW($(PARAM_DL_ZIEL_APPL_3),AppMaj,AppMin) = 1 Then
+    App2 = String.Format("%02X.%02X", AppMaj,AppMin)
+    GetSCILog "Firmware App3:"
+  Else
+    App2 = "??.??"
+  End If
+  LogAdd "Firmware version: Bios:"& Bios & " App: " & App1 & " App2: " & App2 & "App3: " & App3
 End Sub
 
 '------------------------------------------------------------------
