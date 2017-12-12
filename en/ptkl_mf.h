@@ -63,7 +63,12 @@
 
     //Param: Get
         #define PARAM_DL_ZIEL_APPL_3              0x30
-        
+
+        #define PARAM_CAL_R_1KHz                  0x50
+        #define PARAM_CAL_X_1KHz                  0x51
+        #define PARAM_CAL_R_10KHz                 0x52
+        #define PARAM_CAL_X_10KHz                 0x53
+
         #define PARAM_SELFTEST_CONTACT_RES        0x80
         #define PARAM_SELFTEST_CAPACITY           0x81
         #define PARAM_SELFTEST_RESISTANCE         0x82
@@ -93,7 +98,6 @@
         #define PARAM_MEAS_FREQUENCY              0x9B
         #define PARAM_MEAS_FWD_VOLTAGE            0x9C
         #define PARAM_MEAS_FWD_CURRENT            0x9D
-
     // Param: Defaults
 
         #define PARAM_DEFAULT_CURRENT             0x60

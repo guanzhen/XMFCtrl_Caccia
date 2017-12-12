@@ -80,12 +80,12 @@ Sub GetFirmwareInfo ( )
   End If
   
   If Command_GetFW($(PARAM_DL_ZIEL_APPL_3),AppMaj,AppMin) = 1 Then
-    App2 = String.Format("%02X.%02X", AppMaj,AppMin)
+    App3 = String.Format("%02X.%02X", AppMaj,AppMin)
     GetSCILog "Firmware App3:"
   Else
-    App2 = "??.??"
+    App3 = "??.??"
   End If
-  LogAdd "Firmware version: Bios:"& Bios & " App: " & App1 & " App2: " & App2 & "App3: " & App3
+  LogAdd "Firmware version: Bios:"& Bios & " App: " & App1 & " App2: " & App2 & " App3: " & App3
 End Sub
 
 '------------------------------------------------------------------
@@ -305,6 +305,26 @@ Function Get_Measurements ( )
       
       
     Case $(CMD_PREPARE_CALIBRATION) :
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_CAL_R_1KHz),Memory.SLOT_NO,1,0
+      Value = String.Format("%G",GetFloatCanData)
+      Visual.Select("op_paramres1k").Value = Value
+      ResultLog = ResultLog & " Value:" & Value  
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_CAL_X_1KHz),Memory.SLOT_NO,1,0
+      Value = String.Format("%G",GetFloatCanData)
+      Visual.Select("op_paramreac1k").Value = Value
+      ResultLog = ResultLog & " Value:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_CAL_R_10KHz),Memory.SLOT_NO,1,0
+      Value = String.Format("%G",GetFloatCanData)
+      Visual.Select("op_paramres10k").Value = Value
+      ResultLog = ResultLog & " Min:" & Value
+      
+      CANSendGetMC $(CMD_GET_DATA),$(PARAM_CAL_X_10KHz),Memory.SLOT_NO,1,0
+      Value = String.Format("%G",GetFloatCanData)
+      Visual.Select("op_paramreac10k").Value = Value
+      ResultLog = ResultLog & " Max :" & Value
+      
     'NO param to read
     Case $(CMD_PREPARE_MEASURE_AUTO) :
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE1),Memory.SLOT_NO,1,0
@@ -795,6 +815,10 @@ Function ResultChangeVisibility ( ProcessType )
   Visual.Select("param_I").Style.Display = "None"  
   Visual.Select("param_Phi").Style.Display = "None"  
   Visual.Select("param_Freq").Style.Display = "None"  
+  Visual.Select("param_res1k").Style.Display = "None"  
+  Visual.Select("param_reac1k").Style.Display = "None"  
+  Visual.Select("param_res10k").Style.Display = "None"  
+  Visual.Select("param_reac10k").Style.Display = "None"  
   Select Case ProcessType 
   Case PREPARE_NONE:
   'none
@@ -831,6 +855,12 @@ Function ResultChangeVisibility ( ProcessType )
   Visual.Select("param_Phi").Style.Display = "Block"
   Visual.Select("param_Freq").Style.Display = "Block"
   'For debug
+  Case $(CMD_PREPARE_CALIBRATION):
+  Visual.Select("param_res1k").Style.Display = "Block"  
+  Visual.Select("param_reac1k").Style.Display = "Block"  
+  Visual.Select("param_res10k").Style.Display = "Block"  
+  Visual.Select("param_reac10k").Style.Display = "Block"
+  
   Case PREPARE_ALL:
   Visual.Select("param_ContactRes").Style.Display = "Block"
   Visual.Select("param_CapacityCM").Style.Display = "Block"
@@ -849,6 +879,10 @@ Function ResultChangeVisibility ( ProcessType )
   Visual.Select("param_I").Style.Display = "Block"  
   Visual.Select("param_Phi").Style.Display = "Block"  
   Visual.Select("param_Freq").Style.Display = "Block"  
+  Visual.Select("param_res1k").Style.Display = "Block"  
+  Visual.Select("param_reac1k").Style.Display = "Block"  
+  Visual.Select("param_res10k").Style.Display = "Block"  
+  Visual.Select("param_reac10k").Style.Display = "Block"
   
   End Select
   Visual.Select("LayerResults").Style.Display = "Block"
