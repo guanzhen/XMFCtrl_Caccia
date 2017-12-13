@@ -86,7 +86,6 @@
           <option value = "3">Inductor</option>
           <option value = "4">Forward Voltage</option>
           <option value = "5">Polar Cap</option>
-          <option value = "6">Auto Measurement</option>
         </select>
       </tr>
        <tr><td>
@@ -96,12 +95,12 @@
     </table>
     <hr> 
     <table>
-    <tr id="param_voltage"><td>Voltage</td> <td><input id = "ip_paramvoltage" ></input> V</td>    
+    <tr id="param_voltage"><td>Max Voltage</td> <td><input id = "ip_paramvoltage" ></input> V</td>    
     <tr id="param_current"><td>Current</td> <td><input id = "ip_paramcurrent" ></input> A</td>
     <tr id="param_result"><td>Expected Comp Value</td> <td><input id = "ip_paramresults" ></input> Ohm/F/H</td>
     <tr id="param_maxvoltage"><td>MaxVoltage</td> <td><input id = "ip_parammaxvoltage" ></input> V</td>
     <tr id="param_numofcycle"><td>NumOfCycles(opt)</td> <td><input id = "ip_paramnumofcycles" ></input></td>
-    <tr id="param_polarity"><td>Polarity(Opt)</td> <td><input id = "ip_parampolarity" ></input></td>
+    <tr id="param_polarity"><td>Polarity(Opt)</td> <td><input id = "ip_parampolarity" ></input> [0 = Normal, 1 = Inverted]</td>
     <tr><td><button id="btn_measure"> Measure </button>    
     <tr>
      <td><button style="width:150px" id="btn_endurance"> Endurance</button>

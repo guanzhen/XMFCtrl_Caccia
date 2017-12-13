@@ -491,9 +491,7 @@ Function OnClick_btn_measure( Reason )
     Case 4:
       PrepareMeasureDiode
     Case 5:
-      LogAdd "PCAP not implemented"
-    Case 6:
-      LogAdd "Auto not implemented"    
+      PrepareMeasurePolarCap
   End Select
 End Function
 
@@ -520,7 +518,7 @@ Function PrepareMeasureDiode ( )
   Dim CompType,CM_ID, Current,Voltage,Polarity
   Voltage = Math.CastFloat2Long(Visual.Select("ip_paramvoltage").Value)
   Current = Math.CastFloat2Long(Visual.Select("ip_paramcurrent").Value)
-  
+  Polarity = Visual.Select("ip_parampolarity").Value
   CM_ID = Visual.Select("opt_CMID").Value  
   CompType = Visual.Select("optMeasureCommand").Value
   If NOT IsNumeric(Voltage) Then
@@ -528,16 +526,33 @@ Function PrepareMeasureDiode ( )
   Elseif Not IsNumeric(Current) Then
     LogAdd "Invalid Current value"    
   Else
-    Command_Prepare_Meas_FWDVOLTAGE CM_ID,Voltage,Current,CompType,TIO_MEASURE
+    Command_Prepare_Meas_FWDVOLTAGE CM_ID,Voltage,Current,CompType,Polarity,TIO_MEASURE
   End If
 
 End Function
 '------------------------------------------------------------------
+Function PrepareMeasurePolarCap ()
 
+  Dim CompType,CM_ID, Capacitance,Voltage,Polarity
+  Voltage = Math.CastFloat2Long(Visual.Select("ip_parammaxvoltage").Value)
+  Capacitance = Math.CastFloat2Long(Visual.Select("ip_paramresults").Value)
+  Polarity = Visual.Select("ip_parampolarity").Value
+  CM_ID = Visual.Select("opt_CMID").Value  
+  CompType = Visual.Select("optMeasureCommand").Value
+  If NOT IsNumeric(Voltage) Then
+    LogAdd "Invalid Voltage value"    
+  Elseif Not IsNumeric(Capacitance) Then
+    LogAdd "Invalid Capacitance value"    
+  Else
+    Command_Prepare_Meas_PolarCap CM_ID,Voltage,Capacitance,CompType,Polarity,TIO_MEASURE
+  End If
+
+End Function
+'------------------------------------------------------------------
 Function OnClick_btn_calibrate ( Reason )
   Dim SubCmd
-   SubCmd = Visual.Select("opt_SubCmd").Value
-   Memory.CANData(0) = SubCmd
+  SubCmd = Visual.Select("opt_SubCmd").Value
+  Memory.CANData(0) = SubCmd
   If CANSendPrepareCMD($(CMD_PREPARE_CALIBRATION),1,Memory.SLOT_NO,1,1,250) = True Then
     Memory.Set "PrepCmd", $(CMD_PREPARE_CALIBRATION)
     LogAdd "Calibration command started"
@@ -697,7 +712,13 @@ Function Command_Prepare_Measure (CM_ID,ExpectedValue,ComponentType,NumofCycles,
 End Function
 
 '------------------------------------------------------------------
-Function Command_Prepare_Meas_FWDVOLTAGE (CM_ID,Current,Voltage,ComponentType,TimeOut)
+Function Command_Prepare_Meas_FWDVOLTAGE (CM_ID,Current,Voltage,ComponentType,Polarity,TimeOut)
+  Memory.CANData(0) = Lang.GetByte(ComponentType,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),Memory.SLOT_NO,CM_ID,1  
+  
+  Memory.CANData(0) = Lang.GetByte(Polarity,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_POLARITY),Memory.SLOT_NO,CM_ID,1  
+  
   Memory.CANData(0) = Lang.GetByte(Current,0)
   Memory.CANData(1) = Lang.GetByte(Current,1)
   Memory.CANData(2) = Lang.GetByte(Current,2)
@@ -709,10 +730,7 @@ Function Command_Prepare_Meas_FWDVOLTAGE (CM_ID,Current,Voltage,ComponentType,Ti
   Memory.CANData(2) = Lang.GetByte(Voltage,2)
   Memory.CANData(3) = Lang.GetByte(Voltage,3)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_VOLTAGE),Memory.SLOT_NO,CM_ID,4  
-  
-  Memory.CANData(0) = Lang.GetByte(ComponentType,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),Memory.SLOT_NO,CM_ID,1  
-   
+
   If CANSendPrepareCMD($(CMD_PREPARE_MEASURE),1,Memory.SLOT_NO,CM_ID,0,250) = True Then
     Memory.Set "PrepCmd", $(CMD_PREPARE_MEASURE)
     LogAdd "Measure command started"
@@ -722,6 +740,36 @@ Function Command_Prepare_Meas_FWDVOLTAGE (CM_ID,Current,Voltage,ComponentType,Ti
   End If
 End Function
 '------------------------------------------------------------------
+
+Function Command_Prepare_Meas_PolarCap (CM_ID,MaxVoltage,Capacity,ComponentType,Polarity,TimeOut)
+  Memory.CANData(0) = Lang.GetByte(MaxVoltage,0)
+  Memory.CANData(1) = Lang.GetByte(MaxVoltage,1)
+  Memory.CANData(2) = Lang.GetByte(MaxVoltage,2)
+  Memory.CANData(3) = Lang.GetByte(MaxVoltage,3)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_MAX_VOLTAGE),Memory.SLOT_NO,CM_ID,4  
+  
+  Memory.CANData(0) = Lang.GetByte(Capacity,0)
+  Memory.CANData(1) = Lang.GetByte(Capacity,1)
+  Memory.CANData(2) = Lang.GetByte(Capacity,2)
+  Memory.CANData(3) = Lang.GetByte(Capacity,3)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_EXPECTED_RESULT),Memory.SLOT_NO,CM_ID,4
+  
+  Memory.CANData(0) = Lang.GetByte(ComponentType,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),Memory.SLOT_NO,CM_ID,1  
+  
+  Memory.CANData(0) = Lang.GetByte(Polarity,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_POLARITY),Memory.SLOT_NO,CM_ID,1  
+
+  If CANSendPrepareCMD($(CMD_PREPARE_MEASURE),1,Memory.SLOT_NO,CM_ID,0,250) = True Then
+    Memory.Set "PrepCmd", $(CMD_PREPARE_MEASURE)
+    LogAdd "Measure Polar cap command started"
+    System.Start "Wait_Measurement",TimeOut
+  Else
+    LogAdd "Measure Polar cap Command Error."
+  End If
+End Function
+'------------------------------------------------------------------
+
 Function Command_GetNumOfSlots( )
   If CANSendGetMC($(CMD_GET_DATA),$(MC_NUMBER_OF_SLOTS),Memory.SLOT_NO,1,0) = False Then
     LogAdd "Get Number of Slot command Error!"
