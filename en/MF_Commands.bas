@@ -41,7 +41,8 @@ Function Init_MFCommand ( )
   Visual.Select("ip_paramnumofcycles").Value = 0
   Visual.Select("ip_paramresults").Value = 100
   Visual.Select("ip_paramvoltage").Value = 3
-  Visual.Select("ip_paramcurrent").Value = 0.01
+  Visual.Select("ip_paramcurrent").Value = 10E-03
+  Visual.Select("ip_parammaxvoltage").Value = 5
   
   For counter = 1 To 60
     Visual.Select("opt_SlotNum").addItem counter,counter
@@ -953,20 +954,28 @@ Function ChangeVisibility_ComponentSelect ( CompType )
   'Cap
   Case 2:
     Visual.Select("param_result").Style.Display  = "block"
-    Visual.Select("param_numofcycle").Style.Display  = "block"
+    Visual.Select("param_numofcycle").Style.Display  = "block"    
+    Visual.Select("ip_paramresults").Value  =  "100E-06"
+    Visual.Select("ip_param_setupExpectedVal").Value  =  "100E-06"
   'Inductor
   Case 3:
     Visual.Select("param_result").Style.Display  = "block"
-    Visual.Select("param_numofcycle").Style.Display  = "block"
+    Visual.Select("param_numofcycle").Style.Display  = "block"    
+    Visual.Select("ip_param_setupExpectedVal").Value  =  "1E-09"
+    Visual.Select("ip_paramresults").Value  =  "1E-09"
   'Diode
   Case 4:
     Visual.Select("param_voltage").Style.Display = "block"
     Visual.Select("param_current").Style.Display  = "block"
     Visual.Select("param_polarity").Style.Display  = "block"
+    Visual.Select("ip_param_setupExpectedVal").Value  =  "0.7"
   'PCAP
   Case 5:
     Visual.Select("param_result").Style.Display  =  "block"
+    Visual.Select("ip_paramresults").Value  =  "100E-06"
+    Visual.Select("ip_param_setupExpectedVal").Value  =  "100E-06"
     Visual.Select("param_maxvoltage").Style.Display  = "block"
+    Visual.Select("ip_paramvoltage").Value  = "5"
     Visual.Select("param_polarity").Style.Display  = "block"
   Case 6:
     'case auto: all none
