@@ -27,6 +27,10 @@ exit_condition = False
           SendMsg{CANIDRX1}( 0x05,0x00,CANRXMsg.Data[2],0x00,0x02,0x33,0x44)
 
       }
+      Case 0x09:
+      {
+        SendMsg{CANIDRX1}( 0x09,0x00)
+      }
       Case 0x41:
       {
         SendMsg{CANIDRX1}( CANRXMsg.Data[0],0x00,0x01)
@@ -67,7 +71,14 @@ exit_condition = False
         delay 2000
         SendMsg{CANIDRX2}( 0x00,0x00,0x01)
       }
-      
+      'Read MC
+      Case 0x6A:
+      {
+        'Switch (CANRXMsg.Data[1])
+        '{
+          SendMsg{CANIDRX1}( CANRXMsg.Data[0],0x00,0x17,0xB7,0xD1,0x38)
+        '}
+      }
       'ParamGet
       Case 0x81:
       {
