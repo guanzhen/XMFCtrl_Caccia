@@ -72,12 +72,31 @@
       <h1>Measurement Controls</h1>
      <table> 
      <tr><td>Contact Module</td>
-        <td><select id = "opt_CMID">
+        <td><select id = "opt_CMID" style = "width:35px">
         <option value = "0x01">1</option>
         <option value = "0x02">2</option>
         <option value = "0x03">3</option>
         </select>
-      </tr>     
+        <td>Freq.</td>
+        <td>
+          <select id = "optFrequency" style = "width:80px">
+            <option value = "0">Auto</option>
+            <option value = "1">1 kHz</option>
+            <option value = "2">10 kHz</option>
+          </select>      
+        </td>
+        <td title ="Series for C/L, Parallel for R">Model</td>
+        <td>
+        <select id = "optModel" style = "width:80px">
+          <option value = "0">Auto</option>
+          <option value = "1">Series</option>
+          <option value = "2">Parallel</option>
+        </select>      
+        </td>
+      </tr>
+    </table>
+      <hr>
+    <table>
       <tr><td>
         Component Type <td>
         <select id = "optMeasureCommand" >
@@ -87,11 +106,12 @@
           <option value = "4">Forward Voltage</option>
           <option value = "5">Polar Cap</option>
         </select>
+        <td rowspan = "2"><button id="btn_setupmeasure" style = "height:50px"> Setup Measure</button>
       </tr>
-       <tr><td>
-        Setup Expected Value <td><input id="ip_param_setupExpectedVal"></input>
+      <tr>
+        <td>Setup Expected Value 
+        <td><input id="ip_param_setupExpectedVal"></input>
       </tr>
-    <tr><td><button id="btn_setupmeasure"> Setup Measure</button></tr>
     </table>
     <hr> 
     <table>

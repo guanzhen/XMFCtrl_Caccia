@@ -432,14 +432,15 @@ End Function
 '------------------------------------------------------------------
 
 Function OnClick_btn_setupmeasure( Reason )
-Dim ExpectedValue ,CM_ID, CompType
+Dim ExpectedValue ,CM_ID, CompType, ModeSelect
   ExpectedValue = Math.CastFloat2Long(Visual.Select("ip_param_setupExpectedVal").Value)
   CM_ID = Visual.Select("opt_CMID").Value
   CompType = Visual.Select("optMeasureCommand").Value
+  ModeSelect = GetModeSelect()
   If NOT IsNumeric(ExpectedValue) Then
     LogAdd "Invalid value"
   Else    
-    Command_Prepare_SetupMeasure CM_ID,ExpectedValue,CompType,TIO_SETUPMEASURE
+    Command_Prepare_SetupMeasure CM_ID,ExpectedValue,CompType,ModeSelect,TIO_SETUPMEASURE
   End If
 End Function
 
@@ -500,15 +501,17 @@ End Function
 
 Function PrepareMeasureCRL ( )
 
-  Dim ExpectedValue, CompType,NumofCycles,CM_ID
+  Dim ExpectedValue, CompType,NumofCycles,CM_ID,ModeSelect
   ExpectedValue = Math.CastFloat2Long(Visual.Select("ip_param_setupExpectedVal").Value)
   CM_ID = Visual.Select("opt_CMID").Value  
   CompType = Visual.Select("optMeasureCommand").Value
   NumofCycles = Visual.Select("ip_paramnumofcycles").Value
+  ModeSelect = GetModeSelect()
+
   If NOT IsNumeric(ExpectedValue) Then
     LogAdd "Invalid value"
   Else
-    Command_Prepare_Measure CM_ID,ExpectedValue,CompType,NumofCycles,TIO_MEASURE
+    Command_Prepare_Measure CM_ID,ExpectedValue,CompType,NumofCycles,ModeSelect,TIO_MEASURE
   End If
 
 End Function
@@ -668,7 +671,7 @@ Function OnChange_optMeasureCommand ( Reason )
   
 End Function
 '------------------------------------------------------------------
-Function Command_Prepare_SetupMeasure (CM_ID, ExpectedValue,ComponentType,TimeOut)
+Function Command_Prepare_SetupMeasure (CM_ID, ExpectedValue,ComponentType,ModeSelect,TimeOut)
   Memory.CANData(0) = Lang.GetByte(ExpectedValue,0)
   Memory.CANData(1) = Lang.GetByte(ExpectedValue,1)
   Memory.CANData(2) = Lang.GetByte(ExpectedValue,2)
@@ -677,7 +680,10 @@ Function Command_Prepare_SetupMeasure (CM_ID, ExpectedValue,ComponentType,TimeOu
   
   Memory.CANData(0) = Lang.GetByte(ComponentType,0)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),Memory.SLOT_NO,CM_ID,1  
-   
+
+  Memory.CANData(0) = Lang.GetByte(ModeSelect,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_MODE_SELECT),Memory.SLOT_NO,CM_ID,1  
+  
   If CANSendPrepareCMD($(CMD_PREPARE_SETUP_MEASURE),1,Memory.SLOT_NO,CM_ID,0,250) = True Then
     Memory.Set "PrepCmd", $(CMD_PREPARE_SETUP_MEASURE)
     LogAdd "Setup Measure command started"
@@ -688,7 +694,7 @@ Function Command_Prepare_SetupMeasure (CM_ID, ExpectedValue,ComponentType,TimeOu
 End Function
 
 '------------------------------------------------------------------
-Function Command_Prepare_Measure (CM_ID,ExpectedValue,ComponentType,NumofCycles,TimeOut)
+Function Command_Prepare_Measure (CM_ID,ExpectedValue,ComponentType,NumofCycles,ModeSelect,TimeOut)
   Memory.CANData(0) = Lang.GetByte(ExpectedValue,0)
   Memory.CANData(1) = Lang.GetByte(ExpectedValue,1)
   Memory.CANData(2) = Lang.GetByte(ExpectedValue,2)
@@ -697,8 +703,13 @@ Function Command_Prepare_Measure (CM_ID,ExpectedValue,ComponentType,NumofCycles,
   
   Memory.CANData(0) = Lang.GetByte(ComponentType,0)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_COMPONENT_TYPE),Memory.SLOT_NO,CM_ID,1
-   Memory.CANData(0) = Lang.GetByte(NumofCycles,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_NUM_OF_CYCLES),Memory.SLOT_NO,CM_ID,1  
+
+  Memory.CANData(0) = Lang.GetByte(NumofCycles,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_NUM_OF_CYCLES),Memory.SLOT_NO,CM_ID,1
+  
+  Memory.CANData(0) = Lang.GetByte(ModeSelect,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_MODE_SELECT),Memory.SLOT_NO,CM_ID,1  
+  
   If CANSendPrepareCMD($(CMD_PREPARE_MEASURE),1,Memory.SLOT_NO,CM_ID,0,250) = True Then
     If Not Memory.Exists("sig_ERexternalstop") Then        
       LogAdd "Measure command started"
@@ -981,7 +992,22 @@ Function ChangeVisibility_ComponentSelect ( CompType )
     'case auto: all none
   End Select
 End Function 
+'------------------------------------------------------------------
+Function GetModeSelect ( ) 
+Dim ModeSelect, Model, Frequency
 
+Model = Visual.Select("optModel").SelectedItemAttribute("Value")
+Frequency = Visual.Select("optFrequency").SelectedItemAttribute("Value")
+ModeSelect = 0
+
+ModeSelect = Lang.ShiftLeft(Frequency,2) OR Model
+
+DebugMessage Model & " " & Frequency & " " & ModeSelect
+
+GetModeSelect = ModeSelect 
+End Function
+
+'------------------------------------------------------------------
 Function ChgLedStatus ( Var_ID , OnOff )
 		If OnOff = 1 Then
   		Visual.Select(Var_ID).Src = "./icon/led_green.png"
