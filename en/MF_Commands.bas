@@ -36,12 +36,10 @@ Function Init_MFCommand ( )
   Memory.Set "Endurance_Inprogress",Endurance_Inprogress
   Memory.Set "PrepCmd_PrepID",PrepCmd_PrepID
   
-  Visual.Select("ip_param_setupExpectedVal").Value = 100
+  Visual.Select("ip_param_setupExpectedVal").Value = 100E-06
   Visual.Select("ip_parampolarity").Value = 0
   Visual.Select("ip_paramnumofcycles").Value = 0
-  Visual.Select("ip_paramresults").Value = 100
   Visual.Select("ip_paramvoltage").Value = 3
-  Visual.Select("ip_paramcurrent").Value = 10E-03
   Visual.Select("ip_parammaxvoltage").Value = 5
   
   For counter = 1 To 60
@@ -521,14 +519,14 @@ Function PrepareMeasureDiode ( )
 
   Dim CompType,CM_ID, Current,Voltage,Polarity
   Voltage = Math.CastFloat2Long(Visual.Select("ip_paramvoltage").Value)
-  Current = Math.CastFloat2Long(Visual.Select("ip_paramcurrent").Value)
+  Current = Math.CastFloat2Long(Visual.Select("optCurrSel").SelectedItemAttribute("Value"))
   Polarity = Visual.Select("ip_parampolarity").Value
   CM_ID = Visual.Select("opt_CMID").Value  
   CompType = Visual.Select("optMeasureCommand").Value
   If NOT IsNumeric(Voltage) Then
     LogAdd "Invalid Voltage value"    
-  Elseif Not IsNumeric(Current) Then
-    LogAdd "Invalid Current value"    
+  'Elseif Not IsNumeric(Current) Then
+   ' LogAdd "Invalid Current value"    
   Else
     Command_Prepare_Meas_FWDVOLTAGE CM_ID,Voltage,Current,CompType,Polarity,TIO_MEASURE
   End If
@@ -539,7 +537,7 @@ Function PrepareMeasurePolarCap ()
 
   Dim CompType,CM_ID, Capacitance,Voltage,Polarity
   Voltage = Math.CastFloat2Long(Visual.Select("ip_parammaxvoltage").Value)
-  Capacitance = Math.CastFloat2Long(Visual.Select("ip_paramresults").Value)
+  Capacitance = Math.CastFloat2Long(Visual.Select("ip_param_setupExpectedVal").Value)
   Polarity = Visual.Select("ip_parampolarity").Value
   CM_ID = Visual.Select("opt_CMID").Value  
   CompType = Visual.Select("optMeasureCommand").Value
@@ -582,10 +580,11 @@ End Function
 
 Function OnClick_btn_endurance ( Reason )
 
-System.Start Endurance(5000)
+  System.Start Endurance(5000)
 
 End Function
 
+'------------------------------------------------------------------
 Function OnClick_btn_endu_stop ( Reason )
 If Memory.Exists("sig_ERexternalstop") Then
   LogAdd "Endurance Run Stopping..."
@@ -952,39 +951,37 @@ Function ChangeVisibility_ComponentSelect ( CompType )
   'DebugMessage "Change:" & CompType
   'Set all fields to none
     Visual.Select("param_voltage").Style.Display = "None"
+    Visual.Select("param_expectedVal").Style.Display = "None"
     Visual.Select("param_current").Style.Display  = "None"
-    Visual.Select("param_result").Style.Display  =  "None"
     Visual.Select("param_maxvoltage").Style.Display  = "None"
     Visual.Select("param_numofcycle").Style.Display  = "None"
     Visual.Select("param_polarity").Style.Display  = "None"  
   Select Case CompType
   'Res
   Case 1:
-    Visual.Select("param_result").Style.Display  = "block"
+  
+    Visual.Select("ParamUnit").InnerHTML  = "Ohm"
+    Visual.Select("param_expectedVal").Style.Display = "block"
     Visual.Select("param_numofcycle").Style.Display  = "block"
   'Cap
   Case 2:
-    Visual.Select("param_result").Style.Display  = "block"
+    Visual.Select("ParamUnit").InnerHTML  = "F"
+    Visual.Select("param_expectedVal").Style.Display = "block"
     Visual.Select("param_numofcycle").Style.Display  = "block"    
-    Visual.Select("ip_paramresults").Value  =  "100E-06"
-    Visual.Select("ip_param_setupExpectedVal").Value  =  "100E-06"
   'Inductor
   Case 3:
-    Visual.Select("param_result").Style.Display  = "block"
+    Visual.Select("ParamUnit").InnerHTML  = "H"
+    Visual.Select("param_expectedVal").Style.Display = "block"
     Visual.Select("param_numofcycle").Style.Display  = "block"    
-    Visual.Select("ip_param_setupExpectedVal").Value  =  "1E-09"
-    Visual.Select("ip_paramresults").Value  =  "1E-09"
   'Diode
   Case 4:
     Visual.Select("param_voltage").Style.Display = "block"
     Visual.Select("param_current").Style.Display  = "block"
     Visual.Select("param_polarity").Style.Display  = "block"
-    Visual.Select("ip_param_setupExpectedVal").Value  =  "0.7"
   'PCAP
   Case 5:
-    Visual.Select("param_result").Style.Display  =  "block"
-    Visual.Select("ip_paramresults").Value  =  "100E-06"
-    Visual.Select("ip_param_setupExpectedVal").Value  =  "100E-06"
+    Visual.Select("ParamUnit").InnerHTML  = "F"
+    Visual.Select("param_expectedVal").Style.Display = "block"
     Visual.Select("param_maxvoltage").Style.Display  = "block"
     Visual.Select("ip_paramvoltage").Value  = "5"
     Visual.Select("param_polarity").Style.Display  = "block"

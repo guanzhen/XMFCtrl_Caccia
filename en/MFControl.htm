@@ -40,6 +40,7 @@
   #LayerCommand  {float:left;width :49.5%; height:380px}
   #LayerReply    {float:left;width :49.5%;height:380px}  
   #LayerPeripherals { position: absolute; top:301px;}
+
   .GrpFrame
   {
     border-color:     white;
@@ -70,8 +71,8 @@
   <!-- Measure Component~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     <div id="SubLayerMeasure" >
       <h1>Measurement Controls</h1>
-     <table> 
-     <tr><td>Contact Module</td>
+      <table> 
+      <tr><td>Contact Module</td>
         <td><select id = "opt_CMID" style = "width:35px">
         <option value = "0x01">1</option>
         <option value = "0x02">2</option>
@@ -94,39 +95,48 @@
         </select>      
         </td>
       </tr>
-    </table>
+      </table>
       <hr>
-    <table>
-      <tr><td>
-        Component Type <td>
-        <select id = "optMeasureCommand" >
-          <option value = "1">Resistor</option>
-          <option value = "2">Capacitor</option>
-          <option value = "3">Inductor</option>
-          <option value = "4">Forward Voltage</option>
-          <option value = "5">Polar Cap</option>
-        </select>
-        <td rowspan = "2"><button id="btn_setupmeasure" style = "height:50px"> Setup Measure</button>
-      </tr>
-      <tr>
-        <td>Setup Expected Value 
-        <td><input id="ip_param_setupExpectedVal"></input>
-      </tr>
-    </table>
-    <hr> 
-    <table>
-    <tr id="param_voltage"><td>Max Voltage</td> <td><input id = "ip_paramvoltage" ></input> V</td>    
-    <tr id="param_current"><td>Current</td> <td><input id = "ip_paramcurrent" ></input> A</td>
-    <tr id="param_result"><td>Expected Comp Value</td> <td><input id = "ip_paramresults" ></input> Ohm/F/H</td>
-    <tr id="param_maxvoltage"><td>MaxVoltage</td> <td><input id = "ip_parammaxvoltage" ></input> V</td>
-    <tr id="param_numofcycle"><td>NumOfCycles(opt)</td> <td><input id = "ip_paramnumofcycles" ></input></td>
-    <tr id="param_polarity"><td>Polarity(Opt)</td> <td><input id = "ip_parampolarity" ></input> [0 = Normal, 1 = Inverted]</td>
-    <tr><td><button id="btn_measure"> Measure </button>    
-    <tr>
-     <td><button style="width:150px" id="btn_endurance"> Endurance</button>
-     <td><button style="width:150px" id="btn_endu_stop"> Stop </button>
-    </tr>
-    </table>
+      <div>
+        <div style = "float:right;clear:left">
+          <button id="btn_setupmeasure" style = "height:50px"> Setup Measure</button><br><br>
+          <button id="btn_measure" style = "height:50px;clear:right"> Measure </button>
+        </div>
+        <div style = "float:left;height:150px">
+          <table id="TableComponent">
+            <tr>
+              <td>Component Type 
+              <td><select id = "optMeasureCommand" >
+                <option value = "1">Resistor</option>
+                <option value = "2">Capacitor</option>
+                <option value = "3">Inductor</option>
+                <option value = "4">Forward Voltage</option>
+                <option value = "5">Polar Cap</option>
+              </select>
+            </tr>
+            <tr id = "param_expectedVal">
+              <td>Expected Value </td>
+              <td><input id="ip_param_setupExpectedVal"></input></td>
+              <td id="ParamUnit"> </td>
+            </tr>
+            <tr id="param_voltage"><td>Max Voltage</td> <td><input id = "ip_paramvoltage" ></input><td>V</td>    
+            <tr id="param_current"><td>Current<td><select id = "optCurrSel">
+              <option value = "0.002">2mA</option>
+              <option value = "0.010">10mA</option>              
+            </select>
+            <tr id="param_maxvoltage"><td>Max Voltage</td> <td><input id = "ip_parammaxvoltage" ></input><td>V</td>
+            <tr id="param_numofcycle" title = "[0 = Auto]"><td>NumOfCycles (Opt)</td> <td><input id = "ip_paramnumofcycles" ></input></td>
+            <tr id="param_polarity" title = "[0 = Normal, 1 = Inverted]"><td>Polarity (Opt)</td> <td><input id = "ip_parampolarity" ></input></td>
+          </table>
+        </div>
+        <hr style = "float:left;clear:left;">
+        <table>
+          <tr>
+           <td><button style="width:150px" id="btn_endurance"> Endurance</button>
+           <td><button style="width:150px" id="btn_endu_stop"> Stop </button>
+          </tr>
+        </table>
+      </div>
     </div>
     <hr> 
     <div id="SubLayerTools" >
