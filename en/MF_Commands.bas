@@ -432,7 +432,7 @@ End Function
 Function OnClick_btn_setupmeasure( Reason )
 Dim ExpectedValue ,CM_ID, CompType, ModeSelect
   ExpectedValue = Math.CastFloat2Long(Visual.Select("ip_param_setupExpectedVal").Value)
-  CM_ID = Visual.Select("opt_CMID").Value
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
   CompType = Visual.Select("optMeasureCommand").Value
   ModeSelect = GetModeSelect()
   If NOT IsNumeric(ExpectedValue) Then
@@ -501,7 +501,7 @@ Function PrepareMeasureCRL ( )
 
   Dim ExpectedValue, CompType,NumofCycles,CM_ID,ModeSelect
   ExpectedValue = Math.CastFloat2Long(Visual.Select("ip_param_setupExpectedVal").Value)
-  CM_ID = Visual.Select("opt_CMID").Value  
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")  
   CompType = Visual.Select("optMeasureCommand").Value
   NumofCycles = Visual.Select("ip_paramnumofcycles").Value
   ModeSelect = GetModeSelect()
@@ -521,7 +521,7 @@ Function PrepareMeasureDiode ( )
   Voltage = Math.CastFloat2Long(Visual.Select("ip_paramvoltage").Value)
   Current = Math.CastFloat2Long(Visual.Select("optCurrSel").SelectedItemAttribute("Value"))
   Polarity = Visual.Select("ip_parampolarity").Value
-  CM_ID = Visual.Select("opt_CMID").Value  
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")  
   CompType = Visual.Select("optMeasureCommand").Value
   If NOT IsNumeric(Voltage) Then
     LogAdd "Invalid Voltage value"    
@@ -539,7 +539,7 @@ Function PrepareMeasurePolarCap ()
   Voltage = Math.CastFloat2Long(Visual.Select("ip_parammaxvoltage").Value)
   Capacitance = Math.CastFloat2Long(Visual.Select("ip_param_setupExpectedVal").Value)
   Polarity = Visual.Select("ip_parampolarity").Value
-  CM_ID = Visual.Select("opt_CMID").Value  
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")  
   CompType = Visual.Select("optMeasureCommand").Value
   If NOT IsNumeric(Voltage) Then
     LogAdd "Invalid Voltage value"    
@@ -598,7 +598,7 @@ End Function
 
 Function OnClick_btn_getcover ( Reason )
   Dim CM_ID, CanReadArg
-  CM_ID = Visual.Select("opt_CMID").Value  
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")  
   If CANSendGetMC ($(CMD_GET_DATA),$(PARAM_INP_COVER),Memory.SLOT_NO,CM_ID,0) = True Then
     If Memory.CanReadArg.Data(2) = 1 Then
       ChgLedStatus "ledcover",1
@@ -620,7 +620,7 @@ End Function
 
 Function OnClick_btn_gettemp ( Reason )
   Dim CM_ID, CanReadArg, Temp
-  CM_ID = Visual.Select("opt_CMID").Value  
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")  
   If CANSendGetMC ($(CMD_GET_DATA),$(PARAM_MB_TEMP),Memory.SLOT_NO,CM_ID,0) = True Then
     Temp = Lang.MakeInt(Memory.CanReadArg.Data(2),Memory.CanReadArg.Data(3))
     Visual.Select("op_paramtemp").Value = Temp
