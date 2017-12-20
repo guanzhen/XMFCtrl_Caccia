@@ -225,7 +225,7 @@ Function Handle_PubMsg_FCU( CanReadArg )
       OutputDebug = OutputDebug & "Posflag "
       PrepareStopTime = CANReadArg.TimeStamp
       Memory.Set "PrepareStopTime",PrepareStopTime
-      UpdateCycleTime (PrepareStopTime)
+      'UpdateCycleTime (PrepareStopTime)
     End If
   Else
     OutputDebug = "Feeder Pub Msg "
@@ -282,7 +282,7 @@ Function Handle_PubMsg_Standalone( CanReadArg )
     If CanReadArg.Data(1) = &hC8 Then
       PrepareStopTime = CANReadArg.TimeStamp
       Memory.Set "PrepareStopTime",PrepareStopTime
-      UpdateCycleTime (PrepareStopTime)
+      'UpdateCycleTime (PrepareStopTime)
     End If
   Else
     OutputDebug = "Sync Pub Msg "
