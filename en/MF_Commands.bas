@@ -636,6 +636,15 @@ Function OnClick_btn_gettemp ( Reason )
 End Function
 
 '------------------------------------------------------------------
+Function OnClick_btn_getresults ( Reason )
+  If Memory.PrepCmd_Inprogress = 0 Then
+    Memory.Set "PrepCmd", $(CMD_PREPARE_MEASURE)
+    Get_Measurements
+  Else
+    LogAdd "Measurement in progress"
+  End If
+End Function
+'------------------------------------------------------------------
 
 Function OnClick_ButtonDebugLog ( Reason )
   If Memory.Exists("DebugLogWindow") Then
