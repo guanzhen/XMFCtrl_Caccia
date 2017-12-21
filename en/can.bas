@@ -397,8 +397,9 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
         .Data(0) = Cmd + &h10
         .Data(1) = SubCmd        
         .Data(2) = SlotNo
+        .Data(3) = Division
       For i = 0 to DataLen - 1
-        .Data(3+i) = CANData.Data(i)
+        .Data(4+i) = CANData.Data(i)
         'DebugMessage "Copy Data " & i
       Next
       .Length = 3 + DataLen      
