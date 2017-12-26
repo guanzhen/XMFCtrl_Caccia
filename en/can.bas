@@ -402,7 +402,7 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
         .Data(4+i) = CANData.Data(i)
         'DebugMessage "Copy Data " & i
       Next
-      .Length = 3 + DataLen      
+      .Length = 4 + DataLen      
     End With
   'Standalone
   Else
