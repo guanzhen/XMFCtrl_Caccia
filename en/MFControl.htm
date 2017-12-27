@@ -30,9 +30,9 @@
   button {width:150px}
   input {width:150px;}
   select {width:150px;}   
-  #ButtonGridClear {margin-top:20px;float:right; width: 100px;height:34px;align:right;}
-  #ButtonDebugLog  {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
-  #ButtonGetSCIbuffer  {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
+  #btn_GridClear {margin-top:20px;float:right; width: 100px;height:34px;align:right;}
+  #btn_DebugLog  {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
+  #btn_GetSCIbuffer  {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
   #Layer_Main   {padding: 0px; height:62.5%; width:100%;}
   #Layer_TabStrip   {padding: 2px; height:89% ;width:100%;}
   #Layer_MessageLog {padding: 0px; height:100% ; width:100%;}
@@ -62,9 +62,9 @@
     <td><span style = "color = white;font-size = 10pt;font-family=arial;margin=0px;">Can ID: 0x</span></td>
     <td><input id = "inputCANID" style = "width: 27px"></input></td>
     <td><select id = "opt_SlotNum" style = "width:50px;" ></select></td>
-    <td><button id = "btnAssignCANID" class = "ButtonInfo">Assign CANID</button></td>
-    <td><button id = "btnGetApp" class = "ButtonInfo">Read Info</button></td>
-    <td><button id = "btnReset" class = "ButtonInfo">Reset</button></td>
+    <td><button id = "btn_AssignCANID" class = "ButtonInfo">Assign CANID</button></td>
+    <td><button id = "btn_GetApp" class = "ButtonInfo">Read Info</button></td>
+    <td><button id = "btn_Reset" class = "ButtonInfo">Reset</button></td>
   </table>
   
   <div id="LayerCommand" class = "GrpFrame">
@@ -107,7 +107,7 @@
           <table id="TableComponent">
             <tr>
               <td>Component Type 
-              <td><select id = "optMeasureCommand" >
+              <td><select id = "opt_MeasureCommand" >
                 <option value = "1">Resistor</option>
                 <option value = "2">Capacitor</option>
                 <option value = "3">Inductor</option>
@@ -208,12 +208,12 @@
   
   <div id="Layer_Logs">
     <div id="Layer_TabStrip"  class = "GrpFrame">
-    <button id="ButtonGridClear" title="Clear content in message window.">Clear</button>  
-    <button id="ButtonDebugLog" title="Open/Close debuglog window.">DebugLog</button>  
-    <button id="ButtonGetSCIbuffer" title="Get the most recent SCI data.">Read SCI</button>  
+    <button id="btn_GridClear" title="Clear content in message window.">Clear</button>  
+    <button id="btn_DebugLog" title="Open/Close debuglog window.">DebugLog</button>  
+    <button id="btn_GetSCIbuffer" title="Get the most recent SCI data.">Read SCI</button>  
       <div id="Layer_MessageLog">
         <div id="MessageLogObj"></div>
-        <!-- <button id="ButtonDebugLog" title="Creates Debug Window">Start DebugLog</button>         -->
+        <!-- <button id="btn_DebugLog" title="Creates Debug Window">Start DebugLog</button>         -->
       </div>
       <div id="Layer_SCILog">
         <div id="SCILogObj"></div>

@@ -28,9 +28,9 @@ If CANConfig.Config = 0 Then
     CANConfig.Baudrate = "1000"
     Visual.Select("inputCANID").Value = "510"
     text = " [XFCU]"
-    Visual.Select("btnAssignCANID").Style.Display  = "none"
+    Visual.Select("btn_AssignCANID").Style.Display  = "none"
     Visual.Select("opt_SlotNum").Style.Display  = "block"    
-    Visual.Select("btnReset").Style.Display  = "none"    
+    Visual.Select("btn_Reset").Style.Display  = "none"    
   End If
   
   DebugMessage "Selected Config :"&CANConfig.Config
@@ -457,7 +457,7 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
     End If
     CanManager.Deliver = True
   Else
-    DebugMessage "CANSendGetMC Error"
+    DebugMessage "No Can Manager Error"
     CANSendGetMC = False
   End If
   Memory.Set "CanReadArg",CanReadArg
