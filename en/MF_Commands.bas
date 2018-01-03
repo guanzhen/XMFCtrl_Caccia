@@ -429,15 +429,19 @@ End Function
 '------------------------------------------------------------------
 
 Function OnClick_btn_calibrate( Reason )
-  Dim SubCmd 
+  Dim SubCmd
+  Dim Reply
   SubCmd = Visual.Select("opt_SubCmd").Value
   Memory.CANData(0) = SubCmd
-  If CANSendPrepareCMD($(CMD_PREPARE_CALIBRATION),1,Memory.SLOT_NO,1,1,250) = True Then
-    Memory.Set "PrepCmd", $(CMD_PREPARE_CALIBRATION)
-    LogAdd "Calibration command started"
-    System.Start "Wait_Measurement",TIO_CALIBRATE
-  Else
-    LogAdd "Calibration Error."
+  Reply = MsgBox("Are you sure you wish to start calibration?", 1 , "Confirm Calibration")
+  If Reply = 1 Then
+    If CANSendPrepareCMD($(CMD_PREPARE_CALIBRATION),1,Memory.SLOT_NO,1,1,250) = True Then
+      Memory.Set "PrepCmd", $(CMD_PREPARE_CALIBRATION)
+      LogAdd "Calibration command started"
+      System.Start "Wait_Measurement",TIO_CALIBRATE
+    Else
+      LogAdd "Calibration Error."
+    End If
   End If
 End Function
 
