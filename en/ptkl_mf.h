@@ -16,7 +16,8 @@
 *                     2017-11-14
 *                     0.05 , Added default parameters 0x63 to 0x67
 *                     2017-12-11
-*                     0.06 , Added PARAM_DL_ZIEL_APPL_3 0x30
+*                     0.06 , Added PARAM_DL_ZIEL_APPL_3 0x30, Calibration params 0x50 to 0x53, 
+*                            Renumber PB_ERR params from 0xD? to 0x3?  
 *  \b Description: \n
 */
 
@@ -37,13 +38,13 @@
     //Acknowledgements
         #define ACK_INVALID_CM                    0x50
     //Publics/Errors
-        #define PUB_CM_NOT_CONNECTED              0xD1
-        #define PUB_WRONG_POLARITY                0xD2
-        #define PUB_MAX_VOLTAGE                   0xD3
-        #define PUB_MB_ERROR                      0xD4
-        #define PUB_ERROR_ST_CM_CAP               0xD5
-        #define PUB_ERROR_ST_CM_RES               0xD6
-        #define PUB_ERROR_ST_SC_RES               0xD7
+        #define PUB_CM_NOT_CONNECTED              0x31
+        #define PUB_WRONG_POLARITY                0x32
+        #define PUB_MAX_VOLTAGE                   0x33
+        #define PUB_MB_ERROR                      0x34
+        #define PUB_ERROR_ST_CM_CAP               0x35
+        #define PUB_ERROR_ST_CM_RES               0x36
+        #define PUB_ERROR_ST_SC_RES               0x37
 
     //Params : IOs
 

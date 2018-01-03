@@ -411,13 +411,26 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
         'DebugMessage "Standalone GetSend MC Data command"
         .Data(0) = Cmd
         .Data(1) = SubCmd
-        If DataLen > 0 Then
+        'For traditional Feeder params (0xA0 - 0xFF), no division byte needed.
+        If .Data(1) > &hA0 Then
+          If DataLen > 0 Then
+            For i = 0 to DataLen - 1
+              .Data(2+i) = CANData.Data(i)
+              'DebugMessage "Copy Data " & i
+            Next  
+          End If
+          .Length = 2 + DataLen
+        'For new params, division byte needed.
+        Else        
+          .Data(2) = Division
+          If DataLen > 0 Then
           For i = 0 to DataLen - 1
-            .Data(2+i) = CANData.Data(i)
+            .Data(3+i) = CANData.Data(i)
             'DebugMessage "Copy Data " & i
           Next  
+          End If
+          .Length = 3 + DataLen
         End If
-        .Length = 2 + DataLen
     End With  
   End If
   
