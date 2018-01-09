@@ -37,6 +37,7 @@
 
     //Acknowledgements
         #define ACK_INVALID_CM                    0x50
+        #define ACK_ERR_COVER_CLOSED              0x51         
     //Publics/Errors
         #define PUB_CM_NOT_CONNECTED              0x31
         #define PUB_WRONG_POLARITY                0x32

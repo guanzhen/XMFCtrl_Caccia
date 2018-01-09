@@ -358,6 +358,7 @@ Function GetErrorInfo ( CanReadArg )
   Case $(ACK_TOO_MANY_PREPARES): ErrorMsg = "Too many Prepares"
   Case $(ACK_TIMEOUT_SUBSYSTEM): ErrorMsg = "Timeout Subsystem"
   Case $(ACK_NOT_IMPLEMENTED): ErrorMsg = "Not Implemented"
+  Case $(ACK_ERR_COVER_CLOSED): ErrorMsg = "Protective cover is closed."
   
   Case $(PUB_ERROR_ST_CM_CAP): ErrorMsg = "Self Test Contact Module Capacitance too High"
   Case $(PUB_ERROR_ST_CM_RES): ErrorMsg = "Self Test Contact Module Resistance too High"
