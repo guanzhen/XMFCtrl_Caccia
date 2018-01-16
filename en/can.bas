@@ -354,18 +354,29 @@ Function GetErrorInfo ( CanReadArg )
   Case $(ACK_UNKNOWN_CMD): ErrorMsg = "Unknown Command"
   Case $(ACK_WRONG_STATE): ErrorMsg = "Wrong State"
   Case $(ACK_INVALID_PARAM): ErrorMsg = "Invalid Parameters"
-  Case $(ACK_WRONG_LENGTH): ErrorMsg = "Wrong Lenght"
+  Case $(ACK_WRONG_LENGTH): ErrorMsg = "Wrong Length"
   Case $(ACK_TOO_MANY_PREPARES): ErrorMsg = "Too many Prepares"
   Case $(ACK_TIMEOUT_SUBSYSTEM): ErrorMsg = "Timeout Subsystem"
   Case $(ACK_NOT_IMPLEMENTED): ErrorMsg = "Not Implemented"
-  Case $(ACK_ERR_COVER_CLOSED): ErrorMsg = "Protective cover is closed."
-  
+  Case $(ACK_ERR_COVER_CLOSED): ErrorMsg = "Protective cover is closed."  
+  Case $(PUB_MB_CRC): ErrorMsg = "MB CRC Error."  
   Case $(PUB_ERROR_ST_CM_CAP): ErrorMsg = "Self Test Contact Module Capacitance too High"
   Case $(PUB_ERROR_ST_CM_RES): ErrorMsg = "Self Test Contact Module Resistance too High"
   Case $(PUB_ERROR_ST_SC_RES): ErrorMsg = "Self Test Short Circuit Resistance too High"
   Case $(PUB_MAX_VOLTAGE): ErrorMsg = "Max Voltage too high"
   Case $(PUB_WRONG_POLARITY): ErrorMsg = "Wrong component polarity"
   Case $(PUB_CM_NOT_CONNECTED): ErrorMsg = "Contact Module not present"
+  Case $(PUB_ERROR_CM_CHANGED): ErrorMsg = "Contact Module has changed! Calibration required."
+  Case $(PUB_MB_ERROR):
+    Select Case CanReadArg.Data(3)
+    Case  ACK_INVALID_INPUT_OFFSET         : ErrorMsg = "MB Internal error: Input Offset"
+    Case  ACK_INVALID_1KHZ_ADC_I_PP        : ErrorMsg = "MB Internal error: Invalid 1kHz ADC I PP"
+    Case  ACK_INVALID_10KHZ_ADC_I_PP       : ErrorMsg = "MB Internal error: Invalid 10kHz ADC I PP"
+    Case  ACK_TRIM_SHORT_NOK               : ErrorMsg = "MB Internal error: Tro, short NOK"
+    Case  ACK_TRIM_OPEN_NOK                : ErrorMsg = "MB Internal error: Trim open NOK"
+    Case  ACK_TRIM_CANNOT_SAVE             : ErrorMsg = "MB Internal error: Trim cannot be saved"
+    Case Else :ErrorMsg = "Other errors"
+    End Select
   
   'Case $(ACK_WRONG_LENGTH): ErrorMsg = "Wrong Length"      
 
