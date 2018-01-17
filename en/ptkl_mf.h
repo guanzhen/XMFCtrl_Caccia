@@ -88,24 +88,24 @@
        
         #define PARAM_SELFTEST_CONTACT_RES        0x80
         #define PARAM_SELFTEST_CAPACITY_CM_ID     0x81
-        #define PARAM_SELFTEST_RESISTANCE         0x8A
-        #define PARAM_SELFTEST_U                  0x8B
-        #define PARAM_SELFTEST_I                  0x8C
-        #define PARAM_SELFTEST_PHI                0x8D
-        #define PARAM_SELFTEST_FREQ               0x8E
+        #define PARAM_SELFTEST_RESISTANCE         0x8C
+        #define PARAM_SELFTEST_U                  0x8D
+        #define PARAM_SELFTEST_I                  0x8E
+        #define PARAM_SELFTEST_PHI                0x8F
+        #define PARAM_SELFTEST_FREQ               0x95
         #define PARAM_SETUP_MEAS_COMP_TYPE        0x82
         #define PARAM_SETUP_MEAS_STRAY_CAPACITY   0x83
-        #define PARAM_SETUP_MEAS_CONTACT_RES      0x8F
-        #define PARAM_SETUP_MEAS_RESISTANCE       0x95
+        #define PARAM_SETUP_MEAS_CONTACT_RES      0x96
+        #define PARAM_SETUP_MEAS_RESISTANCE       0x97
         #define PARAM_SETUP_MEAS_U                0x84
         #define PARAM_SETUP_MEAS_I                0x85
         #define PARAM_SETUP_MEAS_PHI              0x86
-        #define PARAM_SETUP_MEAS_FREQ             0x96
+        #define PARAM_SETUP_MEAS_FREQ             0x98
 
         #define PARAM_MEAS_COMPONENT_TYPE         0x87
         #define PARAM_MEAS_VALUE                  0x88
-        #define PARAM_MEAS_VALUE_MIN              0x97
-        #define PARAM_MEAS_VALUE_MAX              0x98
+        #define PARAM_MEAS_VALUE_MIN              0x8A
+        #define PARAM_MEAS_VALUE_MAX              0x8B
         #define PARAM_MEAS_COMPONENT_TYPE2        0x99
         #define PARAM_MEAS_VALUE2                 0x9A
         #define PARAM_MEAS_VALUE_MIN2             0x9B
