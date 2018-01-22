@@ -117,10 +117,10 @@
         #define PARAM_MEAS_FWD_VOLTAGE            0x93
         #define PARAM_MEAS_FWD_CURRENT            0x94
         
-        #define PARAM_CAL_R_1KHz                  0xB0
-        #define PARAM_CAL_X_1KHz                  0xB1
-        #define PARAM_CAL_R_10KHz                 0xB2
-        #define PARAM_CAL_X_10KHz                 0xB3
+        #define PARAM_CAL_R_1KHz                  0x50
+        #define PARAM_CAL_X_1KHz                  0x51
+        #define PARAM_CAL_R_10KHz                 0x52
+        #define PARAM_CAL_X_10KHz                 0x53
 
     // Param : EEPROM Targets
         #define EEPROM_CM_1                       0x05
