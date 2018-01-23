@@ -786,11 +786,10 @@ Function GetSCIDataML ( selection )
         Memory.CANData(0) = $(PARAM_LINE)
         CANSendGetFeed$(FEED_GET_DATA),PARAM_SCIDATA, Memory.SLOT_NO,1,1
         For i = 2 To Memory.CANDataLen-1
-          DebugMessage "ML:" & i
+          'DebugMessage "ML:" & i
           SCIArray.Add(Memory.CANData.Data(i))
         Next
-        DebugMessage "ACK:" & Memory.CANData(1)
-          
+        'DebugMessage "ACK:" & Memory.CANData(1)          
         If Memory.CANData(1) = $(ACK_NO_MORE_DATA) Then
           exitloop = 1
         End If
