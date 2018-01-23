@@ -556,19 +556,22 @@ Function CANSendGetFeed(Cmd,SubCmd,SlotNo,Division,DataLen)
         'Data(3) = Data 2
         'Data(4) = Data 3
         'Data(5) = Data 4
+        CANData.Data(0) = CanReadArg.Data(0) 
+        CANData.Data(1) = CanReadArg.Data(1) 
         CANData.Data(2) = CanReadArg.Data(3) 
         CANData.Data(3) = CanReadArg.Data(4)
         CANData.Data(4) = CanReadArg.Data(5)
-        CANData.Data(5) = CanReadArg.Data(6)
+        CANData.Data(5) = CanReadArg.Data(6)        
+        Memory.CANDataLen = CanReadArg.Length - 1
     Else
       'DebugMessage "Standalone Cmd Reply"
       'No need to process data, just copy
-       For i = 0 to 7
-        CANData.Data(i) = CanReadArg.Data(i)
-       Next
+      For i = 0 to 7
+       CANData.Data(i) = CanReadArg.Data(i)
+      Next
+      Memory.CANDataLen = CanReadArg.Length
     End If
     Memory.Set "CANData",CANData      
-    Memory.CANDataLen = CanReadArg.Length
     'DebugMessage Memory.CANDataLen
     'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
     CanManager.Deliver = True
@@ -783,9 +786,11 @@ Function GetSCIDataML ( selection )
         Memory.CANData(0) = $(PARAM_LINE)
         CANSendGetFeed$(FEED_GET_DATA),PARAM_SCIDATA, Memory.SLOT_NO,1,1
         For i = 2 To Memory.CANDataLen-1
-          'DebugMessage "ML:" & i
+          DebugMessage "ML:" & i
           SCIArray.Add(Memory.CANData.Data(i))
         Next
+        DebugMessage "ACK:" & Memory.CANData(1)
+          
         If Memory.CANData(1) = $(ACK_NO_MORE_DATA) Then
           exitloop = 1
         End If
