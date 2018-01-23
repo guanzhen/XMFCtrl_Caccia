@@ -786,7 +786,7 @@ Function GetSCIDataML ( selection )
           'DebugMessage "ML:" & i
           SCIArray.Add(Memory.CANData.Data(i))
         Next
-        If Not Memory.CANDataLen = 8 Then
+        If Memory.CANData(1) = $(ACK_NO_MORE_DATA) Then
           exitloop = 1
         End If
         Timeout = Timeout - 1
