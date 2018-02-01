@@ -884,7 +884,7 @@ Function Endurance ( TimeOut )
   looping = 1
   Do While looping = 1
     'LED On Cycle
-    LED_Change 2
+    'LED_Change 2
     PrepareMeasureCRL    
     Do    
       If sig_ERexternalstop.wait(50) Then
@@ -895,13 +895,13 @@ Function Endurance ( TimeOut )
     
     If Memory.measureOK = 0 Then                                                   
       'looping = 0
-      LED_Change 1
+      'LED_Change 1
       'Exit Do
     End If    
     System.Delay(1500)
     'LED Off Cycle
     PrepareMeasureCRL    
-    LED_Change 0
+    'LED_Change 0
     Do
       If sig_ERexternalstop.wait(50) Then
         looping = 0
@@ -911,7 +911,7 @@ Function Endurance ( TimeOut )
     Loop Until Memory.PrepCmd_MeasureInProgress = 0
     If Memory.measureOK = 0 Then
       'looping = 0
-      LED_Change 1
+      'LED_Change 1
       'Exit Do
     End If
 
@@ -940,9 +940,9 @@ End Function
 '------------------------------------------------------------------
 
 Function LED_Change ( Colour )
-  Memory.CANData(0) = 1 
+  Memory.CANData(0) = 1
   CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS_CANCEL),Memory.SLOT_NO,1,1
-  Memory.CANData(0) = 1 
+  Memory.CANData(0) = 1
   Memory.CANData(1) = Colour
   CANSendGetMC $(CMD_SEND_DATA),$(MC_SET_LED),Memory.SLOT_NO,1,2        
   Memory.CANData(0) = 1 
