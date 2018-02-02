@@ -212,7 +212,7 @@ Function Get_Measurements ( )
       End If      
       'End CMD_PREPARE_MEASURE
     Case $(CMD_PREPARE_SELFTEST) :
-      ResultLog = "Self Test: Contact Res :" & GetFloatCanData2($(CMD_PREPARE_SELFTEST),"op_paramContactres")
+      ResultLog = "Self Test: Contact Res :" & GetFloatCanData2($(PARAM_SELFTEST_CONTACT_RES),"op_paramContactres")
       ResultLog = ResultLog & " Cap:" & GetFloatCanData2($(PARAM_SELFTEST_CAPACITY_CM_ID),"op_paramCapacityCM")
       ResultLog = ResultLog & " Res:" & GetFloatCanData2($(PARAM_SELFTEST_RESISTANCE),"op_paramResistanceCM")
       ResultLog = ResultLog & " U:" & GetFloatCanData2($(PARAM_SELFTEST_U),"op_paramU")
