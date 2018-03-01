@@ -1008,7 +1008,7 @@ Function GetSCIErrorQueue ( )
   Dim exitloop
   Dim Debugmsg
   Dim loopcnt
-  loopcnt = 20
+  loopcnt = 32
   Debugmsg = "MB Errors: "
   exitloop = 0
 
@@ -1027,7 +1027,7 @@ Function GetSCIErrorQueue ( )
     loopcnt = loopcnt - 1
     
     If loopcnt = 0 Then
-      DebugMessage "GetSCIErrorQueue TimeOut"
+      LogAdd "SCI Error Queue Overflow!"
       exitloop = 1
     'If no errors, no need to display message.
     End If  
