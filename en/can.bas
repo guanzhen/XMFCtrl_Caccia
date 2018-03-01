@@ -366,18 +366,23 @@ Function GetErrorInfo ( CanReadArg )
   Case $(PUB_MAX_VOLTAGE): ErrorMsg = "Max Voltage too high"
   Case $(PUB_WRONG_POLARITY): ErrorMsg = "Wrong component polarity"
   Case $(PUB_CM_NOT_CONNECTED): ErrorMsg = "Contact Module not present"
-  Case $(PUB_ERROR_CM_CHANGED): ErrorMsg = "Contact Module has changed! Calibration required."
+  Case $(PUB_ERROR_CM_CHANGED): ErrorMsg = "Contact Module has changed! Compensation required."
   Case $(PUB_MB_ERROR):
     Select Case CanReadArg.Data(3)
     Case  ACK_INVALID_INPUT_OFFSET         : ErrorMsg = "MB Internal error: Input Offset"
     Case  ACK_INVALID_1KHZ_ADC_I_PP        : ErrorMsg = "MB Internal error: Invalid 1kHz ADC I PP"
     Case  ACK_INVALID_10KHZ_ADC_I_PP       : ErrorMsg = "MB Internal error: Invalid 10kHz ADC I PP"
-    Case  ACK_TRIM_SHORT_NOK               : ErrorMsg = "MB Internal error: Tro, short NOK"
+    Case  ACK_TRIM_SHORT_NOK               : ErrorMsg = "MB Internal error: Trim short NOK"
     Case  ACK_TRIM_OPEN_NOK                : ErrorMsg = "MB Internal error: Trim open NOK"
     Case  ACK_TRIM_CANNOT_SAVE             : ErrorMsg = "MB Internal error: Trim cannot be saved"
-    Case Else :ErrorMsg = "Other errors"
-    End Select
-  
+    Case  ACK_CAL_CANNOT_SAVE              : ErrorMsg = "MB Internal error: Compensation data cannot be saved"
+    Case  ACK_CANNOT_GET_BOARD_VERS        : ErrorMsg = "MB Internal error: Cannot read measurement board version"
+    Case  ACK_CANNOT_CAL_DIODE_DIFF        : ErrorMsg = "MB Internal error: Cannot calibrate diode differential"
+    Case  ACK_AUTO_RANGE_DID_NOT_SUCCEED   : ErrorMsg = "MB Internal error: Auto range did not succeed"
+    Case  ACK_CAP_AUTO_POL_UNDETERMINED    : ErrorMsg = "MB Internal error: Polarity for capacitor undetermined"
+    Case  ACK_FWD_VOLT_ONLY_2MA_OR_10MA    : ErrorMsg = "MB Internal error: Invalid current used for Diode measurement"    
+    Case Else :ErrorMsg = "Other MB errors"
+    End Select    
   'Case $(ACK_WRONG_LENGTH): ErrorMsg = "Wrong Length"      
 
   Case Else: ErrorMsg = "Other errors"
@@ -782,24 +787,24 @@ Function GetSCIDataML ( selection )
   Memory.CANData(1) = selection
   'DebugMessage "ML:Start"
   If CANSendGetFeed($(FEED_GET_DATA),PARAM_SCIDATA, Memory.SLOT_NO,1,2) = True Then      
-      Do
-        'DebugMessage "ML:Line"        
-        Memory.CANData(0) = $(PARAM_LINE)
-        CANSendGetFeed$(FEED_GET_DATA),PARAM_SCIDATA, Memory.SLOT_NO,1,1
-        For i = 2 To Memory.CANDataLen-1
-          'DebugMessage "ML:" & i
-          SCIArray.Add(Memory.CANData.Data(i))
-        Next
-        'DebugMessage "ACK:" & Memory.CANData(1)          
-        If Memory.CANData(1) = $(ACK_NO_MORE_DATA) Then
-          exitloop = 1
-        End If
-        Timeout = Timeout - 1
-        If Timeout = 0 Then
-          exitloop = 1
-          DebugMessage "ML:TimeOut"
-        End If
-      Loop Until exitloop = 1
+    Do
+      'DebugMessage "ML:Line"        
+      Memory.CANData(0) = $(PARAM_LINE)
+      CANSendGetFeed$(FEED_GET_DATA),PARAM_SCIDATA, Memory.SLOT_NO,1,1
+      For i = 2 To Memory.CANDataLen-1
+        'DebugMessage "ML:" & i
+        SCIArray.Add(Memory.CANData.Data(i))
+      Next
+      'DebugMessage "ACK:" & Memory.CANData(1)          
+      If Memory.CANData(1) = $(ACK_NO_MORE_DATA) Then
+        exitloop = 1
+      End If
+      Timeout = Timeout - 1
+      If Timeout = 0 Then
+        exitloop = 1
+        DebugMessage "ML:TimeOut"
+      End If
+    Loop Until exitloop = 1
   Else
     'DebugMessage "Error"
   End If

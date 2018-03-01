@@ -1,3 +1,4 @@
+
 /*!
 *   \file              ptkl_mf.h
 *   
@@ -20,11 +21,13 @@
 *                            Renumber PB_ERR params from 0xD? to 0x3?
 *                     2017-12-27
 *                     0.07 , Added PUB_ERROR_NOT_CAL, as an error for contact block not calibrated.
-*                     2017-01-08
+*                     2018-01-08
 *                     0.08 , Added ACK_ERR_COVER_CLOSED
-*                     2017-01-15
+*                     2018-01-15
 *                     0.09 , Reverted changes to be backward compatible with ptkl_mf.h V0.02.
 *                            Newer params introduced in V0.03 toV0.08 are added on top of the changes.
+*                     2018-02-22
+*                     0.10 , Added defines to access for new factory data: Tolerances / Offsetes and settings.
 *  \b Description: \n
 */
 
@@ -61,6 +64,9 @@
         #define PARAM_INP_COVER                   0x30
         #define PARAM_MB_TEMP                     0x31
         
+    // Params : Misc
+
+        #define PARAM_MB_ERRORS                   0x54       
     // Param: Defaults
 
         #define PARAM_DEFAULT_CURRENT             0x60
@@ -71,6 +77,9 @@
         #define PARAM_DEFAULT_RES_CONTACT_BLK     0x65
         #define PARAM_DEFAULT_CAP_CONTACT_BLK     0x66
         #define PARAM_DEFAULT_RES_SHORTCIRCUIT    0x67
+        #define PARAM_DEFAULT_MEAS_TOLERANCE      0x68
+        #define PARAM_DEFAULT_MEAS_OFFSET         0x69
+        #define PARAM_DEFAULT_MEAS_SETTINGS       0x6A
         
     //Param: Send
         #define PARAM_MAX_VOLTAGE                 0x70

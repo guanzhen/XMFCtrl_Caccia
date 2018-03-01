@@ -7,19 +7,13 @@ Const COMP_TYPE_PCAP = 5
 Const COMP_TYPE_AUTO = 6
 
 Const PROCESS_NONE = 0
-Const PROCESS_SETUP = 1
-Const PROCESS_MEASURE = 2
-Const PROCESS_SELFTEST = 3
-Const PROCESS_Calibration = 4
-
 Const PREPARE_NONE = 0
 Const PREPARE_ALL = 6
 
-
-Const TIO_SETUPMEASURE = 6000
-Const TIO_MEASURE = 6000
+Const TIO_SETUPMEASURE = 10000
+Const TIO_MEASURE = 10000
 Const TIO_CALIBRATE = 100000
-Const TIO_SELFTEST = 5000
+Const TIO_SELFTEST = 10000
 
 Const ACK_CRC_ERROR                   = &hD0
 Const ACK_CM_NOT_CONNECTED            = &hD1
@@ -31,6 +25,12 @@ Const ACK_INVALID_10KHZ_ADC_I_PP      = &hD6
 Const ACK_TRIM_SHORT_NOK              = &hD7
 Const ACK_TRIM_OPEN_NOK               = &hD8
 Const ACK_TRIM_CANNOT_SAVE            = &hD9
+Const ACK_CAL_CANNOT_SAVE             = &hDA
+Const ACK_CANNOT_GET_BOARD_VERS       = &hDB
+Const ACK_CANNOT_CAL_DIODE_DIFF       = &hDC
+Const ACK_AUTO_RANGE_DID_NOT_SUCCEED  = &hDD
+Const ACK_CAP_AUTO_POL_UNDETERMINED   = &hDE
+Const ACK_FWD_VOLT_ONLY_2MA_OR_10MA   = &hDF
 
 
 Function Init_MFCommand ( )
@@ -456,7 +456,11 @@ Function OnClick_btn_getresults ( Reason )
   End If
 End Function
 '------------------------------------------------------------------
+Function OnClick_btn_GetSCIErrQ ( Reason )
+  GetSCIErrorQueue
+End Function
 
+'------------------------------------------------------------------
 Function OnClick_btn_DebugLog ( Reason )
   If Memory.Exists("DebugLogWindow") Then
     DebugWindowClose
@@ -986,6 +990,43 @@ Function LogAdd ( sMessage )
     Gridobj.showRow( MsgId )
   End If  
   'DebugMessage sMessage
+End Function
+
+'-------------------------------------------------------------------
+Function GetSCIErrorQueue ( ) 
+
+  Dim exitloop
+  Dim Debugmsg
+  Dim loopcnt
+  loopcnt = 20
+  Debugmsg = "MB Errors: "
+  exitloop = 0
+
+  Do
+
+    If CANSendGetMC($(CMD_GET_DATA),$(PARAM_MB_ERRORS), Memory.SLOT_NO,1,0) = True Then        
+      'Exit if error = 0
+      If Memory.CANData.Data(2) = 0 Then  
+        exitloop = 1  
+      Else
+        Debugmsg = Debugmsg & String.Format ("%02X ",Memory.CANData.Data(2))
+      End If
+      GetSCILog "Get MB Err:"
+    End If   
+
+    loopcnt = loopcnt - 1
+    
+    If loopcnt = 0 Then
+      DebugMessage "GetSCIErrorQueue TimeOut"
+      exitloop = 1
+    'If no errors, no need to display message.
+    End If  
+  Loop Until exitloop = 1
+  ' The last error was 00 = no error.
+  If loopcnt = 19 Then
+    Debugmsg = Debugmsg & "None"
+  End If  
+  LogAdd Debugmsg
 End Function
 
 '-------------------------------------------------------------------
