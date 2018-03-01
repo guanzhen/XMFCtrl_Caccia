@@ -49,7 +49,7 @@ Function Init_MFCommand ( )
   Memory.Set "PrepCmd_PrepID",PrepCmd_PrepID
   
   Visual.Select("ip_param_setupExpectedVal").Value = 100E-06
-  Visual.Select("ip_parampolarity").Value = 0
+  Visual.Select("opt_polarity").Value = 0
   Visual.Select("ip_paramnumofcycles").Value = 0
   Visual.Select("ip_paramvoltage").Value = 3
   Visual.Select("ip_parammaxvoltage").Value = 5
@@ -130,12 +130,12 @@ Dim cmd
       Else
         System.Delay(100)
       End If
-    'End Loop Do while Memory.PrepCmd_Inprogress = 1     
     Loop Until loop_enable = 0 
     
-    'If measureOK = 1 Then
+    If measureOK = 1 Then
       Get_Measurements
-    'End If
+    End If
+    
     Memory.Set "measureOK",measureOK
     Memory.PrepCmd_MeasureInProgress = 0
     Dim LogMsg
@@ -207,8 +207,11 @@ Function Get_Measurements ( )
         DebugMessage "Process Measure Diode"
         
         ResultLog = "Meas: FWD Voltage :" & GetFloatCanData2($(PARAM_MEAS_FWD_VOLTAGE),"op_paramfwdvoltage")
+        ResultLog = ResultLog & " Min:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MIN),"op_paramType1ValueMin")
+        ResultLog = ResultLog & " Max:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MAX),"op_paramType1ValueMax")
         ResultLog = ResultLog & " FWD Current:" & GetFloatCanData2($(PARAM_MEAS_FWD_CURRENT),"op_paramfwdcurrent")
-
+        ResultLog = ResultLog & " Min:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MIN2),"op_paramType2ValueMin")
+        ResultLog = ResultLog & " Max:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MAX2),"op_paramType2ValueMax")
       End If      
       'End CMD_PREPARE_MEASURE
     Case $(CMD_PREPARE_SELFTEST) :
@@ -518,13 +521,11 @@ Function PrepareMeasureDiode ( )
   Dim CompType,CM_ID, Current,Voltage,Polarity
   Voltage = Math.CastFloat2Long(Visual.Select("ip_paramvoltage").Value)
   Current = Math.CastFloat2Long(Visual.Select("optCurrSel").SelectedItemAttribute("Value"))
-  Polarity = Visual.Select("ip_parampolarity").Value
+  Polarity = Visual.Select("opt_polarity").SelectedItemAttribute("Value")
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")  
   CompType = Visual.Select("opt_MeasureCommand").Value
   If NOT IsNumeric(Voltage) Then
     LogAdd "Invalid Voltage value"    
-  'Elseif Not IsNumeric(Current) Then
-   ' LogAdd "Invalid Current value"    
   Else
     Command_Prepare_Meas_FWDVOLTAGE CM_ID,Voltage,Current,CompType,Polarity,TIO_MEASURE
   End If
@@ -536,7 +537,7 @@ Function PrepareMeasurePolarCap ()
   Dim CompType,CM_ID, Capacitance,Voltage,Polarity
   Voltage = Math.CastFloat2Long(Visual.Select("ip_parammaxvoltage").Value)
   Capacitance = Math.CastFloat2Long(Visual.Select("ip_param_setupExpectedVal").Value)
-  Polarity = Visual.Select("ip_parampolarity").Value
+  Polarity = Visual.Select("opt_polarity").SelectedItemAttribute("Value")
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")  
   CompType = Visual.Select("opt_MeasureCommand").Value
   If NOT IsNumeric(Voltage) Then
@@ -865,7 +866,7 @@ Function GetModeSelect ( )
   Frequency = Visual.Select("optFrequency").SelectedItemAttribute("Value")
   ModeSelect = 0
   ModeSelect = Lang.ShiftLeft(Frequency,2) OR Model
-  DebugMessage Model & " " & Frequency & " " & ModeSelect
+  'DebugMessage Model & " " & Frequency & " " & ModeSelect
   GetModeSelect = ModeSelect 
 End Function
 

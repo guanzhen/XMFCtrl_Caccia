@@ -128,7 +128,14 @@
             </select>
             <tr id="param_maxvoltage"><td>Max Voltage</td> <td><input id = "ip_parammaxvoltage" ></input><td>V</td>
             <tr id="param_numofcycle" title = "[0 = Auto]"><td>NumOfCycles (Opt)</td> <td><input id = "ip_paramnumofcycles" ></input></td>
-            <tr id="param_polarity" title = "[0 = Normal, 1 = Inverted]"><td>Polarity (Opt)</td> <td><input id = "ip_parampolarity" ></input></td>
+            <tr id="param_polarity" title = "[0 = Normal, 1 = Reversed/Inverted]"><td>Polarity (Opt)</td> 
+                <!--<td><input id = "ip_parampolarity" ></input></td>-->
+                <td>
+                <select id = "opt_polarity" >
+                <option value = "0">Normal</option>
+                <option value = "1">Reversed</option>                                
+                </select>
+                </td>
           </table>
         </div>
         <hr style = "float:left;clear:left;">
@@ -172,15 +179,15 @@
       
       <!-- For measurements -->
       <tr id="param_CompType1">     <td>Primary Attribute</td>      <td><input id = "op_paramcomptype1" ></input></td>
+      <tr id="param_fwdvoltage">    <td>Forward Voltage</td>        <td><input id = "op_paramfwdvoltage" ></input> V</td>
       <tr id="param_Type1Value">    <td>Parameter 1 value</td>      <td><input id = "op_paramType1Value" ></input></td>
       <tr id="param_Type1ValueMin"> <td>Parameter 1 value Min</td>  <td><input id = "op_paramType1ValueMin" ></input></td>
       <tr id="param_Type1ValueMax"> <td>Parameter 1 value Max</td>  <td><input id = "op_paramType1ValueMax" ></input></td>
       <tr id="param_CompType2">     <td>Secondary Attribute</td>    <td><input id = "op_paramcomptype2" ></input></td>
       <tr id="param_Type2Value">    <td>Parameter 2 value</td>      <td><input id = "op_paramType2Value" ></input></td>
+      <tr id="param_fwdcurrent">    <td>Forward Current</td>        <td><input id = "op_paramfwdcurrent" ></input> I</td>
       <tr id="param_Type2ValueMin"> <td>Parameter 2 value Min</td>  <td><input id = "op_paramType2ValueMin" ></input></td>
       <tr id="param_Type2ValueMax"> <td>Parameter 2 value Max</td>  <td><input id = "op_paramType2ValueMax" ></input></td>
-      <tr id="param_fwdvoltage">    <td>Forward Voltage</td>        <td><input id = "op_paramfwdvoltage" ></input> V</td>
-      <tr id="param_fwdcurrent">    <td>Forward Current</td>        <td><input id = "op_paramfwdcurrent" ></input> I</td>
       <tr id="param_res1k">         <td>Res. 1KHz</td>              <td><input id = "op_paramres1k" ></input> Ohm</td>
       <tr id="param_reac1k">        <td>Reac. 1KHz</td>             <td><input id = "op_paramreac1k" ></input> Ohm</td>
       <tr id="param_res10k">        <td>Res. 10KHz</td>             <td><input id = "op_paramres10k" ></input> Ohm</td>
