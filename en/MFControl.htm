@@ -100,8 +100,8 @@
       <hr>
       <div>
         <div style = "padding-right:5px;float:right;clear:left">
-          <button id="btn_setupmeasure" style = "height:50px"> Setup Measure</button><br><br>
-          <button id="btn_measure" style = "height:50px;clear:right"> Measure </button><br><br> 
+          <button id="btn_setupmeasure" style = "height:50px">Setup Measure</button><br><br>
+          <button id="btn_measure" style = "height:50px;clear:right">Start Measure</button><br><br> 
           <button id="btn_getresults" title = "Retrieve previous measurement results" style = "height:30px;clear:right"> Get results </button>
         </div>
         <div style = "float:left;height:180px">
@@ -141,7 +141,7 @@
         <hr style = "float:left;clear:left;">
         <table>
           <tr>
-           <td><button style="width:150px" id="btn_endurance"> Endurance</button>
+           <td><button style="width:150px" id="btn_endurance"> Endurance </button>
            <td><button style="width:150px" id="btn_endu_stop"> Stop </button>
           </tr>
         </table>
@@ -151,13 +151,13 @@
     <div id="SubLayerTools" >
       <h1> Functions </h1>
       <table>
-      <tr><td><button style="width:150px" id="btn_calibrate"> Calibration </button></td>
+      <tr><td><button style="width:150px" id="btn_calibrate"> Compensation </button></td>
       <td>
         <select style = "width:180px;" id = "opt_SubCmd">
-        <option value = "0x01">1: Closed Loop</option>
-        <option value = "0x02">2: Closed Loop Cal</option>
-        <option value = "0x03">3: Open Loop</option>
-        <option value = "0x04">4: Restore Calibrated Data</option>
+        <option value = "0x01">1 Closed Loop</option>
+        <option value = "0x02">2 Closed Loop Cal</option>
+        <option value = "0x03">3 Open Loop</option>
+        <option value = "0x04">4 Restore Compensation Data</option>
         </select>
       </td>
       </tr>

@@ -112,7 +112,7 @@ Dim cmd
         'Check Error Stop Condition
       If Memory.PrepCmd_Error = 1 Then
         LogAdd "Measurement command error"
-        loop_enable = 0       
+        loop_enable = 0
       'Check button stop condition.
       Elseif Memory.PrepCmd_Inprogress = 0 Then
         If Not Memory.Exists("sig_ERexternalstop") Then
@@ -129,7 +129,7 @@ Dim cmd
         LED_Change 1
       Else
         System.Delay(100)
-      End If
+      End If  
     Loop Until loop_enable = 0 
     
     If measureOK = 1 Then
@@ -149,11 +149,15 @@ Dim cmd
       Case $(CMD_PREPARE_SELFTEST) :
         LogMsg = "Selftest"
       Case $(CMD_PREPARE_CALIBRATION) :
-        LogMsg = "Calibration"
+        LogMsg = "Compensation"
       Case $(CMD_PREPARE_MEASURE_AUTO) :
         LogMsg = "Auto Meas"
     End Select
-    GetSCILog LogMsg
+    GetSCILog LogMsg    
+    If Memory.PrepCmd_Error = 1  AND Memory.CanErr = $(PUB_MB_ERROR) Then
+      GetSCIErrorQueue
+    End If
+    
 End Function 
 '------------------------------------------------------------------
 Function Get_Measurements ( )
@@ -225,7 +229,7 @@ Function Get_Measurements ( )
       
     Case $(CMD_PREPARE_CALIBRATION) :
 
-      ResultLog = "Calibration: R_1kHz :" & GetFloatCanData2($(PARAM_CAL_R_1KHz),"op_paramres1k")
+      ResultLog = "Compensation: R_1kHz :" & GetFloatCanData2($(PARAM_CAL_R_1KHz),"op_paramres1k")
       ResultLog = ResultLog & " X_1kHz:" & GetFloatCanData2($(PARAM_CAL_X_1KHz),"op_paramreac1k")
       ResultLog = ResultLog & " R_10kHz:" & GetFloatCanData2($(PARAM_CAL_R_10KHz),"op_paramres10k")
       ResultLog = ResultLog & " X_10kHz:" & GetFloatCanData2($(PARAM_CAL_X_10KHz),"op_paramreac10k")
@@ -345,7 +349,7 @@ End Function
 
 Function OnClick_btn_measure( Reason )
   Dim CompType
-  DebugMessage "PrepareMeasure Button"
+  DebugMessage "PrepareMeasure Command"
   CompType = Visual.Select("opt_MeasureCommand").Value
   Select Case CompType
     Case 1:
@@ -368,14 +372,14 @@ Function OnClick_btn_calibrate( Reason )
   Dim Reply
   SubCmd = Visual.Select("opt_SubCmd").Value
   Memory.CANData(0) = SubCmd
-  Reply = MsgBox("Are you sure you wish to start calibration?", 1 , "Confirm Calibration")
+  Reply = MsgBox("Are you sure you wish to start compensation?", 1 , "Confirm compensation")
   If Reply = 1 Then
     If CANSendPrepareCMD($(CMD_PREPARE_CALIBRATION),1,Memory.SLOT_NO,1,1,250) = True Then
       Memory.Set "PrepCmd", $(CMD_PREPARE_CALIBRATION)
-      LogAdd "Calibration command started"
+      LogAdd "Compensation command started"
       System.Start "Wait_Measurement",TIO_CALIBRATE
     Else
-      LogAdd "Calibration Error."
+      LogAdd "Compensation Error."
     End If
   End If
 End Function
@@ -525,7 +529,7 @@ Function PrepareMeasureDiode ( )
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")  
   CompType = Visual.Select("opt_MeasureCommand").Value
   If NOT IsNumeric(Voltage) Then
-    LogAdd "Invalid Voltage value"    
+    LogAdd "Invalid Voltage value"
   Else
     Command_Prepare_Meas_FWDVOLTAGE CM_ID,Voltage,Current,CompType,Polarity,TIO_MEASURE
   End If
@@ -749,7 +753,7 @@ Function ChangeVisibility_Result ( ProcessType )
   Visual.Select("param_reac10k").Style.Display = "None"  
   Select Case ProcessType 
   Case PREPARE_NONE:
-  'none
+  'None : Should not occur
   Case $(CMD_PREPARE_SETUP_MEASURE):
   Visual.Select("param_ContactRes").Style.Display = "Block"
   Visual.Select("param_CapacityCM").Style.Display = "Block"
@@ -760,7 +764,7 @@ Function ChangeVisibility_Result ( ProcessType )
   Visual.Select("param_Freq").Style.Display = "Block"
   Case $(CMD_PREPARE_MEASURE):
   CompType = Visual.Select("opt_MeasureCommand").Value
-  'Not Diode
+  'Component = R, C or L
   If Not CompType = 4 Then
     Visual.Select("param_CompType1").Style.Display = "Block"
     Visual.Select("param_CompType2").Style.Display = "Block"
@@ -770,9 +774,14 @@ Function ChangeVisibility_Result ( ProcessType )
     Visual.Select("param_Type2Value").Style.Display = "Block"  
     Visual.Select("param_Type2ValueMin").Style.Display = "Block"  
     Visual.Select("param_Type2ValueMax").Style.Display = "Block"  
+  'Component = Diode
   Else
     Visual.Select("param_fwdvoltage").Style.Display = "Block"
-    Visual.Select("param_fwdcurrent").Style.Display = "Block"  
+    Visual.Select("param_fwdcurrent").Style.Display = "Block"
+    Visual.Select("param_Type1ValueMin").Style.Display = "Block"  
+    Visual.Select("param_Type1ValueMax").Style.Display = "Block"
+    Visual.Select("param_Type2ValueMin").Style.Display = "Block"  
+    Visual.Select("param_Type2ValueMax").Style.Display = "Block" 
   End If
   Case $(CMD_PREPARE_SELFTEST) :  
   Visual.Select("param_ContactRes").Style.Display = "Block"
@@ -928,9 +937,9 @@ Function Endurance ( TimeOut )
 End Function
 '------------------------------------------------------------------
 
-'------------------------------------------------------------------
+'-------------------------------------------------------------------------
 ' Common Auxillary Functions ---------------------------------------------
-'------------------------------------------------------------------
+'-------------------------------------------------------------------------
 
 Function LED_Update ( Var_ID , OnOff )
 		If OnOff = 1 Then
