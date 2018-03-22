@@ -37,7 +37,9 @@
   #Layer_Main   {padding: 0px; height:62.5%; width:100%;}
   #Layer_TabStrip   {padding: 2px; height:89% ;width:100%;}
   #Layer_MessageLog {padding: 0px; height:100% ; width:100%;}
-  #MessageLogObj {height:100%; width :100%;}  
+  #MessageLogObj {height:100%; width :95%;}  
+  #Layer_SCILog {padding: 0px; height:100% ; width:100%;}
+  #SCILogObj {height:100%; width :95%;}  
   #LayerCommand  {float:left;width :49.5%; height:380px}
   #LayerReply    {float:left;width :49.5%;height:380px}  
   #LayerPeripherals { position: absolute; top:301px;}
@@ -290,8 +292,8 @@
     LogGrid.setSkin ("red_gray");
     LogGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
     LogGrid.enableTooltips ("true,true,true");
-    LogGrid.enableResizing ("false,false,false");
-    LogGrid.enableMultiselect(false);
+    SCIGrid.enableResizing ("true,true,true");
+    LogGrid.enableMultiselect(true);
     LogGrid.enableAutoWidth (true);
     LogGrid.enableSmartRendering(true);
     LogGrid.init();
@@ -312,8 +314,8 @@
     SCIGrid.setSkin ("red_gray");
     SCIGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
     SCIGrid.enableTooltips ("true,true,true");
-    SCIGrid.enableResizing ("false,false,false");
-    SCIGrid.enableMultiselect(false);
+    SCIGrid.enableResizing ("true,true,true");
+    SCIGrid.enableMultiselect(true);
     SCIGrid.enableAutoWidth (true);
     SCIGrid.enableSmartRendering(true);
     SCIGrid.init();

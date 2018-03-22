@@ -1,4 +1,5 @@
 
+
 Const COMP_TYPE_RES  = 1
 Const COMP_TYPE_CAP  = 2
 Const COMP_TYPE_IND  = 3
@@ -32,6 +33,12 @@ Const ACK_AUTO_RANGE_DID_NOT_SUCCEED  = &hDD
 Const ACK_CAP_AUTO_POL_UNDETERMINED   = &hDE
 Const ACK_FWD_VOLT_ONLY_2MA_OR_10MA   = &hDF
 
+Const Debug_Bit_SCITX = 5
+Const Debug_Bit_SCIRX = 6
+
+Const Log_SCI_TX   = 0
+Const Log_SCI_RX   = 1
+Const Log_SCI_TXRX = 2
 
 Function Init_MFCommand ( )
   Dim PrepCmd_Inprogress,PrepCmd_Error,PrepCmd_PrepID,Endurance_Inprogress
@@ -85,14 +92,14 @@ Sub Get_Firmware( )
   
   If Command_GetFW($(PARAM_DL_ZIEL_APPL_2),AppMaj,AppMin) = 1 Then
     App2 = String.Format("%02X.%02X", AppMaj,AppMin)
-    GetSCILog "Firmware App2:"
+    GetSCITrace Log_SCI_TXRX,"Firmware App2:"
   Else
     App2 = "??.??"
   End If
   
   If Command_GetFW($(PARAM_DL_ZIEL_APPL_3),AppMaj,AppMin) = 1 Then
     App3 = String.Format("%02X.%02X", AppMaj,AppMin)
-    GetSCILog "Firmware App3:"
+    GetSCITrace Log_SCI_TXRX, "Firmware App3:"
   Else
     App3 = "??.??"
   End If
@@ -153,7 +160,7 @@ Dim cmd
       Case $(CMD_PREPARE_MEASURE_AUTO) :
         LogMsg = "Auto Meas"
     End Select
-    GetSCILog LogMsg    
+    GetSCITrace Log_SCI_TXRX, LogMsg    
     If Memory.PrepCmd_Error = 1  AND Memory.CanErr = $(PUB_MB_ERROR) Then
       GetSCIErrorQueue
     End If
@@ -284,14 +291,16 @@ Function OnClick_btn_AssignCANID( Reason )
   LogAdd "Assign CANID"
   CANID_Assign CanID
   System.Delay(100)
-  Command_GetNumOfSlots
-  Get_Firmware
-  'Set Green LED
-  Memory.CANData(0) = 1 
-  Memory.CANData(1) = 2 
-  CANSendGetMC $(CMD_SEND_DATA),$(MC_SET_LED),Memory.SLOT_NO,1,2
-  Memory.CANData(0) = 1 
-  CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS),Memory.SLOT_NO,1,1
+  If Command_GetNumOfSlots = True Then
+    Get_Firmware
+    'Debug_Set_Bit Debug_Bit_SCIRX
+    'Set Green LED    
+    Memory.CANData(0) = 1 
+    Memory.CANData(1) = 2 
+    CANSendGetMC $(CMD_SEND_DATA),$(MC_SET_LED),Memory.SLOT_NO,1,2
+    Memory.CANData(0) = 1 
+    CANSendGetMC $(CMD_SEND_DATA),$(MC_STATUS),Memory.SLOT_NO,1,1
+  End If
   
 End Function
 
@@ -343,7 +352,7 @@ End Function
 '------------------------------------------------------------------
 
 Function OnClick_btn_GetSCIbuffer( Reason )
-  GetSCILog "Data: "
+  GetSCITrace Log_SCI_TXRX, "Data: "
 End Function 
 '------------------------------------------------------------------
 
@@ -424,16 +433,16 @@ Function OnClick_btn_getcover ( Reason )
   If CANSendGetMC ($(CMD_GET_DATA),$(PARAM_INP_COVER),Memory.SLOT_NO,CM_ID,0) = True Then
     If Memory.CanData.Data(2) = 1 Then
       LED_Update "ledcover",1
-      LogAdd "Cover Open"
+      GetSCITrace Log_SCI_TXRX, "Cover Open"
     Else
       LED_Update "ledcover",0
-      LogAdd "Cover Closed"
+      GetSCITrace Log_SCI_TXRX, "Cover Closed"
 
     End If
   Else
     LED_Update "ledcover",0
   End If
-  GetSCILog "Get Cover Slot: "
+  'GetSCILog "Get Cover Slot: "
 End Function
 
 '------------------------------------------------------------------
@@ -450,7 +459,7 @@ Function OnClick_btn_gettemp ( Reason )
     Temp = "??"
   End If
   Visual.Select("op_paramtemp").Value = Temp
-  GetSCILog "Get Cover Temp: "
+  'GetSCILog "Get Cover Temp: "
 End Function
 
 '------------------------------------------------------------------
@@ -669,6 +678,9 @@ End Function
 Function Command_GetNumOfSlots( )
   If CANSendGetMC($(CMD_GET_DATA),$(MC_NUMBER_OF_SLOTS),Memory.SLOT_NO,1,0) = False Then
     LogAdd "Get Number of Slot command Error!"
+    Command_GetNumOfSlots = False
+  Else
+    Command_GetNumOfSlots = True
   End If
 End Function
 
@@ -867,6 +879,28 @@ Function ChangeVisibility_ComponentSelect ( CompType )
     'case auto: all none
   End Select
 End Function 
+
+'-------------------------------------------------------------------
+
+Function Debug_Set_Bit ( BitNo )
+
+  Dim DebugStatus,DebugStatusNew
+  If CANSendGetFeed( $(FEED_GET_DATA),$(PARAM_MEAS_DEBUG),Memory.SLOT_NO,1,0) = True Then
+    DebugStatus = Lang.MakeInt(Memory.CANData.Data(2),Memory.CANData.Data(3))
+    DebugMessage "DebugStatus: " &String.Format("0x%04X",DebugStatus)
+  End If
+  
+  DebugStatusNew= Lang.SetBit(DebugStatus,BitNo,True)
+  DebugMessage "DebugStatusNew: " &String.Format("0x%04X",DebugStatusNew)    
+  
+  Memory.CANData(0) = Lang.GetByte(DebugStatusNew,0)
+  Memory.CANData(1) = Lang.GetByte(DebugStatusNew,1)
+  
+  If CANSendGetFeed ($(FEED_SEND_DATA),$(PARAM_MEAS_DEBUG),Memory.SLOT_NO,1,2) = True Then
+    DebugStatus = Lang.MakeInt(Memory.CANData.Data(0),Memory.CANData.Data(1))
+  End If  
+End Function 
+
 '------------------------------------------------------------------
 
 Function GetModeSelect ( )
@@ -1021,7 +1055,7 @@ Function GetSCIErrorQueue ( )
       Else
         Debugmsg = Debugmsg & String.Format ("%02X ",Memory.CANData.Data(2))
       End If
-      GetSCILog "Get MB Err:"
+      GetSCITrace Log_SCI_TXRX, "Get MB Err:"
     End If   
 
     loopcnt = loopcnt - 1
@@ -1040,43 +1074,58 @@ Function GetSCIErrorQueue ( )
 End Function
 
 '-------------------------------------------------------------------
-Function GetSCILog ( Log )
-  Dim scitx,scirx,i
- 
-  scitx = " TX: "
-  scirx = ")   RX: "
+Function GetSCITrace ( TxRxSetting, Log )
+  Dim scitx,scirx,i,log_msg
+  Dim Get_Tx, Get_Rx
+  
+  Get_Tx = False
+  Get_Rx = False  
+  
+  If TxRxSetting = Log_SCI_TX OR TxRxSetting = Log_SCI_TXRX Then
+    Get_Tx = True
+  End If  
+  If TxRxSetting = Log_SCI_RX OR TxRxSetting = Log_SCI_TXRX Then
+    Get_Rx = True
+  End If
   
   'Get TX sci data
-  GetSCIDataML 0  
-  If Memory.SCIArray.size > 0 Then  
-    scitx = scitx & Memory.SCIArray.size & " ("
-    For i = 0 To Memory.SCIArray.size - 1
-      scitx = scitx & String.Format ("%02X ",Memory.SCIArray.Data(i))
-      If i > 50 Then
-        DebugMessage "Data Overflow!"
-        Exit For
-      End If    
-    Next
+  If Get_Tx = True Then
+    scitx = ""
+    GetSCIDataML 0  
+    If Memory.SCIArray.size > 0 Then  
+      scitx = scitx & Memory.SCIArray.size & " ("
+      For i = 0 To Memory.SCIArray.size - 1
+        scitx = scitx & String.Format ("%02X ",Memory.SCIArray.Data(i))
+        If i > 50 Then
+          DebugMessage "Data Overflow!"
+          Exit For
+        End If    
+      Next  
+    End If
+    Log_SCIMsg "TX: " & scitx & ")"
+  End If
   
-  End If
   'Get RX sci data
-  GetSCIDataML 1
-  If Memory.SCIArray.size > 0 Then  
-    scirx = scirx & Memory.SCIArray.size & " ("
-    For i = 0 To Memory.SCIArray.size - 1
-      scirx = scirx & String.Format ("%02X ",Memory.SCIArray.Data(i))
-      If i > 50 Then
-        DebugMessage "Data Overflow!"
-        Exit For
-      End If    
-    Next
+  If Get_Rx = True Then
+    scirx = ""
+    GetSCIDataML 1    
+    If Memory.SCIArray.size > 0 Then  
+      scirx = scirx & Memory.SCIArray.size & " ("
+      For i = 0 To Memory.SCIArray.size - 1
+        scirx = scirx & String.Format ("%02X ",Memory.SCIArray.Data(i))
+        If i > 50 Then
+          DebugMessage "Data Overflow!"
+          Exit For
+        End If    
+      Next
+    End If
+    Log_SCIMsg "RX: " & scirx & ")"
   End If
-  SCIMsg Log & scitx & scirx & ")"
 
 End Function
 '-------------------------------------------------------------------
 
-Function SCIMsg( sMessage )
+Function Log_SCIMsg( sMessage )
   Dim Gridobj
   Set Gridobj = Visual.Script("SCIGrid")
   Dim MsgId
@@ -1087,3 +1136,17 @@ Function SCIMsg( sMessage )
     DebugMessage "SCI: " & sMessage
   End If 
 End Function
+
+'-------------------------------------------------------------------
+
+Function MF_Handle_Async_Msg_Standalone ( CanReadArg )
+  If CanReadArg.Data(1) = $(PB_USER) Then
+    If CanReadArg.Data(3) = 0 Then
+      'LogAdd "Testing TX"
+    ElseIf CanReadArg.Data(3) = 1 Then
+      'LogAdd "Testing RX"    
+      GetSCITrace Log_SCI_RX, ""
+    End If
+  End If
+End Function
+

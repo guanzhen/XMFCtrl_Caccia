@@ -303,6 +303,11 @@ Function Handle_PubMsg_Standalone( CanReadArg )
     OutputLog = OutputLog & "OK ("  & CanReadArg.Format(CFM_SHORT) & ")"
   End If    
   
+  'Call handler to handle Async messages
+  If Bit_Async = 1 Then  
+    'MF_Handle_Async_Msg_Standalone CanReadArg
+  End If  
+  
   If Memory.PrepCmd_Inprogress = 1 Then
 
     'Pub End detection.
@@ -456,8 +461,8 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
     Memory.Get "CanManager",CanManager        
     Result = CanManager.SendCmd(CanSendArg,1000,SC_CHECK_ERROR_BYTE,CanReadArg)
     
-    If  Result = SCA_NO_ERROR Then      
-      DebugMessage "GetMC OK: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
+    If Result = SCA_NO_ERROR Then      
+      DebugMessage "GetSendMC OK: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
       CANSendGetMC = True
       'XFCU
       If CANConfig.Config = 1 Then
@@ -482,8 +487,12 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
       Memory.Set "CANData",CANData
       'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
     Else
-      LogAdd "Command NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
-      DebugMessage "Command NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
+      If Result = SCA_TIMEOUT Then
+        CanReadArg.Length = 2
+        CanReadArg.Data(1) = &h0C
+      End If
+      LogAdd "GetSendMC NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
+      DebugMessage "GetSendMC NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
       CANSendGetMC = False
     End If
     CanManager.Deliver = True
@@ -544,18 +553,11 @@ Function CANSendGetFeed(Cmd,SubCmd,SlotNo,Division,DataLen)
   'Process Response
   If Memory.Exists("CanManager") AND CanConfig.CANIDvalid = 1 Then    
     Memory.Get "CanManager",CanManager        
-    Result = CanManager.SendCmd(CanSendArg,1000,SC_CHECK_ERROR_BYTE,CanReadArg)
-    
-    DebugMessage "GetFeed OK: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
-    If Result = SCA_NO_ERROR Then
-      CANSendGetFeed = True
-    Else
-      CANSendGetFeed = False
-    End If
+    Result = CanManager.SendCmd(CanSendArg,1000,SC_CHECK_ERROR_BYTE,CanReadArg)    
+    DebugMessage "GetSendFeed: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
     'XFCU
     If CANConfig.Config = 1 Then
       'StandAlone Prepare Commands
-        'DebugMessage "Reading XFCU Get Feed Reply"
         'Data(0) = CMD
         'Data(1) = ACK
         'Data(2) = Data 1
@@ -570,22 +572,26 @@ Function CANSendGetFeed(Cmd,SubCmd,SlotNo,Division,DataLen)
         CANData.Data(5) = CanReadArg.Data(6)        
         Memory.CANDataLen = CanReadArg.Length - 1
     Else
-      'DebugMessage "Standalone Cmd Reply"
       'No need to process data, just copy
       For i = 0 to 7
        CANData.Data(i) = CanReadArg.Data(i)
       Next
       Memory.CANDataLen = CanReadArg.Length
     End If
-    Memory.Set "CANData",CANData      
-    'DebugMessage Memory.CANDataLen
-    'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
+    
+    If Result = SCA_NO_ERROR Then
+      CANSendGetFeed = True
+    Else
+      CANSendGetFeed = False
+    End If
+    
+    Memory.Set "CANData",CANData          
     CanManager.Deliver = True
   Else
     DebugMessage "CANSendGetFeed Error"
     CANSendGetFeed = False
-  End If
-  
+  End If  
+  Memory.Set "CanReadArg",CanReadArg
 End Function
 '------------------------------------------------------------------
 
@@ -643,6 +649,7 @@ Function CANSendPrepareCMD(Cmd,Context,SlotNo,Division,DataLen,PubEndTimeout)
   If Memory.Exists("CanManager") AND CanConfig.CANIDvalid = 1 Then    
     Memory.Get "CanManager",CanManager      
     Result = CanManager.SendCmd(CanSendArg,1000,SC_CHECK_ERROR_BYTE,CanReadArg)
+    DebugMessage "Result: " & Result 
     'Process ACK
     If  Result = SCA_NO_ERROR Then      
       DebugMessage "Prepare OK: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
@@ -672,11 +679,16 @@ Function CANSendPrepareCMD(Cmd,Context,SlotNo,Division,DataLen,PubEndTimeout)
       Memory.Set "CANData",CANData
       'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
     Else
+      'TODO: change the handling of error messages.
+      If Result = SCA_TIMEOUT Then
+        CanReadArg.Length = 2
+        CanReadArg.Data(1) = &h0C
+      End If
       Memory.PrepCmd_Inprogress = 0      
       Memory.PrepCmd_Error = 1
-      Memory.Set "CanErr",CanReadArg.Data(1)
       DebugMessage "Command NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
       LogAdd "Command NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
+      Memory.Set "CanErr",CanReadArg.Data(1)
       CANSendPrepareCMD = False
       Exit Function
     End If

@@ -135,3 +135,8 @@
         #define EEPROM_CM_1                       0x05
         #define EEPROM_CM_2                       0x06
         #define EEPROM_CM_3                       0x07
+
+    // Param: Debug parameters
+        #define PARAM_MEAS_STATUS                 0x60
+        #define PARAM_MEAS_DEBUG                  0x61
+        
