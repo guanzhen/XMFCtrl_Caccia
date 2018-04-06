@@ -171,18 +171,19 @@ Function Get_Measurements ( )
   Dim ResultLog,Value, CompType
   DebugMessage "Process Results"
   ChangeVisibility_Result(Memory.PrepCmd)
+  'Read params from MF depending on the prepare command executed.
   Select Case Memory.PrepCmd
     Case PREPARE_NONE : 
       ResultLog = "Error, no prepare"
     Case $(CMD_PREPARE_SETUP_MEASURE) :
     
-      ResultLog = "Setup Measure: Contact Res :" & GetFloatCanData2($(PARAM_SETUP_MEAS_CONTACT_RES),"op_paramContactres")
-      ResultLog = ResultLog & " Cap:" & GetFloatCanData2($(PARAM_SETUP_MEAS_STRAY_CAPACITY),"op_paramCapacityCM")
-      ResultLog = ResultLog & " Res:" & GetFloatCanData2($(PARAM_SETUP_MEAS_RESISTANCE),"op_paramResistanceCM")
-      ResultLog = ResultLog & " U:" & GetFloatCanData2($(PARAM_SETUP_MEAS_U),"op_paramU")
-      ResultLog = ResultLog & " I:" & GetFloatCanData2($(PARAM_SETUP_MEAS_I),"op_paramI")
-      ResultLog = ResultLog & " Phi:" & GetFloatCanData2($(PARAM_SETUP_MEAS_PHI),"op_paramPhi")
-      ResultLog = ResultLog & " Freq:" & GetFloatCanData2($(PARAM_SETUP_MEAS_FREQ),"op_paramFreq")
+      ResultLog = "Setup Measure: Contact Res :" & GetFloatCanData($(PARAM_SETUP_MEAS_CONTACT_RES),"op_paramContactres")
+      ResultLog = ResultLog & " Cap:" & GetFloatCanData($(PARAM_SETUP_MEAS_STRAY_CAPACITY),"op_paramCapacityCM")
+      ResultLog = ResultLog & " Res:" & GetFloatCanData($(PARAM_SETUP_MEAS_RESISTANCE),"op_paramResistanceCM")
+      ResultLog = ResultLog & " U:" & GetFloatCanData($(PARAM_SETUP_MEAS_U),"op_paramU")
+      ResultLog = ResultLog & " I:" & GetFloatCanData($(PARAM_SETUP_MEAS_I),"op_paramI")
+      ResultLog = ResultLog & " Phi:" & GetFloatCanData($(PARAM_SETUP_MEAS_PHI),"op_paramPhi")
+      ResultLog = ResultLog & " Freq:" & GetFloatCanData($(PARAM_SETUP_MEAS_FREQ),"op_paramFreq")
       
     Case $(CMD_PREPARE_MEASURE) :
       
@@ -196,50 +197,50 @@ Function Get_Measurements ( )
         Visual.Select("op_paramcomptype1").Value = String.Format("%c",Value)
         
         ResultLog = "Meas: CompType1 :" & String.Format("%c",Value)              
-        ResultLog = ResultLog & " Value:" & GetFloatCanData2($(PARAM_MEAS_VALUE),"op_paramType1Value")
-        ResultLog = ResultLog & " Min:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MIN),"op_paramType1ValueMin")
-        ResultLog = ResultLog & " Max:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MAX),"op_paramType1ValueMax")
+        ResultLog = ResultLog & " Value:" & GetFloatCanData($(PARAM_MEAS_VALUE),"op_paramType1Value")
+        ResultLog = ResultLog & " Min:" & GetFloatCanData($(PARAM_MEAS_VALUE_MIN),"op_paramType1ValueMin")
+        ResultLog = ResultLog & " Max:" & GetFloatCanData($(PARAM_MEAS_VALUE_MAX),"op_paramType1ValueMax")
         
         CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE2),Memory.SLOT_NO,1,0
         Value = Memory.CanData(2)
         Visual.Select("op_paramcomptype2").Value = String.Format("%c",Value)
         ResultLog = ResultLog & " CompType2 :" & String.Format("%c",Value)      
 
-        ResultLog = ResultLog & " Value:" & GetFloatCanData2($(PARAM_MEAS_VALUE2),"op_paramType2Value")
-        ResultLog = ResultLog & " Min:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MIN2),"op_paramType2ValueMin")
-        ResultLog = ResultLog & " Max:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MAX2),"op_paramType2ValueMax")
-        ResultLog = ResultLog & " U:" & GetFloatCanData2($(PARAM_MEAS_U),"op_paramU")
-        ResultLog = ResultLog & " I:" & GetFloatCanData2($(PARAM_MEAS_I),"op_paramI")
-        ResultLog = ResultLog & " Phi:" & GetFloatCanData2($(PARAM_MEAS_PHI),"op_paramPhi")
-        ResultLog = ResultLog & " Freq:" & GetFloatCanData2($(PARAM_MEAS_FREQUENCY),"op_paramFreq")
+        ResultLog = ResultLog & " Value:" & GetFloatCanData($(PARAM_MEAS_VALUE2),"op_paramType2Value")
+        ResultLog = ResultLog & " Min:" & GetFloatCanData($(PARAM_MEAS_VALUE_MIN2),"op_paramType2ValueMin")
+        ResultLog = ResultLog & " Max:" & GetFloatCanData($(PARAM_MEAS_VALUE_MAX2),"op_paramType2ValueMax")
+        ResultLog = ResultLog & " U:" & GetFloatCanData($(PARAM_MEAS_U),"op_paramU")
+        ResultLog = ResultLog & " I:" & GetFloatCanData($(PARAM_MEAS_I),"op_paramI")
+        ResultLog = ResultLog & " Phi:" & GetFloatCanData($(PARAM_MEAS_PHI),"op_paramPhi")
+        ResultLog = ResultLog & " Freq:" & GetFloatCanData($(PARAM_MEAS_FREQUENCY),"op_paramFreq")
 
       'Diode
       Else
         DebugMessage "Process Measure Diode"
         
-        ResultLog = "Meas: FWD Voltage :" & GetFloatCanData2($(PARAM_MEAS_FWD_VOLTAGE),"op_paramfwdvoltage")
-        ResultLog = ResultLog & " Min:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MIN),"op_paramType1ValueMin")
-        ResultLog = ResultLog & " Max:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MAX),"op_paramType1ValueMax")
-        ResultLog = ResultLog & " FWD Current:" & GetFloatCanData2($(PARAM_MEAS_FWD_CURRENT),"op_paramfwdcurrent")
-        ResultLog = ResultLog & " Min:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MIN2),"op_paramType2ValueMin")
-        ResultLog = ResultLog & " Max:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MAX2),"op_paramType2ValueMax")
+        ResultLog = "Meas: FWD Voltage :" & GetFloatCanData($(PARAM_MEAS_FWD_VOLTAGE),"op_paramfwdvoltage")
+        ResultLog = ResultLog & " Min:" & GetFloatCanData($(PARAM_MEAS_VALUE_MIN),"op_paramType1ValueMin")
+        ResultLog = ResultLog & " Max:" & GetFloatCanData($(PARAM_MEAS_VALUE_MAX),"op_paramType1ValueMax")
+        ResultLog = ResultLog & " FWD Current:" & GetFloatCanData($(PARAM_MEAS_FWD_CURRENT),"op_paramfwdcurrent")
+        ResultLog = ResultLog & " Min:" & GetFloatCanData($(PARAM_MEAS_VALUE_MIN2),"op_paramType2ValueMin")
+        ResultLog = ResultLog & " Max:" & GetFloatCanData($(PARAM_MEAS_VALUE_MAX2),"op_paramType2ValueMax")
       End If      
       'End CMD_PREPARE_MEASURE
     Case $(CMD_PREPARE_SELFTEST) :
-      ResultLog = "Self Test: Contact Res :" & GetFloatCanData2($(PARAM_SELFTEST_CONTACT_RES),"op_paramContactres")
-      ResultLog = ResultLog & " Cap:" & GetFloatCanData2($(PARAM_SELFTEST_CAPACITY_CM_ID),"op_paramCapacityCM")
-      ResultLog = ResultLog & " Res:" & GetFloatCanData2($(PARAM_SELFTEST_RESISTANCE),"op_paramResistanceCM")
-      ResultLog = ResultLog & " U:" & GetFloatCanData2($(PARAM_SELFTEST_U),"op_paramU")
-      ResultLog = ResultLog & " I:" & GetFloatCanData2($(PARAM_SELFTEST_I),"op_paramI")
-      ResultLog = ResultLog & " Phi:" & GetFloatCanData2($(PARAM_SELFTEST_PHI),"op_paramPhi")
-      ResultLog = ResultLog & " Freq:" & GetFloatCanData2($(PARAM_SELFTEST_FREQ),"op_paramFreq")      
+      ResultLog = "Self Test: Contact Res :" & GetFloatCanData($(PARAM_SELFTEST_CONTACT_RES),"op_paramContactres")
+      ResultLog = ResultLog & " Cap:" & GetFloatCanData($(PARAM_SELFTEST_CAPACITY_CM_ID),"op_paramCapacityCM")
+      ResultLog = ResultLog & " Res:" & GetFloatCanData($(PARAM_SELFTEST_RESISTANCE),"op_paramResistanceCM")
+      ResultLog = ResultLog & " U:" & GetFloatCanData($(PARAM_SELFTEST_U),"op_paramU")
+      ResultLog = ResultLog & " I:" & GetFloatCanData($(PARAM_SELFTEST_I),"op_paramI")
+      ResultLog = ResultLog & " Phi:" & GetFloatCanData($(PARAM_SELFTEST_PHI),"op_paramPhi")
+      ResultLog = ResultLog & " Freq:" & GetFloatCanData($(PARAM_SELFTEST_FREQ),"op_paramFreq")      
       
     Case $(CMD_PREPARE_CALIBRATION) :
 
-      ResultLog = "Compensation: R_1kHz :" & GetFloatCanData2($(PARAM_CAL_R_1KHz),"op_paramres1k")
-      ResultLog = ResultLog & " X_1kHz:" & GetFloatCanData2($(PARAM_CAL_X_1KHz),"op_paramreac1k")
-      ResultLog = ResultLog & " R_10kHz:" & GetFloatCanData2($(PARAM_CAL_R_10KHz),"op_paramres10k")
-      ResultLog = ResultLog & " X_10kHz:" & GetFloatCanData2($(PARAM_CAL_X_10KHz),"op_paramreac10k")
+      ResultLog = "Compensation: R_1kHz :" & GetFloatCanData($(PARAM_CAL_R_1KHz),"op_paramres1k")
+      ResultLog = ResultLog & " X_1kHz:" & GetFloatCanData($(PARAM_CAL_X_1KHz),"op_paramreac1k")
+      ResultLog = ResultLog & " R_10kHz:" & GetFloatCanData($(PARAM_CAL_R_10KHz),"op_paramres10k")
+      ResultLog = ResultLog & " X_10kHz:" & GetFloatCanData($(PARAM_CAL_X_10KHz),"op_paramreac10k")
 
     Case $(CMD_PREPARE_MEASURE_AUTO) :
     
@@ -247,20 +248,20 @@ Function Get_Measurements ( )
       Value = Memory.CanData(2)
       Visual.Select("op_paramcomptype1").Value = String.Format("%c",Value)        
       ResultLog = "Meas: CompType1 :" & String.Format("%c",Value)              
-      ResultLog = ResultLog & " Value:" & GetFloatCanData2($(PARAM_MEAS_VALUE),"op_paramType1Value")
-      ResultLog = ResultLog & " Min:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MIN),"op_paramType1ValueMin")
-      ResultLog = ResultLog & " Max:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MAX),"op_paramType1ValueMax")        
+      ResultLog = ResultLog & " Value:" & GetFloatCanData($(PARAM_MEAS_VALUE),"op_paramType1Value")
+      ResultLog = ResultLog & " Min:" & GetFloatCanData($(PARAM_MEAS_VALUE_MIN),"op_paramType1ValueMin")
+      ResultLog = ResultLog & " Max:" & GetFloatCanData($(PARAM_MEAS_VALUE_MAX),"op_paramType1ValueMax")        
       CANSendGetMC $(CMD_GET_DATA),$(PARAM_MEAS_COMPONENT_TYPE2),Memory.SLOT_NO,1,0
       Value = Memory.CanData(2)
       Visual.Select("op_paramcomptype2").Value = String.Format("%c",Value)
       ResultLog = ResultLog & " CompType2 :" & String.Format("%c",Value)      
-      ResultLog = ResultLog & " Value:" & GetFloatCanData2($(PARAM_MEAS_VALUE2),"op_paramType2Value")
-      ResultLog = ResultLog & " Min:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MIN2),"op_paramType2ValueMin")
-      ResultLog = ResultLog & " Max:" & GetFloatCanData2($(PARAM_MEAS_VALUE_MAX2),"op_paramType2ValueMax")
-      ResultLog = ResultLog & " U:" & GetFloatCanData2($(PARAM_MEAS_U),"op_paramU")
-      ResultLog = ResultLog & " I:" & GetFloatCanData2($(PARAM_MEAS_I),"op_paramI")
-      ResultLog = ResultLog & " Phi:" & GetFloatCanData2($(PARAM_MEAS_PHI),"op_paramPhi")
-      ResultLog = ResultLog & " Freq:" & GetFloatCanData2($(PARAM_MEAS_FREQUENCY),"op_paramFreq")        
+      ResultLog = ResultLog & " Value:" & GetFloatCanData($(PARAM_MEAS_VALUE2),"op_paramType2Value")
+      ResultLog = ResultLog & " Min:" & GetFloatCanData($(PARAM_MEAS_VALUE_MIN2),"op_paramType2ValueMin")
+      ResultLog = ResultLog & " Max:" & GetFloatCanData($(PARAM_MEAS_VALUE_MAX2),"op_paramType2ValueMax")
+      ResultLog = ResultLog & " U:" & GetFloatCanData($(PARAM_MEAS_U),"op_paramU")
+      ResultLog = ResultLog & " I:" & GetFloatCanData($(PARAM_MEAS_I),"op_paramI")
+      ResultLog = ResultLog & " Phi:" & GetFloatCanData($(PARAM_MEAS_PHI),"op_paramPhi")
+      ResultLog = ResultLog & " Freq:" & GetFloatCanData($(PARAM_MEAS_FREQUENCY),"op_paramFreq")        
 
     End Select
     LogAdd ResultLog      
@@ -376,11 +377,11 @@ End Function
 
 '------------------------------------------------------------------
 
-Function OnClick_btn_calibrate( Reason )
-  Dim SubCmd
+Function OnClick_btn_calibrate ( Reason )
+  Dim command
   Dim Reply
-  SubCmd = Visual.Select("opt_SubCmd").Value
-  Memory.CANData(0) = SubCmd
+  command = Visual.Select("opt_SubCmd").Value
+  Memory.CANData(0) = command
   Reply = MsgBox("Are you sure you wish to start compensation?", 1 , "Confirm compensation")
   If Reply = 1 Then
     If CANSendPrepareCMD($(CMD_PREPARE_CALIBRATION),1,Memory.SLOT_NO,1,1,250) = True Then
@@ -999,17 +1000,7 @@ End Function
 
 '------------------------------------------------------------------
 
-Function GetFloatCanData( )
-  Dim Value,RawValue,CANData  
-  Memory.Get "CANData",CANData
-  'DebugMessage String.Format("%4X,%4X,%4X,%4X",CANData(2),CANData(3),CANData(4),CANData(5))
-  RawValue = Lang.MakeLong4(CANData(2),CANData(3),CANData(4),CANData(5))
-  Value = Math.CastLong2Float(RawValue)
-  GetFloatCanData = Value   
-End Function
-'------------------------------------------------------------------
-
-Function GetFloatCanData2( param, displayelement)
+Function GetFloatCanData( param, displayelement )
   Dim Value,RawValue,CANData
   
   CANSendGetMC $(CMD_GET_DATA),param,Memory.SLOT_NO,1,0
@@ -1018,7 +1009,7 @@ Function GetFloatCanData2( param, displayelement)
   RawValue = Lang.MakeLong4(CANData(2),CANData(3),CANData(4),CANData(5))
   Value = String.Format("%G",Math.CastLong2Float(RawValue))
   Visual.Select(displayelement).Value = String.Format(Value)  
-  GetFloatCanData2 = Value 
+  GetFloatCanData = Value 
   
 End Function
 
