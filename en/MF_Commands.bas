@@ -541,7 +541,7 @@ Function PrepareMeasureDiode ( )
   If NOT IsNumeric(Voltage) Then
     LogAdd "Invalid Voltage value"
   Else
-    Command_Prepare_Meas_FWDVOLTAGE CM_ID,Voltage,Current,CompType,Polarity,TIO_MEASURE
+    Command_Prepare_Meas_FWDVOLTAGE CM_ID,Current,Voltage,CompType,Polarity,TIO_MEASURE
   End If
 
 End Function
