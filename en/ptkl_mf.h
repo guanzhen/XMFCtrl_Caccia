@@ -1,4 +1,3 @@
-
 /*!
 *   \file              ptkl_mf.h
 *   
@@ -24,13 +23,15 @@
 *                     2018-01-08
 *                     0.08 , Added ACK_ERR_COVER_CLOSED
 *                     2018-01-15
-*                     0.09 , Reverted changes to be backward compatible with ptkl_mf.h V0.02.
+*                     v8 (0.09) , Reverted changes to be backward compatible with ptkl_mf.h V0.02.
 *                            Newer params introduced in V0.03 toV0.08 are added on top of the changes.
 *                     2018-02-22
-*                     0.10 , Added defines to access for new factory data: Tolerances / Offsetes and settings.
+*                     v9  , Added defines to access for new factory data: Tolerances / Offsets and settings.
+*					                  Added define PARAM_MB_ERRORS
+*					            2018-03-14
+*					            v10 , Added  PARAM_MEAS_STATUS PARAM_MEAS_DEBUG
 *  \b Description: \n
 */
-
     //Service Commands
 
     //Prepare Commands
@@ -58,6 +59,7 @@
         #define PUB_ERROR_ST_CM_RES               0x37
         #define PUB_ERROR_ST_SC_RES               0x38
         #define PUB_ERROR_CM_CHANGED              0x39
+        #define PUB_ERROR_MB_COMM                 0x3A
 
     //Params : IOs
 
@@ -139,4 +141,3 @@
     // Param: Debug parameters
         #define PARAM_MEAS_STATUS                 0x60
         #define PARAM_MEAS_DEBUG                  0x61
-        

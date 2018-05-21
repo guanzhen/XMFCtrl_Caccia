@@ -372,6 +372,7 @@ Function GetErrorInfo ( CanReadArg )
   Case $(PUB_WRONG_POLARITY): ErrorMsg = "Wrong component polarity"
   Case $(PUB_CM_NOT_CONNECTED): ErrorMsg = "Contact Module not present"
   Case $(PUB_ERROR_CM_CHANGED): ErrorMsg = "Contact Module has changed! Compensation required."
+  Case $(PUB_ERROR_MB_COMM): ErrorMsg = "MF1 Board communication error!"
   Case $(PUB_MB_ERROR):
     Select Case CanReadArg.Data(3)
     Case  ACK_INVALID_INPUT_OFFSET         : ErrorMsg = "MB Internal error: Input Offset"
