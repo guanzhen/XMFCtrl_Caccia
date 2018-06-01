@@ -361,6 +361,7 @@ Function GetErrorInfo ( CanReadArg )
   Case $(ACK_INVALID_PARAM): ErrorMsg = "Invalid Parameters"
   Case $(ACK_WRONG_LENGTH): ErrorMsg = "Wrong Length"
   Case $(ACK_TOO_MANY_PREPARES): ErrorMsg = "Too many Prepares"
+  Case $(ACK_UNKNOWN_PROGRAMM): ErrorMsg = "SubBoard MF1 eSW did not start correct!"
   Case $(ACK_TIMEOUT_SUBSYSTEM): ErrorMsg = "Timeout Subsystem"
   Case $(ACK_NOT_IMPLEMENTED): ErrorMsg = "Not Implemented"
   Case $(ACK_ERR_COVER_CLOSED): ErrorMsg = "Protective cover is closed."  
