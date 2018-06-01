@@ -23,7 +23,7 @@ Sub OnLoadFrame()
   Memory.Set "dispLog", true
   
   Window.Width  = 1040
-  Window.Height = 640
+  Window.Height = 760
   
   ' Create version and title ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   If Not System.Configuration ("Version", Config, "Package") Then

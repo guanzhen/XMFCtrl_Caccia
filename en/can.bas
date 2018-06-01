@@ -478,12 +478,14 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
           CANData.Data(3) = CanReadArg.Data(4)
           CANData.Data(4) = CanReadArg.Data(5)
           CANData.Data(5) = CanReadArg.Data(6)
+          Memory.Set "CANDataLen" , CanReadArg.Length
       Else
         'DebugMessage "Standalone Cmd Reply"
         'No need to process data, just copy
          For i = 0 to 7
           CANData.Data(i) = CanReadArg.Data(i)
          Next
+        Memory.Set "CANDataLen" , CanReadArg.Length
       End If
       Memory.Set "CANData",CANData
       'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
@@ -505,6 +507,109 @@ Function CANSendGetMC(Cmd,SubCmd,SlotNo,Division,DataLen)
   
 End Function
 '------------------------------------------------------------------
+
+
+'------------------------------------------------------------------
+Function CANSendGetEEPROM(Cmd,SubCmd,SlotNo,Division,DataLen)
+
+  Dim CanManager,CanConfig,CanSendArg,CanReadArg,CANData
+  Dim i,Result
+  Dim CANID
+  
+  Set CanSendArg = CreateObject("ICAN.CanSendArg")
+  Set CanReadArg = CreateObject("ICAN.CanReadArg")
+  Memory.Get "CANData",CANData
+
+  If Memory.Exists("CanConfig") Then
+    Memory.Get "CanConfig",CanConfig
+    CANID = CanConfig.CANIDcmd
+  End If
+  
+  'XFCU
+  If CANConfig.Config = 1 Then
+    With CanSendArg
+        'DebugMessage "In Machine GetSendMCData command"
+        .CanId = CANID
+        .Data(0) = Cmd + &h10
+        .Data(1) = SubCmd        
+        .Data(2) = SlotNo
+      For i = 0 to DataLen - 1
+        .Data(3+i) = CANData.Data(i)
+        'DebugMessage "Copy Data " & i
+      Next
+      .Length = 3 + DataLen      
+    End With
+  'Standalone
+  Else
+    With CanSendArg
+      .CanId = CANID
+        'DebugMessage "Standalone GetSend MC Data command"
+        .Data(0) = Cmd
+        .Data(1) = SubCmd
+        'For traditional Feeder params (0xA0 - 0xFF), no division byte needed.        
+        If DataLen > 0 Then
+          For i = 0 to DataLen - 1
+            .Data(2+i) = CANData.Data(i)
+            'DebugMessage "Copy Data " & i
+          Next  
+        End If
+        .Length = 2 + DataLen
+    End With  
+  End If
+  
+  'Process Response
+  If Memory.Exists("CanManager") AND CanConfig.CANIDvalid = 1 Then    
+    Memory.Get "CanManager",CanManager        
+    Result = CanManager.SendCmd(CanSendArg,1000,SC_CHECK_ERROR_BYTE,CanReadArg)
+    
+    If Result = SCA_NO_ERROR Then      
+      DebugMessage "CANSendGetEEPROM OK: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
+      CANSendGetEEPROM = True
+      'XFCU
+      If CANConfig.Config = 1 Then
+          'DebugMessage "Reading XFCU GetSend MC Data Reply"
+          'Data(0) = CMD
+          'Data(1) = ACK
+          'Data(2) = Data 1
+          'Data(3) = Data 2
+          'Data(4) = Data 3
+          'Data(5) = Data 4
+          CANData.Data(2) = CanReadArg.Data(3) 
+          CANData.Data(3) = CanReadArg.Data(4)
+          CANData.Data(4) = CanReadArg.Data(5)
+          CANData.Data(5) = CanReadArg.Data(6)
+          Memory.Set "CANDataLen" , CanReadArg.Length
+      Else
+        'DebugMessage "Standalone Cmd Reply"
+        'No need to process data, just copy
+         For i = 0 to 7
+          CANData.Data(i) = CanReadArg.Data(i)
+         Next
+        Memory.Set "CANDataLen" , CanReadArg.Length
+      End If
+      Memory.Set "CANData",CANData
+      'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
+    Else
+      If Result = SCA_TIMEOUT Then
+        CanReadArg.Length = 2
+        CanReadArg.Data(1) = &h0C
+      End If
+      If Not CanReadArg.Data(1) = &H10 Then
+        LogAdd "CANSendGetEEPROM NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
+        DebugMessage "CANSendGetEEPROM NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
+        CANSendGetEEPROM = False
+      End If
+    End If
+    CanManager.Deliver = True
+  Else
+    DebugMessage "No Can Manager Error"
+    CANSendGetEEPROM = False
+  End If
+  Memory.Set "CanReadArg",CanReadArg
+  
+End Function
+'------------------------------------------------------------------
+
 Function CANSendGetFeed(Cmd,SubCmd,SlotNo,Division,DataLen)
 
   Dim CanManager,CanConfig,CanSendArg,CanReadArg,CANData
@@ -571,13 +676,13 @@ Function CANSendGetFeed(Cmd,SubCmd,SlotNo,Division,DataLen)
         CANData.Data(3) = CanReadArg.Data(4)
         CANData.Data(4) = CanReadArg.Data(5)
         CANData.Data(5) = CanReadArg.Data(6)        
-        Memory.CANDataLen = CanReadArg.Length - 1
+        Memory.Set "CANDataLen" , CanReadArg.Length - 1
     Else
       'No need to process data, just copy
       For i = 0 to 7
        CANData.Data(i) = CanReadArg.Data(i)
       Next
-      Memory.CANDataLen = CanReadArg.Length
+      Memory.Set "CANDataLen" , CanReadArg.Length
     End If
     
     If Result = SCA_NO_ERROR Then

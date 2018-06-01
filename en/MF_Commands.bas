@@ -40,6 +40,10 @@ Const Log_SCI_TX   = 0
 Const Log_SCI_RX   = 1
 Const Log_SCI_TXRX = 2
 
+Const PARAM_MB_STATUS  = &h55
+Const PARAM_DATA_STATUS = &h56
+Const PARAM_MB_OVERRIDE = &h57
+
 Function Init_MFCommand ( )
   Dim PrepCmd_Inprogress,PrepCmd_Error,PrepCmd_PrepID,Endurance_Inprogress
   Dim PrepCmd_MeasureInProgress,counter
@@ -488,6 +492,34 @@ Function OnClick_btn_DebugLog ( Reason )
 End Function
 
 
+'------------------------------------------------------------------
+Function OnClick_btn_getstatus ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")    
+  Dim StatusWord,DataStatusWord,OverrideWord
+  If CANSendGetMC ($(CMD_GET_DATA),PARAM_MB_STATUS,Memory.SLOT_NO,CM_ID,0) = True Then
+    StatusWord = Lang.MakeWord(Memory.CanData(2),Memory.CanData(3))
+    UpdateStatus "ipstatus_",StatusWord,13
+  End If
+  If CANSendGetMC ($(CMD_GET_DATA),PARAM_DATA_STATUS,Memory.SLOT_NO,CM_ID,0) = True Then
+    DataStatusWord = Lang.MakeWord(Memory.CanData(2),Memory.CanData(3))
+  End If
+  If CANSendGetMC ($(CMD_GET_DATA),PARAM_MB_OVERRIDE,Memory.SLOT_NO,CM_ID,0) = True Then
+    OverrideWord = Lang.MakeWord(Memory.CanData(2),Memory.CanData(3))
+    UpdateStatus "ipdebug_",OverrideWord,7
+  End If
+  DebugMessage String.Format("Status %02X",StatusWord) & String.Format(" DataStat %02X",DataStatusWord) & String.Format(" Override %02X",OverrideWord) 
+End Function
+'------------------------------------------------------------------
+
+Function UpdateStatus ( handle,data,length )
+  Dim iBit,handlename
+  For iBit = 0 to length-1
+    handlename = handle & String.Format("%01d",iBit+1)
+    'DebugMessage handlename & " " & Lang.Bit(data,iBit)
+    LED_Update handlename, Lang.Bit(data,iBit)
+  Next
+End Function
 '------------------------------------------------------------------
 Function OnChange_opt_SlotNum ( Reason )
   Memory.Set "SLOT_NO",Visual.Select("opt_SlotNum").SelectedItemAttribute("Value")
