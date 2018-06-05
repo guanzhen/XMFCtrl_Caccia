@@ -268,7 +268,8 @@ Function Get_Measurements ( )
       ResultLog = ResultLog & " Freq:" & GetFloatCanData($(PARAM_MEAS_FREQUENCY),"op_paramFreq")        
 
     End Select
-    LogAdd ResultLog      
+    LogAdd ResultLog
+    DebugMessage ResultLog
 End Function 
 
 '------------------------------------------------------------------
@@ -383,12 +384,13 @@ End Function
 
 Function OnClick_btn_calibrate ( Reason )
   Dim command
-  Dim Reply
+  Dim Reply,CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")  
   command = Visual.Select("opt_SubCmd").Value
   Memory.CANData(0) = command
   Reply = MsgBox("Are you sure you wish to start compensation?", 1 , "Confirm compensation")
   If Reply = 1 Then
-    If CANSendPrepareCMD($(CMD_PREPARE_CALIBRATION),1,Memory.SLOT_NO,1,1,250) = True Then
+    If CANSendPrepareCMD($(CMD_PREPARE_CALIBRATION),1,Memory.SLOT_NO,CM_ID,1,250) = True Then
       Memory.Set "PrepCmd", $(CMD_PREPARE_CALIBRATION)
       LogAdd "Compensation command started"
       System.Start "Wait_Measurement",TIO_CALIBRATE
@@ -401,8 +403,9 @@ End Function
 '------------------------------------------------------------------
 
 Function OnClick_btn_selftest ( Reason )
-    
-  If CANSendPrepareCMD($(CMD_PREPARE_SELFTEST),1,Memory.SLOT_NO,1,0,250) = True Then
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  If CANSendPrepareCMD($(CMD_PREPARE_SELFTEST),1,Memory.SLOT_NO,CM_ID,0,250) = True Then
     Memory.Set "PrepCmd", $(CMD_PREPARE_SELFTEST)
     LogAdd "Self Test command started"
     System.Start "Wait_Measurement",TIO_SELFTEST
