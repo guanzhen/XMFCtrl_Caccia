@@ -100,6 +100,9 @@
             <option value = "2">Parallel</option>
           </select>      
           </td>
+          <td>
+          <input id="cbmodesel" type = "checkbox" style = "width:50px">Manual</input>
+          </td>
         </tr>
         </table>
         <hr>
@@ -252,13 +255,20 @@
       <h1>Overrides</h1>
       <table>    
         <tr><td>Parameter</td><td>Status</td></tr>
-        <tr><td title="Force commands even if contact module is not present">Disable CM Check</td><td><input id="ipdebug_1" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="Manually set mode select">Manual ModeSelect</td><td><input id="ipdebug_2" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="Override mode select based on capacitance value">Manual capacitance ModeSelect</td><td><input id="ipdebug_3" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="Disable automatic self test at feeder startup">Disable Auto SelfTest</td><td><input id="ipdebug_4" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="MF can be used even if SelfTest result failed">Override SelfTest Result Check</td><td><input id="ipdebug_5" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="MF can be used even if Application start command start return a failure">Override AppStart result</td><td><input id="ipdebug_6" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="MF can be used even if communication to MB failed">Override MB Check</td><td><input id="ipdebug_7" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="Measurements are enabled even if contact module is not present">Disable CM Check</td><td>
+        <input value = "0" id="ipdebug_1" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="Manually select measurement frequency and model.">Manual ModeSelect</td><td>
+        <input value = "1" id="ipdebug_2" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="eSW will not set mode select based on capacitance value">Manual capacitance ModeSelect</td><td>
+        <input value = "2" id="ipdebug_3" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="Disable automatic self test at feeder startup">Disable Auto SelfTest</td><td>
+        <input value = "3" id="ipdebug_4" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="MF can be used even if SelfTest result failed">Override SelfTest Result Check</td><td>
+        <input value = "4" id="ipdebug_5" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="MF enabled even if Application start command failed (bootloader not present)">Override AppStart result</td><td>
+        <input value = "5" id="ipdebug_6" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="MF can be used even if communication to MB failed">Override MB Check</td><td>
+        <input value = "6" id="ipdebug_7" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
       </table>
     </div>
     <button id="btn_getstatus" style="clear:left;margin:5px;">Get Status</button>

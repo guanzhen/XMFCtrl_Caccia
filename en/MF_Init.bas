@@ -43,7 +43,7 @@ Sub OnLoadFrame()
   '~~~ Disable elements for input only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   'DisableComponents
   'Visual.SerScopeGrid.AddRows 10,10, True, 1
-  'CreateDebugLogWindow
+  CreateDebugLogWindow
   Visual.Script("dhxWins").load_cansetup
   Visual.Script("LogGrid").load_messagebox  
   Visual.Script("SCIGrid").load_messagebox  

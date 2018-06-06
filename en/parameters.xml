@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+  DISPLAYFORMAT (format)):
+  state = acknowledge state
+  a   = Ascii
+  s   = unsigned short (16Bit)
+  sl  = signed long (32Bit)
+  f   = float (32 Bit)
+  e   = float (32 Bit, Scientific notation (mantissa/exponent), lowercase)
+  x   = hex (8Bit)
+  exp = Exponent (8Bit)
+  str = string
+-->
+
+<Parameters>
+  <ContactModule>
+    <memory size = "128"></memory>
+    <param address="2" length="17" format="str" >SerialNumber </param>
+    <param address="28" length="2" format="str" >FS </param>
+    <param address="30" length="2" format="str" >RS </param>
+    <param address="54" length="2" format="s" >Offset X</param>
+    <param address="56" length="2" format="s" >Offset Y</param>
+    <param address="58" length="2" format="s" >Offset Z</param>    
+  </ContactModule>
+  <MeasurementBoard>
+    <memory size = "1024"></memory>
+    <param address="2" length="17" format="str" >SerialNumber </param>
+    <param address="2" length="8" format="str" >Date of MFG </param>
+    <param address="10" length="3" format="str" >Manufacturer </param>
+    <param address="10" length="3" format="str" >Manufacturer </param>
+  </MeasurementBoard>
+</Parameters>
