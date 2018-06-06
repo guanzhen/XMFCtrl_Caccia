@@ -59,6 +59,7 @@ Function Init_MFCommand ( )
   Memory.Set "Endurance_Inprogress",Endurance_Inprogress
   Memory.Set "PrepCmd_PrepID",PrepCmd_PrepID
   
+  Visual.Select("cbmodesel").Checked = True
   Visual.Select("ip_param_setupExpectedVal").Value = 100E-06
   Visual.Select("opt_polarity").Value = 0
   Visual.Select("ip_paramnumofcycles").Value = 0
@@ -529,7 +530,112 @@ Function OnChange_opt_SlotNum ( Reason )
   DebugMessage "SLOT_NO" & Memory.SLOT_NO
 End Function
 '------------------------------------------------------------------
+Function OnClick_cbmodesel ( Reason )
+Dim StatusWord,checkvalue
 
+  If Visual.Select("cbmodesel").Checked = True Then
+    Visual.Select("optFrequency").Disabled = False
+    Visual.Select("optModel").Disabled = False
+  Else
+    Visual.Select("optFrequency").Disabled = True
+    Visual.Select("optFrequency").Value = 0
+    Visual.Select("optModel").Disabled = True
+    Visual.Select("optModel").Value = 0
+  End If
+  'Set bit 1 (mode seleect) to value in element.
+  Override_SetBit 1,Visual.Select("cbmodesel").Checked
+End Function
+
+
+'------------------------------------------------------------------
+Function OnClick_ipdebug_1 ( Reason )
+  Dim Bit,NewValue
+  Bit = Visual.Select("ipdebug_1").Value
+  NewValue = Override_ToggleBit(Bit)
+  LED_Update "ipdebug_1",NewValue
+End Function
+'------------------------------------------------------------------
+Function OnClick_ipdebug_2 ( Reason )
+  Dim Bit,NewValue
+  Bit = Visual.Select("ipdebug_2").Value
+  NewValue = Override_ToggleBit(Bit)
+  LED_Update "ipdebug_2",NewValue
+End Function
+'------------------------------------------------------------------
+Function OnClick_ipdebug_3 ( Reason )
+  Dim Bit,NewValue
+  Bit = Visual.Select("ipdebug_3").Value
+  NewValue = Override_ToggleBit(Bit)
+  LED_Update "ipdebug_3",NewValue
+End Function
+'------------------------------------------------------------------
+Function OnClick_ipdebug_4 ( Reason )
+  Dim Bit,NewValue
+  Bit = Visual.Select("ipdebug_4").Value
+  NewValue = Override_ToggleBit(Bit)
+  LED_Update "ipdebug_4",NewValue
+End Function
+'------------------------------------------------------------------
+Function OnClick_ipdebug_5 ( Reason )
+  Dim Bit,NewValue
+  Bit = Visual.Select("ipdebug_5").Value
+  NewValue = Override_ToggleBit(Bit)
+  LED_Update "ipdebug_5",NewValue
+End Function
+
+'------------------------------------------------------------------
+Function OnClick_ipdebug_6 ( Reason )
+  Dim Bit,NewValue
+  Bit = Visual.Select("ipdebug_6").Value
+  NewValue = Override_ToggleBit(Bit)
+  LED_Update "ipdebug_6",NewValue
+End Function
+'------------------------------------------------------------------
+Function OnClick_ipdebug_7 ( Reason )
+  Dim Bit,NewValue
+  Bit = Visual.Select("ipdebug_7").Value
+  NewValue = Override_ToggleBit(Bit)
+  LED_Update "ipdebug_7",NewValue
+End Function
+'------------------------------------------------------------------
+' Read the override word
+Function Override_Get (ByRef Value)
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")   
+  If CANSendGetMC ($(CMD_GET_DATA),PARAM_MB_OVERRIDE,Memory.SLOT_NO,CM_ID,0) = True Then
+    Value = Lang.MakeWord(Memory.CanData(2),Memory.CanData(3))
+  End If
+End Function 
+'------------------------------------------------------------------
+' Set selected bit in override word, to a certain boolean value
+Function Override_SetBit (Bit,Value)
+  Dim CM_ID
+  Dim OverrideWord
+  
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")     
+  Override_Get OverrideWord
+  OverrideWord = Lang.SetBit(OverrideWord,Bit,Value)
+  DebugMessage "Override = " & String.Format("%2X",OverrideWord)
+  Memory.CANData(0) = Lang.GetByte(OverrideWord,0)
+  Memory.CANData(1) = Lang.GetByte(OverrideWord,1)    
+  CANSendGetMC $(CMD_SEND_DATA),PARAM_MB_OVERRIDE,Memory.SLOT_NO,CM_ID,2
+End Function
+'------------------------------------------------------------------
+' Toggle selected bit in override word
+Function Override_ToggleBit (Bit)
+Dim value
+Override_Get value
+If Lang.Bit(value,Bit) = 1 Then
+  'DebugMessage "value: " & value & "new bit: 0"  
+  Override_SetBit Bit,0
+  Override_ToggleBit = 0
+Else 
+  'DebugMessage "value: " & value & "new bit: 1"
+  Override_SetBit Bit,1
+  Override_ToggleBit = 1
+End If
+End Function 
+'------------------------------------------------------------------
 Function OnChange_opt_MeasureCommand ( Reason )
   Dim CompType
   DebugMessage "Select:" & Visual.select("opt_MeasureCommand").Value
