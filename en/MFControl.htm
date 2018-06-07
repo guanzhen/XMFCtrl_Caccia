@@ -38,8 +38,8 @@
   #Layer_Main   {padding: 1px; height:99%; width:100%;}
   #Layer_CMEEPROM   {padding: 1px; height:99%; }
   #Layer_MBEEPROM   {padding: 1px; height:99%; }
-  #Layer_CMGrid   {padding: 1px; height:95%; width:100%}
-  #Layer_MBGrid   {padding: 1px; height:95%; width:100%}
+  #Layer_CMGrid   {height:432px; width:600px}
+  #Layer_MBGrid   {height:432px; width:600px}
   #Layer_TabStrip   {padding: 2px; height:94% ;width:100%;}
   #Layer_MessageLog {padding: 0px; height:100% ; width:100%;}
   #Layer_Counters {padding: 1px; height:99% ; width:100%;}
@@ -226,12 +226,12 @@
   <!-- End Div Layer_Main -->
   <div id="Layer_CMEEPROM" class = "GrpFrame">
     <div id="Layer_CMGrid"></div>
-    <button id = "btn_ReadCMEEPROM">Get EEPROM Data</button>
+    <button id = "btn_ReadCMEEPROM" style = "padding:2px">Get EEPROM Data</button>
   </div>
   
   <div id="Layer_MBEEPROM" class = "GrpFrame">
     <div id="Layer_MBGrid"></div>
-    <button id = "btn_ReadMBEEPROM">Get EEPROM Data</button>
+    <button id = "btn_ReadMBEEPROM" style = "padding:2px">Get EEPROM Data</button>
   </div>
   
   
@@ -352,20 +352,20 @@
   var LogGrid = new dhtmlXGridObject('MessageLogObj');
   LogGrid.load_messagebox = function()
   {
-    LogGrid.setHeader("Date,Time,Information");
-    LogGrid.setImagePath("../../../codebase/grid/imgs/");
-    LogGrid.setInitWidths( "100,100,*");
-    LogGrid.setColAlign ("center,center,left");
-    LogGrid.setColTypes ("ro,ro,ro");
-    LogGrid.setColSorting ("na,na,na");
-    LogGrid.setSkin ("red_gray");
-    LogGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
-    LogGrid.enableTooltips ("true,true,true");
-    LogGrid.enableResizing ("true,true,true");
-    LogGrid.enableMultiselect(true);
-    LogGrid.enableAutoWidth (true);
-    LogGrid.enableSmartRendering(true);
-    LogGrid.init();
+    this.setHeader("Date,Time,Information");
+    this.setImagePath("../../../codebase/grid/imgs/");
+    this.setInitWidths( "100,100,*");
+    this.setColAlign ("center,center,left");
+    this.setColTypes ("ro,ro,ro");
+    this.setColSorting ("na,na,na");
+    this.setSkin ("red_gray");
+    this.setStyle("color:black;font-weight:bold;","color:black;","","")
+    this.enableTooltips ("true,true,true");
+    this.enableResizing ("true,true,true");
+    this.enableMultiselect(true);
+    this.enableAutoWidth (true);
+    this.enableSmartRendering(true);
+    this.init();
   }
 </script>
 
@@ -374,20 +374,20 @@
   var SCIGrid = new dhtmlXGridObject('SCILogObj');
   SCIGrid.load_messagebox = function()
   {
-    SCIGrid.setHeader("Date,Time,Information");
-    SCIGrid.setImagePath("../../../codebase/grid/imgs/");
-    SCIGrid.setInitWidths( "100,100,*");
-    SCIGrid.setColAlign ("center,center,left");
-    SCIGrid.setColTypes ("ro,ro,ro");
-    SCIGrid.setColSorting ("na,na,na");
-    SCIGrid.setSkin ("red_gray");
-    SCIGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
-    SCIGrid.enableTooltips ("true,true,true");
-    SCIGrid.enableResizing ("true,true,true");
-    SCIGrid.enableMultiselect(true);
-    SCIGrid.enableAutoWidth (true);
-    SCIGrid.enableSmartRendering(true);
-    SCIGrid.init();
+    this.setHeader("Date,Time,Information");
+    this.setImagePath("../../../codebase/grid/imgs/");
+    this.setInitWidths( "100,100,*");
+    this.setColAlign ("center,center,left");
+    this.setColTypes ("ro,ro,ro");
+    this.setColSorting ("na,na,na");
+    this.setSkin ("red_gray");
+    this.setStyle("color:black;font-weight:bold;","color:black;","","")
+    this.enableTooltips ("true,true,true");
+    this.enableResizing ("true,true,true");
+    this.enableMultiselect(true);
+    this.enableAutoWidth (true);
+    this.enableSmartRendering(true);
+    this.init();
   }
 </script>
 
@@ -396,20 +396,20 @@
   var MBEEPROMGrid = new dhtmlXGridObject('Layer_MBGrid');
   MBEEPROMGrid.drawgrid = function()
   {
-    MBEEPROMGrid.setHeader("Parameter,Address,Data");
-    MBEEPROMGrid.setImagePath("../../../codebase/grid/imgs/");
-    MBEEPROMGrid.setInitWidths( "150,100,*");
-    MBEEPROMGrid.setColAlign ("center,center,left");
-    MBEEPROMGrid.setColTypes ("ro,ro,ro");
-    MBEEPROMGrid.setColSorting ("na,na,na");
-    MBEEPROMGrid.setSkin ("red_gray");
-    MBEEPROMGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
-    MBEEPROMGrid.enableTooltips ("true,true,true");
-    MBEEPROMGrid.enableResizing ("true,true,true");
-    MBEEPROMGrid.enableMultiselect(true);
-    MBEEPROMGrid.enableAutoWidth (true);
-    //MBEEPROMGrid.enableSmartRendering(true);
-    MBEEPROMGrid.init();
+    this.setHeader("Parameter,Address,Data");
+    this.setImagePath("../../../codebase/grid/imgs/");
+    this.setInitWidths( "150,100,*");
+    this.setColAlign ("center,center,left");
+    this.setColTypes ("ro,ro,ro");
+    this.setColSorting ("na,na,na");
+    this.setSkin ("red_gray");
+    this.setStyle("color:black;font-weight:bold;","color:black;","","")
+    this.enableTooltips ("true,true,true");
+    this.enableResizing ("true,true,true");
+    this.enableMultiselect(true);
+    this.enableAutoWidth (false);
+    this.enableSmartRendering(true);
+    this.init();
   }
   MBEEPROMGrid.setVal = function(row,col,val) { this.cells(this.getRowId(row),col).cell.innerHTML = val; }
 </script>
@@ -419,20 +419,20 @@
   var CMEEPROMGrid = new dhtmlXGridObject('Layer_CMGrid');
   CMEEPROMGrid.drawgrid = function()
   {
-    CMEEPROMGrid.setHeader("Parameter,Address,Data");
-    CMEEPROMGrid.setImagePath("../../../codebase/grid/imgs/");
-    CMEEPROMGrid.setInitWidths( "150,100,*");
-    CMEEPROMGrid.setColAlign ("center,center,left");
-    CMEEPROMGrid.setColTypes ("ro,ro,ro");
-    CMEEPROMGrid.setColSorting ("na,na,na");
-    CMEEPROMGrid.setSkin ("red_gray");
-    CMEEPROMGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
-    CMEEPROMGrid.enableTooltips ("true,true,true");
-    CMEEPROMGrid.enableResizing ("true,true,true");
-    CMEEPROMGrid.enableMultiselect(true);
-    CMEEPROMGrid.enableAutoWidth (true);
-    //CMEEPROMGrid.enableSmartRendering(true);
-    CMEEPROMGrid.init();
+    this.setHeader("Parameter,Address,Data");
+    this.setImagePath("../../../codebase/grid/imgs/");
+    this.setInitWidths( "150,100,*");
+    this.setColAlign ("center,center,left");
+    this.setColTypes ("ro,ro,ro");
+    this.setColSorting ("na,na,na");
+    this.setSkin ("red_gray");
+    this.setStyle("color:black;font-weight:bold;","color:black;","","")
+    this.enableTooltips ("true,true,true");
+    this.enableResizing ("true,true,true");
+    this.enableMultiselect(true);
+    this.enableAutoWidth (false);
+    this.enableSmartRendering(true);
+    this.init();
   }
   CMEEPROMGrid.setVal = function(row,col,val) { this.cells(this.getRowId(row),col).cell.innerHTML = val; }
 
@@ -441,6 +441,8 @@
 
 <script language = "JScript" type="text/javascript"> 
   tabbar2 = new dhtmlXTabBar("Layer_TabStrip","top");
+  tabbar2.Init = function()
+  {
   tabbar2.enableAutoReSize( true );
   tabbar2.setImagePath("../../../codebase/tabbar/imgs/");
   tabbar2.setSkin("silver");
@@ -454,10 +456,13 @@
     tabbar2.setCustomStyle( 'msg_tab' + i, 'gray', 'black', 'font-size:10pt;font-family:Arial;font-weight: bold;' );
   }
   tabbar2.setTabActive("msg_tab1");
+  }
 </script>
 
 <script language = "JScript" type="text/javascript"> 
   tabbar = new dhtmlXTabBar("Layer_TabStripMain","top");
+  tabbar.Init = function() 
+  {
   tabbar.enableAutoReSize( true );
   tabbar.setImagePath("../../../codebase/tabbar/imgs/");
   tabbar.setSkin("silver");
@@ -475,6 +480,7 @@
     tabbar.setCustomStyle( 'main_tab' + i, 'gray', 'black', 'font-size:10pt;font-family:Arial;font-weight: bold;' );
   }
   tabbar.setTabActive("main_tab3");
+  }
 </script>
 
 </HTML>

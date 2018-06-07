@@ -45,9 +45,11 @@ Sub OnLoadFrame()
   'Visual.SerScopeGrid.AddRows 10,10, True, 1
   CreateDebugLogWindow
   Visual.Script("dhxWins").load_cansetup
-  Visual.Script("LogGrid").load_messagebox  
+  Visual.Script("tabbar").Init
+  Visual.Script("tabbar2").Init
   Visual.Script("MBEEPROMGrid").drawgrid  
   Visual.Script("CMEEPROMGrid").drawgrid  
+  Visual.Script("LogGrid").load_messagebox
   Visual.Script("SCIGrid").load_messagebox  
   Visual.Select("Layer_Main").style.display = "none"
   Visual.Select("Layer_Logs").style.display = "none"  
