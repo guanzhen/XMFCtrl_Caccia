@@ -112,12 +112,14 @@ Dim xmlOk
 Dim Format,Length,Address
 Dim i,y
 Dim Data
+Dim DataError
 Dim TmpString,TmpWord
   Memory.Get "EEPROMData_MB",EEPROMData_MB
   Set Node = Memory.MBFORMATNODE
   xmlOk = Lang.IsObject(Node)
   If xmlOk Then
     For i = 0 to Node.Size-1
+      DataError = False
       Format = Node(i).Attribute.Attribute("format")
       Address = Node(i).Attribute.Attribute("address")
       Length = Node(i).Attribute.Attribute("length")       
@@ -125,26 +127,27 @@ Dim TmpString,TmpWord
       Select case Format
         case "str":
           'Convert to string. 
-          'TODO: Investigate better way to do this
-          TmpString = ""
-          For y = 0 to Length-1
-            TmpWord = Chr(EEPROMData_MB.Data(y+Address))
-            TmpString = TmpString & TmpWord
-          Next
-          Data = TmpString
+          If GetString(EEPROMData_MB,Address,Length,Data) = False Then
+            'Error with string
+            DataError = True
+          End If
         case "x":
           Data = EEPROMData_MB.Char(Address)        
         case "s":
           Data = EEPROMData_MB.Word(Address)
         case "f":
-          Data = EEPROMData_MB.Float(Address)
+          Data = String.Format("%G",EEPROMData_MB.Float(Address))
         case "s1":
           Data = EEPROMData_MB.Short(Address)
         case "s2":
           Data = EEPROMData_MB.Long(Address)
         case else:
-      End Select      
-      Visual.Script("MBEEPROMGrid").setVal i,2,Data
+      End Select
+      Visual.Script("MBEEPROMGrid").setVal i,Data
+      If DataError = True Then
+        Visual.Script("MBEEPROMGrid").setCellRed(i)
+      End If
+
       DebugMessage "Param" & i & " "& Address & " "& Length & " "& Format & "Data: " & Data
     Next
   End If
@@ -157,6 +160,7 @@ Dim xmlOk
 Dim Format,Length,Address
 Dim i,y
 Dim Data
+Dim DataError
 Dim TmpString,TmpWord
   Memory.Get "EEPROMData_CM",EEPROMData_CM
   Set Node = Memory.CMFORMATNODE
@@ -164,33 +168,34 @@ Dim TmpString,TmpWord
   If xmlOk Then
     'loop through all the parameters in the CMFORMATNODE node and display them
     For i = 0 to Node.Size-1
+      DataError = False
       Format = Node(i).Attribute.Attribute("format")
       Address = Node(i).Attribute.Attribute("address")
       Length = Node(i).Attribute.Attribute("length")       
       'Format data based on address and data format, from EEPROM data array read using GetEEPROMML
       Select case Format
         case "str":
-          'Convert to string. 
           'TODO: Investigate better way to do this
-          TmpString = ""
-          For y = 0 to Length-1
-            TmpWord = Chr(EEPROMData_CM.Data(y+Address))
-            TmpString = TmpString & TmpWord
-          Next
-          Data = TmpString
+          If GetString(EEPROMData_CM,Address,Length,Data) = False Then
+            'Error with string
+            DataError = True
+          End If
         case "x":
           Data = EEPROMData_CM.Char(Address)        
         case "s":
           Data = EEPROMData_CM.Word(Address)
         case "f":
-          Data = EEPROMData_CM.Float(Address)
+          Data = String.Format("%G",EEPROMData_CM.Float(Address))
         case "s1":
           Data = EEPROMData_CM.Short(Address)
         case "s2":
           Data = EEPROMData_CM.Long(Address)
         case else:
       End Select      
-      Visual.Script("CMEEPROMGrid").setVal i,2,Data
+      Visual.Script("CMEEPROMGrid").setVal i,Data
+      If DataError = True Then
+        Visual.Script("CMEEPROMGrid").setCellRed(i)
+      End If
       DebugMessage "Param" & i & " "& Address & " "& Length & " "& Format & "Data: " & Data
     Next
   End If
@@ -261,4 +266,34 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
   Else
   End If
 
+End Function
+
+Function GetString(ByRef array,index,length,TargetString)
+  Dim TmpString,TmpWord,y
+  Dim ValidString
+  Dim DataByte
+  ValidString = True
+  TmpString = ""
+  For y = 0 to length-1
+    DataByte = array.Data(index+y)
+    If DataByte < 32 OR DataByte > 126 Then
+      TmpWord = Chr(63)
+      ValidString = False
+    Else
+      TmpWord = Chr(DataByte)
+    End If
+    TmpString = TmpString & TmpWord
+  Next
+  GetString = ValidString
+  TargetString = TmpString
+End Function
+
+Function GetChar(input)
+  'Check if character is printable
+  If input < 32 OR input > 126 Then
+    GetChar = Chr(63)
+  Else
+    GetChar = Chr(input)
+  End If
+  
 End Function

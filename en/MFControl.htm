@@ -411,7 +411,9 @@
     this.enableSmartRendering(true);
     this.init();
   }
-  MBEEPROMGrid.setVal = function(row,col,val) { this.cells(this.getRowId(row),col).cell.innerHTML = val; }
+  MBEEPROMGrid.setVal = function(row,val) { this.cells(this.getRowId(row),2).cell.innerHTML = val; }
+  MBEEPROMGrid.setCellRed = function(row){this.setCellTextStyle(row,2,"color:red");}
+
 </script>
 
 <!-- Create CM EEPROM DHTMLX object-->
@@ -434,8 +436,8 @@
     this.enableSmartRendering(true);
     this.init();
   }
-  CMEEPROMGrid.setVal = function(row,col,val) { this.cells(this.getRowId(row),col).cell.innerHTML = val; }
-
+  CMEEPROMGrid.setVal = function(row,val) { this.cells(this.getRowId(row),2).cell.innerHTML = val; }
+  CMEEPROMGrid.setCellRed = function(row){this.setCellTextStyle(row,2,"color:red");}
 </script>
 
 
