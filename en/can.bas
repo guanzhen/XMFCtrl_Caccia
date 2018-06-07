@@ -563,7 +563,7 @@ Function CANSendGetEEPROM(Cmd,SubCmd,SlotNo,Division,DataLen)
     Memory.Get "CanManager",CanManager        
     Result = CanManager.SendCmd(CanSendArg,1000,SC_CHECK_ERROR_BYTE,CanReadArg)
     
-    If Result = SCA_NO_ERROR Then      
+    If Result = SCA_NO_ERROR OR Result = SCA_ERROR_BYTE Then      
       DebugMessage "CANSendGetEEPROM OK: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
       CANSendGetEEPROM = True
       'XFCU

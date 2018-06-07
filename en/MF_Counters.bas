@@ -4,20 +4,41 @@ Const CM1_TARGET = 5
 Const CM2_TARGET = 6
 Const CM3_TARGET = 7
 
+'------------------------------------------------------------------
+Function OnClick_btn_ReadCMEEPROM( Reason )
+  Dim EEPROMData,i
 
-Function OnClick_btn_ReadCounters( Reason )
-
-ReadCounters
+  If Memory.Get("EEPROMData_CM",EEPROMData) = True Then
+    GetEEPROMML 0,CM1_TARGET,EEPROMData
+    UpdateCMGrid
+  End If
 
 End Function
 
-Sub ReadCounters()
+'------------------------------------------------------------------
+Function OnClick_btn_ReadMBEEPROM( Reason )
+Dim EEPROMData
+Set EEPROMData = Memory.EEPROMData_MB
+GetEEPROMML 0,MB_TARGET,EEPROMData
+UpdateMBGrid
+
+End Function
+'------------------------------------------------------------------
+Function InitEEPROMGrid()
   Dim xmlOk, XMLfilepath, ackNode, i 
   Dim Address, Length, Name, Format, Value, SizeNode
   Dim EEPROMSize
-
+  Dim EEPROMData_CM,EEPROMData_MB
+  Dim CM_Grid
+  Dim MB_Grid
+  Dim MsgId
+  
+  Set CM_Grid = Visual.Script("CMEEPROMGrid")
+  Set MB_Grid = Visual.Script("MBEEPROMGrid")
   XMLfilepath = System.Environment.Path & "parameters.xml" 
   
+  Set EEPROMData_CM = CreateObject("Math.ByteArray")
+  Set EEPROMData_MB = CreateObject("Math.ByteArray")
   'Checks if xml file is present
   If File.FileExists(XMLfilepath) = False Then
     DebugMessage "XML file NOK : " & XMLfilepath
@@ -26,30 +47,156 @@ Sub ReadCounters()
     DebugMessage "XML file OK : " & XMLfilepath
     xmlOk = True
     Set ackNode = CreateObject("XMLCW.XmlParser").Build( XMLfilepath )
+    Memory.Set "EEPROMXMLNode",ackNode
     xmlOk = Lang.IsObject(ackNode)
-    If xmlOk = True Then      
-      DebugMessage "xml Size: " & ackNode.size
+    If xmlOk = True Then
       EEPROMSize = ackNode("ContactModule").Child("memory").Attribute.Attribute("size")
-      DebugMessage "CM memory size " & EEPROMSize
-      GetEEPROMML 0,CM1_TARGET,EEPROMSize
+      'Init memory to hold EEPROMData
+      For i = 0 to EEPROMSize-1
+        EEPROMData_CM.Add(0)
+      Next
+      DebugMessage "CM size:" & EEPROMSize & " EEPROMData_CM Size:" & EEPROMData_CM.Size
+      Memory.Set "EEPROMData_CM",EEPROMData_CM
       Set ackNode = ackNode("ContactModule").SelectNodes("param")
       xmlOk = Lang.IsObject(ackNode)
     End If
     If xmlOk = True Then
       'Search for all parameters and obtain the value from contact module.
       DebugMessage "param Size: " & ackNode.size
-      For i = 0 to ackNode.Size-1
+      For i = 0 to ackNode.Size-1        
         Address =  ackNode(i).Attribute.Attribute("address") 
         Length = ackNode(i).Attribute.Attribute("length") 
         Format = ackNode(i).Attribute.Attribute("format") 
         Name = ackNode.ChildContent(i)
+        DebugMessage "Param" & i & " " & Name & " "& Address & " "& Length & " "& Format & " " & Value
+        CM_Grid.addrow i,Name & "," & String.Format("0x%04X",Address) & ",",i
+        'Value = GetCMParam( 1, Address, Length, Format)
+      Next      
+      Memory.Set "CMFORMATNODE",ackNode
+    End If
+    ' Populate MB tab
+    Set ackNode = Memory.EEPROMXMLNode
+    xmlOk = Lang.IsObject(ackNode)
+    If xmlOk = True Then
+      EEPROMSize = ackNode("MeasurementBoard").Child("memory").Attribute.Attribute("size")
+      'Init memory to hold EEPROMData
+      For i = 0 to EEPROMSize-1
+        EEPROMData_MB.Add(0)
+      Next
+      DebugMessage "MB size:" & EEPROMSize & " EEPROMData_MB Size:" & EEPROMData_MB.Size
+      Memory.Set "EEPROMData_MB",EEPROMData_MB
+      Set ackNode = ackNode("MeasurementBoard").SelectNodes("param")
+      xmlOk = Lang.IsObject(ackNode)
+    End If
+    If xmlOk = True Then
+      'Search for all parameters and obtain the value from contact module.
+      DebugMessage "param Size: " & ackNode.size
+      For i = 0 to ackNode.Size-1        
+        Address =  ackNode(i).Attribute.Attribute("address") 
+        Length = ackNode(i).Attribute.Attribute("length") 
+        Format = ackNode(i).Attribute.Attribute("format") 
+        Name = ackNode.ChildContent(i)
+        MB_Grid.addrow i,Name & "," & String.Format("0x%04X",Address) & ",",i
         'Value = GetCMParam( 1, Address, Length, Format)
         DebugMessage "Param" & i & " " & Name & " "& Address & " "& Length & " "& Format & " " & Value
       Next      
+      Memory.Set "MBFORMATNODE",ackNode
     End If
   End If  
-End Sub
+End Function
 
+'------------------------------------------------------------------
+Function UpdateMBGrid()
+Dim Node,EEPROMData_MB
+Dim xmlOk
+Dim Format,Length,Address
+Dim i,y
+Dim Data
+Dim TmpString,TmpWord
+  Memory.Get "EEPROMData_MB",EEPROMData_MB
+  Set Node = Memory.MBFORMATNODE
+  xmlOk = Lang.IsObject(Node)
+  If xmlOk Then
+    For i = 0 to Node.Size-1
+      Format = Node(i).Attribute.Attribute("format")
+      Address = Node(i).Attribute.Attribute("address")
+      Length = Node(i).Attribute.Attribute("length")       
+      'Format data based on address and data format, from EEPROM data array read using GetEEPROMML
+      Select case Format
+        case "str":
+          'Convert to string. 
+          'TODO: Investigate better way to do this
+          TmpString = ""
+          For y = 0 to Length-1
+            TmpWord = Chr(EEPROMData_MB.Data(y+Address))
+            TmpString = TmpString & TmpWord
+          Next
+          Data = TmpString
+        case "x":
+          Data = EEPROMData_MB.Char(Address)        
+        case "s":
+          Data = EEPROMData_MB.Word(Address)
+        case "f":
+          Data = EEPROMData_MB.Float(Address)
+        case "s1":
+          Data = EEPROMData_MB.Short(Address)
+        case "s2":
+          Data = EEPROMData_MB.Long(Address)
+        case else:
+      End Select      
+      Visual.Script("MBEEPROMGrid").setVal i,2,Data
+      DebugMessage "Param" & i & " "& Address & " "& Length & " "& Format & "Data: " & Data
+    Next
+  End If
+
+End Function
+'------------------------------------------------------------------
+Function UpdateCMGrid()
+Dim Node,EEPROMData_CM
+Dim xmlOk
+Dim Format,Length,Address
+Dim i,y
+Dim Data
+Dim TmpString,TmpWord
+  Memory.Get "EEPROMData_CM",EEPROMData_CM
+  Set Node = Memory.CMFORMATNODE
+  xmlOk = Lang.IsObject(Node)
+  If xmlOk Then
+    'loop through all the parameters in the CMFORMATNODE node and display them
+    For i = 0 to Node.Size-1
+      Format = Node(i).Attribute.Attribute("format")
+      Address = Node(i).Attribute.Attribute("address")
+      Length = Node(i).Attribute.Attribute("length")       
+      'Format data based on address and data format, from EEPROM data array read using GetEEPROMML
+      Select case Format
+        case "str":
+          'Convert to string. 
+          'TODO: Investigate better way to do this
+          TmpString = ""
+          For y = 0 to Length-1
+            TmpWord = Chr(EEPROMData_CM.Data(y+Address))
+            TmpString = TmpString & TmpWord
+          Next
+          Data = TmpString
+        case "x":
+          Data = EEPROMData_CM.Char(Address)        
+        case "s":
+          Data = EEPROMData_CM.Word(Address)
+        case "f":
+          Data = EEPROMData_CM.Float(Address)
+        case "s1":
+          Data = EEPROMData_CM.Short(Address)
+        case "s2":
+          Data = EEPROMData_CM.Long(Address)
+        case else:
+      End Select      
+      Visual.Script("CMEEPROMGrid").setVal i,2,Data
+      DebugMessage "Param" & i & " "& Address & " "& Length & " "& Format & "Data: " & Data
+    Next
+  End If
+
+End Function
+'------------------------------------------------------------------
 Function GetCMParam ( CM_num,address,length,format )
   Dim Value
   Dim Buffer
@@ -57,42 +204,54 @@ Function GetCMParam ( CM_num,address,length,format )
   Value = 0
   GetCMParam = Value
 End Function
-
+'------------------------------------------------------------------
 'read EEPROM data, based on the size and commit it into memory
-Function GetEEPROMML(address,target,size)
-  dim EEPROMArray,i,exitloop,Timeout
-  dim scitx,scirx, bytesleft
-  Set EEPROMArray = CreateObject( "MATH.Array" )
+Function GetEEPROMML(address,target,byref EEPROMArray)
+  Dim i,exitloop,Timeout,CANData
+  Dim scitx,scirx, bytesleft
   Dim DebugLine
-  bytesleft = size
+  Dim ByteCounter
+  Dim LineNumber  
+ 
+  Memory.Get "CANData",CANData
+  bytesleft = EEPROMArray.size
+  DebugMessage "Bytes to Read from EEPROM: " & bytesleft
+  ByteCounter = 0
   exitloop = 0
   Timeout = 50
  'Get SCI TX
-  Memory.CANData(0) = target
-  Memory.CANData(1) = Lang.GetByte(address,0)
-  Memory.CANData(2) = Lang.GetByte(address,1)
-  Memory.CANData(3) = Lang.GetByte(address,2)
-  Memory.CANData(4) = Lang.GetByte(address,3)
-  
+  CANData.Data(0) = target
+  CANData.Data(1) = Lang.GetByte(address,0)
+  CANData.Data(2) = Lang.GetByte(address,1)
+  CANData.Data(3) = Lang.GetByte(address,2)
+  CANData.Data(4) = Lang.GetByte(address,3)
+  Memory.Set "CANData",CANData
+  LineNumber = 0
   DebugMessage "ML:Start"
   If CANSendGetEEPROM($(CMD_GET_DATA),$(PARAM_GET_EEPROM_START), Memory.SLOT_NO,1,5) = True Then      
     Do
-      DebugMessage "ML:Line"
+      LineNumber = LineNumber + 1
+      'DebugMessage "ML:Line " & LineNumber & " bytes: " & bytesleft
       DebugLine = ""
-      CANSendGetEEPROM $(CMD_GET_DATA),$(PARAM_GET_EEPROM_LINE), Memory.SLOT_NO,1,0      
-      For i = 2 To Memory.CANDataLen-1
-        DebugLine = DebugLine & Memory.CANData.Data(i)
-        EEPROMArray.Add(Memory.CANData.Data(i))
-      Next
-      DebugMessage "ACK:" & Memory.CANData(1) & " ML:" & DebugLine
-      If Memory.CANData(1) = $(ACK_NO_MORE_DATA) Then
-        exitloop = 1
+      If CANSendGetEEPROM($(CMD_GET_DATA),$(PARAM_GET_EEPROM_LINE), Memory.SLOT_NO,1,0) = True Then
+        Memory.Get "CANData",CANData
+        For i = 2 To Memory.CANDataLen-1     
+          If bytesleft > 0 Then
+            DebugLine = DebugLine & String.Format("%02X ",(CANData.Data(i)))
+            EEPROMArray.Data(ByteCounter) = CANData.Data(i)
+            bytesleft = bytesleft - 1
+            ByteCounter = ByteCounter + 1
+          Else
+            DebugMessage "ML: End"
+            exitloop = 1
+            Exit For
+          End If
+        Next
+        If CANData(1) = $(ACK_NO_MORE_DATA) Then
+          exitloop = 1
+        End If
       End If
-      bytesleft = bytesleft - (Memory.CANDataLen - 2)
-      If bytesleft <= 0 Then
-        exitloop = 1
-      End If
-      DebugMessage "ACK:" & Memory.CANData(1) & " ML:" & DebugLine & " Bytes left:" & bytesleft & " Length:" & Memory.CANDataLen
+      DebugMessage "ACK:" & CANData(1) & " ML:" & DebugLine & " Bytes left:" & bytesleft & " Length:" & Memory.CANDataLen
       Timeout = Timeout - 1
       If Timeout = 0 Then
         exitloop = 1
@@ -100,8 +259,6 @@ Function GetEEPROMML(address,target,size)
       End If
     Loop Until exitloop = 1
   Else
-    'DebugMessage "Error"
   End If
-  Memory.Set "EEPROMArray",EEPROMArray
 
 End Function

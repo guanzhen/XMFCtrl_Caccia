@@ -76,6 +76,9 @@ Function Init_MFCommand ( )
   
   PrepCmd_MeasureInProgress = 0
   Memory.Set "PrepCmd_MeasureInProgress",PrepCmd_MeasureInProgress
+  
+  InitEEPROMGrid
+  
 End Function
 
 '------------------------------------------------------------------

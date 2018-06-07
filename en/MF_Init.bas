@@ -46,6 +46,8 @@ Sub OnLoadFrame()
   CreateDebugLogWindow
   Visual.Script("dhxWins").load_cansetup
   Visual.Script("LogGrid").load_messagebox  
+  Visual.Script("MBEEPROMGrid").drawgrid  
+  Visual.Script("CMEEPROMGrid").drawgrid  
   Visual.Script("SCIGrid").load_messagebox  
   Visual.Select("Layer_Main").style.display = "none"
   Visual.Select("Layer_Logs").style.display = "none"  

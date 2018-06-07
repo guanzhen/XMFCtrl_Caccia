@@ -36,6 +36,10 @@
   #btn_GetSCIErrQ  {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
   #Layer_TabStripMain   {padding: 0px; height:65%; width:100%;background-color : #97A0A5;}
   #Layer_Main   {padding: 1px; height:99%; width:100%;}
+  #Layer_CMEEPROM   {padding: 1px; height:99%; }
+  #Layer_MBEEPROM   {padding: 1px; height:99%; }
+  #Layer_CMGrid   {padding: 1px; height:95%; width:100%}
+  #Layer_MBGrid   {padding: 1px; height:95%; width:100%}
   #Layer_TabStrip   {padding: 2px; height:94% ;width:100%;}
   #Layer_MessageLog {padding: 0px; height:100% ; width:100%;}
   #Layer_Counters {padding: 1px; height:99% ; width:100%;}
@@ -219,10 +223,17 @@
       </div>
     </div>
   </div>
-  
-  <div id="Layer_Counters" class = "GrpFrame">
-    <button id = "btn_ReadCounters">Get Counters</button>
+  <!-- End Div Layer_Main -->
+  <div id="Layer_CMEEPROM" class = "GrpFrame">
+    <div id="Layer_CMGrid"></div>
+    <button id = "btn_ReadCMEEPROM">Get EEPROM Data</button>
   </div>
+  
+  <div id="Layer_MBEEPROM" class = "GrpFrame">
+    <div id="Layer_MBGrid"></div>
+    <button id = "btn_ReadMBEEPROM">Get EEPROM Data</button>
+  </div>
+  
   
   <div id="Layer_Status" class = "GrpFrame">
     <div id=SubLayerStatus_Status style = "float:left">
@@ -380,21 +391,69 @@
   }
 </script>
 
-<script language = "JScript" type="text/javascript"> 
-  tabbar = new dhtmlXTabBar("Layer_TabStrip","top");
-  tabbar.enableAutoReSize( true );
-  tabbar.setImagePath("../../../codebase/tabbar/imgs/");
-  tabbar.setSkin("silver");
-  tabbar.addTab("msg_tab1","Message Log");
-  tabbar.addTab("msg_tab2","SCI Log");
-  tabbar.setContent( "msg_tab1", Layer_MessageLog);
-  tabbar.setContent( "msg_tab2", Layer_SCILog);
-
-  for ( var i = 1; i <= tabbar.getNumberOfTabs(); i++ )
+<!-- Create MB EEPROM DHTMLX object-->
+<script language="JScript" type="text/javascript">
+  var MBEEPROMGrid = new dhtmlXGridObject('Layer_MBGrid');
+  MBEEPROMGrid.drawgrid = function()
   {
-    tabbar.setCustomStyle( 'main_tab' + i, 'gray', 'black', 'font-size:10pt;font-family:Arial;font-weight: bold;' );
+    MBEEPROMGrid.setHeader("Parameter,Address,Data");
+    MBEEPROMGrid.setImagePath("../../../codebase/grid/imgs/");
+    MBEEPROMGrid.setInitWidths( "150,100,*");
+    MBEEPROMGrid.setColAlign ("center,center,left");
+    MBEEPROMGrid.setColTypes ("ro,ro,ro");
+    MBEEPROMGrid.setColSorting ("na,na,na");
+    MBEEPROMGrid.setSkin ("red_gray");
+    MBEEPROMGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
+    MBEEPROMGrid.enableTooltips ("true,true,true");
+    MBEEPROMGrid.enableResizing ("true,true,true");
+    MBEEPROMGrid.enableMultiselect(true);
+    MBEEPROMGrid.enableAutoWidth (true);
+    //MBEEPROMGrid.enableSmartRendering(true);
+    MBEEPROMGrid.init();
   }
-  tabbar.setTabActive("main_tab1");
+  MBEEPROMGrid.setVal = function(row,col,val) { this.cells(this.getRowId(row),col).cell.innerHTML = val; }
+</script>
+
+<!-- Create CM EEPROM DHTMLX object-->
+<script language="JScript" type="text/javascript">
+  var CMEEPROMGrid = new dhtmlXGridObject('Layer_CMGrid');
+  CMEEPROMGrid.drawgrid = function()
+  {
+    CMEEPROMGrid.setHeader("Parameter,Address,Data");
+    CMEEPROMGrid.setImagePath("../../../codebase/grid/imgs/");
+    CMEEPROMGrid.setInitWidths( "150,100,*");
+    CMEEPROMGrid.setColAlign ("center,center,left");
+    CMEEPROMGrid.setColTypes ("ro,ro,ro");
+    CMEEPROMGrid.setColSorting ("na,na,na");
+    CMEEPROMGrid.setSkin ("red_gray");
+    CMEEPROMGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
+    CMEEPROMGrid.enableTooltips ("true,true,true");
+    CMEEPROMGrid.enableResizing ("true,true,true");
+    CMEEPROMGrid.enableMultiselect(true);
+    CMEEPROMGrid.enableAutoWidth (true);
+    //CMEEPROMGrid.enableSmartRendering(true);
+    CMEEPROMGrid.init();
+  }
+  CMEEPROMGrid.setVal = function(row,col,val) { this.cells(this.getRowId(row),col).cell.innerHTML = val; }
+
+</script>
+
+
+<script language = "JScript" type="text/javascript"> 
+  tabbar2 = new dhtmlXTabBar("Layer_TabStrip","top");
+  tabbar2.enableAutoReSize( true );
+  tabbar2.setImagePath("../../../codebase/tabbar/imgs/");
+  tabbar2.setSkin("silver");
+  tabbar2.addTab("msg_tab1","Message Log");
+  tabbar2.addTab("msg_tab2","SCI Log");
+  tabbar2.setContent( "msg_tab1", Layer_MessageLog);
+  tabbar2.setContent( "msg_tab2", Layer_SCILog);
+
+  for ( var i = 1; i <= tabbar2.getNumberOfTabs(); i++ )
+  {
+    tabbar2.setCustomStyle( 'msg_tab' + i, 'gray', 'black', 'font-size:10pt;font-family:Arial;font-weight: bold;' );
+  }
+  tabbar2.setTabActive("msg_tab1");
 </script>
 
 <script language = "JScript" type="text/javascript"> 
@@ -404,16 +463,18 @@
   tabbar.setSkin("silver");
   tabbar.addTab("main_tab1","Main");
   tabbar.addTab("main_tab2","Status");
-  tabbar.addTab("main_tab3","Counters");
+  tabbar.addTab("main_tab3","CM EEPROM");
+  tabbar.addTab("main_tab4","MB EEPROM");
   tabbar.setContent( "main_tab1", Layer_Main);
   tabbar.setContent( "main_tab2", Layer_Status);
-  tabbar.setContent( "main_tab3", Layer_Counters);
+  tabbar.setContent( "main_tab3", Layer_CMEEPROM);
+  tabbar.setContent( "main_tab4", Layer_MBEEPROM);
 
   for ( var i = 1; i <= tabbar.getNumberOfTabs(); i++ )
   {
     tabbar.setCustomStyle( 'main_tab' + i, 'gray', 'black', 'font-size:10pt;font-family:Arial;font-weight: bold;' );
   }
-  tabbar.setTabActive("main_tab2");
+  tabbar.setTabActive("main_tab3");
 </script>
 
 </HTML>
