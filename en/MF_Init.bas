@@ -39,10 +39,7 @@ Sub OnLoadFrame()
   ' ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   '~~~ Read params ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  'ReadConfigParam
   '~~~ Disable elements for input only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  'DisableComponents
-  'Visual.SerScopeGrid.AddRows 10,10, True, 1
   CreateDebugLogWindow
   Visual.Script("dhxWins").load_cansetup
   Visual.Script("tabbar").Init
@@ -51,8 +48,12 @@ Sub OnLoadFrame()
   Visual.Script("CMEEPROMGrid").drawgrid  
   Visual.Script("LogGrid").load_messagebox
   Visual.Script("SCIGrid").load_messagebox  
-  Visual.Select("Layer_Main").style.display = "none"
+  Visual.Select("Layer_TabStripMain").style.display = "none"
   Visual.Select("Layer_Logs").style.display = "none"  
+  'Visual.Select("Layer_Main").style.display = "none"
+  'Visual.Select("Layer_CMEEPROM").style.display = "none"  
+  'Visual.Select("Layer_MBEEPROM").style.display = "none"  
+  'Visual.Select("Layer_Status").style.display = "none"  
   Init_MFCommand
   Visual.Script("win").attachEvent "onClose" , Lang.GetRef( "btn_CanConnect" , 1)
 End Sub

@@ -141,6 +141,9 @@ Dim TmpString,TmpWord
           Data = EEPROMData_MB.Short(Address)
         case "s2":
           Data = EEPROMData_MB.Long(Address)
+        case "s3":
+          'DebugMessage String.Format("%02X,%02X,%02X,%02X",EEPROMData_MB.Data(Address),EEPROMData_MB.Data(Address+1),EEPROMData_MB.Data(Address+2),EEPROMData_MB.Data(Address+3))
+          Data = String.Format("%u",Lang.MakeLong4(EEPROMData_MB.Data(Address),EEPROMData_MB.Data(Address+1),EEPROMData_MB.Data(Address+2),EEPROMData_MB.Data(Address+3)))
         case else:
       End Select
       Visual.Script("MBEEPROMGrid").setVal i,Data
@@ -190,6 +193,8 @@ Dim TmpString,TmpWord
           Data = EEPROMData_CM.Short(Address)
         case "s2":
           Data = EEPROMData_CM.Long(Address)
+        case "s3":
+          Data = String.Format("%u",Lang.MakeLong4(EEPROMData_CM.Data(Address),EEPROMData_CM.Data(Address+1),EEPROMData_CM.Data(Address+2),EEPROMData_CM.Data(Address+3)))
         case else:
       End Select      
       Visual.Script("CMEEPROMGrid").setVal i,Data
@@ -223,7 +228,8 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
   DebugMessage "Bytes to Read from EEPROM: " & bytesleft
   ByteCounter = 0
   exitloop = 0
-  Timeout = 50
+  'Arbitary timeout to limit EEPROM lines read.
+  Timeout = ( bytesleft / 6 ) + 10
  'Get SCI TX
   CANData.Data(0) = target
   CANData.Data(1) = Lang.GetByte(address,0)
