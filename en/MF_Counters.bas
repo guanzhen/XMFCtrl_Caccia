@@ -24,6 +24,32 @@ UpdateMBGrid
 
 End Function
 '------------------------------------------------------------------
+Function OnClick_btn_SaveCMEEPROM(Reason)
+  Dim Filename
+  
+  If System.FileDialog( False, _
+     OFN_HIDEREADONLY or OFN_CREATEPROMPT or OFN_OVERWRITEPROMPT, _
+     "CSV files(*.csv)", _
+     Filename ) Then
+    DebugMessage Filename
+    WriteFile "CMEEPROMGrid",Filename
+    System.MessageBox filename & " saved.","File Saved",MB_OK
+  End if
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_SaveMBEEPROM(Reason)
+  Dim Filename
+  
+  If System.FileDialog( False, _
+     OFN_HIDEREADONLY or OFN_CREATEPROMPT or OFN_OVERWRITEPROMPT, _
+     "CSV files(*.csv)", _
+     Filename ) Then
+    DebugMessage Filename
+    WriteFile "MBEEPROMGrid",Filename
+    System.MessageBox filename & " saved.","File Saved",MB_OK
+  End if
+End Function
+'------------------------------------------------------------------
 Function InitEEPROMGrid()
   Dim xmlOk, XMLfilepath, ackNode, i 
   Dim Address, Length, Name, Format, Value, SizeNode
@@ -62,13 +88,13 @@ Function InitEEPROMGrid()
     End If
     If xmlOk = True Then
       'Search for all parameters and obtain the value from contact module.
-      DebugMessage "param Size: " & ackNode.size
+      'DebugMessage "Number of parameters: " & ackNode.size
       For i = 0 to ackNode.Size-1        
         Address =  ackNode(i).Attribute.Attribute("address") 
         Length = ackNode(i).Attribute.Attribute("length") 
         Format = ackNode(i).Attribute.Attribute("format") 
         Name = ackNode.ChildContent(i)
-        DebugMessage "Param" & i & " " & Name & " "& Address & " "& Length & " "& Format & " " & Value
+        'DebugMessage "Param" & i & " " & Name & " "& Address & " "& Length & " "& Format & " " & Value
         CM_Grid.addrow i,Name & "," & String.Format("0x%04X",Address) & ",",i
         'Value = GetCMParam( 1, Address, Length, Format)
       Next      
@@ -90,7 +116,7 @@ Function InitEEPROMGrid()
     End If
     If xmlOk = True Then
       'Search for all parameters and obtain the value from contact module.
-      DebugMessage "param Size: " & ackNode.size
+      'DebugMessage "Number of parameters: " & ackNode.size
       For i = 0 to ackNode.Size-1        
         Address =  ackNode(i).Attribute.Attribute("address") 
         Length = ackNode(i).Attribute.Attribute("length") 
@@ -98,7 +124,7 @@ Function InitEEPROMGrid()
         Name = ackNode.ChildContent(i)
         MB_Grid.addrow i,Name & "," & String.Format("0x%04X",Address) & ",",i
         'Value = GetCMParam( 1, Address, Length, Format)
-        DebugMessage "Param" & i & " " & Name & " "& Address & " "& Length & " "& Format & " " & Value
+        'DebugMessage "Param" & i & " " & Name & " "& Address & " "& Length & " "& Format & " " & Value
       Next      
       Memory.Set "MBFORMATNODE",ackNode
     End If
@@ -142,16 +168,19 @@ Dim TmpString,TmpWord
         case "s2":
           Data = EEPROMData_MB.Long(Address)
         case "s3":
+          Data = EEPROMData_MB.Long(Address)
           'DebugMessage String.Format("%02X,%02X,%02X,%02X",EEPROMData_MB.Data(Address),EEPROMData_MB.Data(Address+1),EEPROMData_MB.Data(Address+2),EEPROMData_MB.Data(Address+3))
-          Data = String.Format("%u",Lang.MakeLong4(EEPROMData_MB.Data(Address),EEPROMData_MB.Data(Address+1),EEPROMData_MB.Data(Address+2),EEPROMData_MB.Data(Address+3)))
+          'Data = String.Format("%u",Lang.MakeLong4(EEPROMData_MB.Data(Address),EEPROMData_MB.Data(Address+1),EEPROMData_MB.Data(Address+2),EEPROMData_MB.Data(Address+3)))
         case else:
       End Select
       Visual.Script("MBEEPROMGrid").setVal i,Data
       If DataError = True Then
         Visual.Script("MBEEPROMGrid").setCellRed(i)
+      Else
+        Visual.Script("MBEEPROMGrid").setCellBlack(i)        
       End If
 
-      DebugMessage "Param" & i & " "& Address & " "& Length & " "& Format & "Data: " & Data
+      'DebugMessage "Param" & i & " "& Address & " "& Length & " "& Format & "Data: " & Data
     Next
   End If
 
@@ -200,8 +229,10 @@ Dim TmpString,TmpWord
       Visual.Script("CMEEPROMGrid").setVal i,Data
       If DataError = True Then
         Visual.Script("CMEEPROMGrid").setCellRed(i)
+      Else
+        Visual.Script("CMEEPROMGrid").setCellBlack(i)
       End If
-      DebugMessage "Param" & i & " "& Address & " "& Length & " "& Format & "Data: " & Data
+      'DebugMessage "Param" & i & " "& Address & " "& Length & " "& Format & "Data: " & Data
     Next
   End If
 
@@ -262,7 +293,7 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
           exitloop = 1
         End If
       End If
-      DebugMessage "ACK:" & CANData(1) & " ML:" & DebugLine & " Bytes left:" & bytesleft & " Length:" & Memory.CANDataLen
+      'DebugMessage "ACK:" & CANData(1) & " ML:" & DebugLine & " Bytes left:" & bytesleft & " Length:" & Memory.CANDataLen
       Timeout = Timeout - 1
       If Timeout = 0 Then
         exitloop = 1
@@ -274,6 +305,16 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
 
 End Function
 
+Function WriteFile (scptobj,filename)
+  Dim workFile, xmlString
+  xmlString = Visual.Script(scptobj).serializeToCSV(True)
+  xmlString = String.Replace(xmlString, "'", chr(34)&"")
+  Set workFile = File.Open( filename, "wt")
+  workFile.Write xmlString
+  Set workFile = nothing
+End Function
+
+'------------------------------------------------------------------
 Function GetString(ByRef array,index,length,TargetString)
   Dim TmpString,TmpWord,y
   Dim ValidString
@@ -293,7 +334,7 @@ Function GetString(ByRef array,index,length,TargetString)
   GetString = ValidString
   TargetString = TmpString
 End Function
-
+'------------------------------------------------------------------
 Function GetChar(input)
   'Check if character is printable
   If input < 32 OR input > 126 Then

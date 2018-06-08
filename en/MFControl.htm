@@ -13,6 +13,7 @@
   <script src="../../../codebase/grid/dhtmlxgridcell.js"></script>  
   <script src="../../../codebase/grid/ext/dhtmlxgrid_srnd.js"></script>
   <script src="../../../codebase/grid/ext/dhtmlxgrid_data.js"></script>
+  <script src="../../../codebase/grid/ext/dhtmlxgrid_nxml.js"></script>
     
   <!-- Dhtmlx Windows -->
   <link rel="stylesheet" type="text/css" href="../../../codebase/windows/skins/dhtmlxwindows_dhx_skyblue.css">
@@ -38,8 +39,8 @@
   #Layer_Main   {padding: 1px; height:99%; width:100%;}
   #Layer_CMEEPROM   {padding: 1px; height:99%; }
   #Layer_MBEEPROM   {padding: 1px; height:99%; }
-  #Layer_CMGrid   {height:432px; width:600px}
-  #Layer_MBGrid   {height:432px; width:600px}
+  #Layer_CMGrid   {height:426px; width:600px}
+  #Layer_MBGrid   {height:426px; width:600px}
   #Layer_TabStrip   {padding: 2px; height:94% ;width:100%;}
   #Layer_MessageLog {padding: 0px; height:100% ; width:100%;}
   #Layer_Counters {padding: 1px; height:99% ; width:100%;}
@@ -222,37 +223,51 @@
         </table>
       </div>
     </div>
+    <div id="Layer_CMEEPROM" class = "GrpFrame">
+      <div id="Layer_CMGrid"></div>
+      <button id = "btn_ReadCMEEPROM" style = "margin:2px 1px">Get EEPROM Data</button>
+      <button id = "btn_SaveCMEEPROM" style = "margin:2px 1px">Export to CSV</button>
+    </div>
+    
+    <div id="Layer_MBEEPROM" class = "GrpFrame">
+      <div id="Layer_MBGrid"></div>
+      <button id = "btn_ReadMBEEPROM" style = "margin:2px 1px">Get EEPROM Data</button>
+      <button id = "btn_SaveMBEEPROM" style = "margin:2px 1px">Export to CSV</button>
+    </div>    
   </div>
   <!-- End Div Layer_Main -->
-  <div id="Layer_CMEEPROM" class = "GrpFrame">
-    <div id="Layer_CMGrid"></div>
-    <button id = "btn_ReadCMEEPROM" style = "padding:2px">Get EEPROM Data</button>
-  </div>
-  
-  <div id="Layer_MBEEPROM" class = "GrpFrame">
-    <div id="Layer_MBGrid"></div>
-    <button id = "btn_ReadMBEEPROM" style = "padding:2px">Get EEPROM Data</button>
-  </div>
-  
   
   <div id="Layer_Status" class = "GrpFrame">
     <div id=SubLayerStatus_Status style = "float:left">
     <h1>Status</h1>
     <table>
       <tr><td>Parameter</td><td>Status</td></tr>
-      <tr><td title="MB Application Started successfully">App Started</td><td><input id="ipstatus_1" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>App Started OK</td><td><input id="ipstatus_2" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td title="Automatic self test at startup has been carried out">Auto SelfTest Started</td><td><input id="ipstatus_3" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>ShortCircuit Res OK</td><td><input id="ipstatus_4" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>CM OpenLoop Res OK</td><td><input id="ipstatus_5" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>CM OpenLoop Cap OK</td><td><input id="ipstatus_6" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>CM Check Started</td><td><input id="ipstatus_7" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td title = "Serial number matches. OpenLoop Compensation done on CM">CM DataSync OK</td><td><input id="ipstatus_8" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>MB DataSync OK</td><td><input id="ipstatus_13" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>CM Not Present</td><td><input id="ipstatus_9" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>Prepare Cmd in progress</td><td><input id="ipstatus_10" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>Polarity Reverse Check</td><td><input id="ipstatus_11" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>MB Failure</td><td><input id="ipstatus_12" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="MB Application Started successfully">App Started</td><td>
+      <input id="ipstatus_1" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="MF1 eSW App has started successfully.">App Started OK</td><td>
+      <input id="ipstatus_2" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="Automatic self test at startup has been carried out">Auto SelfTest Started</td><td>
+      <input id="ipstatus_3" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="SelfTest:Shortcircuit resistance passed"> ShortCircuit Res OK</td><td>
+      <input id="ipstatus_4" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="SelfTest: ContactModule Openloop Resistance passed">CM OpenLoop Res OK</td><td>
+      <input id="ipstatus_5" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="SelfTest: ContactModule Openloop Capacitance passed">CM OpenLoop Cap OK</td><td>
+      <input id="ipstatus_6" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="Check for contact module presence has started">CM Check Started</td><td>
+      <input id="ipstatus_7" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title = "OpenLoop Compensation done on current CM. CM Serial no. stored on MB matches installed CM serial no.">CM DataSync OK</td><td>
+      <input id="ipstatus_8" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title = "Used for EEPROM wearleveling function. serial no. in buffer matches installed MB serial no.">MB DataSync OK</td><td>
+      <input id="ipstatus_13" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title = "CM is not detected. MF is blocked.">CM Not Present</td><td>
+      <input id="ipstatus_9" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title = "Prepare command is currently being executed.">Prepare Cmd in progress</td><td>
+      <input id="ipstatus_10" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title = "MF has internally switched polarity for 2nd measurement. First measurement reported wrong polarity.">Polarity Reverse Check</td><td>
+      <input id="ipstatus_11" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title ="Communication with MF1 cannot be established.">MB Failure</td><td>
+      <input id="ipstatus_12" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
     </table>
     </div>
     <div id=SubLayerStatus_DataStatus style = "float:left;display:none">
@@ -408,11 +423,12 @@
     this.enableResizing ("true,true,true");
     this.enableMultiselect(true);
     this.enableAutoWidth (false);
-    this.enableSmartRendering(true);
+    this.enableSmartRendering(false);
     this.init();
   }
   MBEEPROMGrid.setVal = function(row,val) { this.cells(this.getRowId(row),2).cell.innerHTML = val; }
   MBEEPROMGrid.setCellRed = function(row){this.setCellTextStyle(row,2,"color:red");}
+  MBEEPROMGrid.setCellBlack = function(row){this.setCellTextStyle(row,2,"color:Black");}
 
 </script>
 
@@ -433,11 +449,12 @@
     this.enableResizing ("true,true,true");
     this.enableMultiselect(true);
     this.enableAutoWidth (false);
-    this.enableSmartRendering(true);
+    this.enableSmartRendering(false);
     this.init();
   }
   CMEEPROMGrid.setVal = function(row,val) { this.cells(this.getRowId(row),2).cell.innerHTML = val; }
   CMEEPROMGrid.setCellRed = function(row){this.setCellTextStyle(row,2,"color:red");}
+  CMEEPROMGrid.setCellBlack = function(row){this.setCellTextStyle(row,2,"color:Black");}
 </script>
 
 
