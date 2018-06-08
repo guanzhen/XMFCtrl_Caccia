@@ -260,7 +260,7 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
   ByteCounter = 0
   exitloop = 0
   'Arbitary timeout to limit EEPROM lines read.
-  Timeout = ( bytesleft / 6 ) + 10
+  Timeout = 30
  'Get SCI TX
   CANData.Data(0) = target
   CANData.Data(1) = Lang.GetByte(address,0)
@@ -283,7 +283,8 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
             EEPROMArray.Data(ByteCounter) = CANData.Data(i)
             bytesleft = bytesleft - 1
             ByteCounter = ByteCounter + 1
-          Else
+          End If
+          If CANData.Data(1) = $(ACK_NO_MORE_DATA) Then
             DebugMessage "ML: End"
             exitloop = 1
             Exit For
@@ -293,7 +294,12 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
           exitloop = 1
         End If
       End If
-      'DebugMessage "ACK:" & CANData(1) & " ML:" & DebugLine & " Bytes left:" & bytesleft & " Length:" & Memory.CANDataLen
+      DebugMessage "ACK:" & CANData(1) & " ML:" & DebugLine & " Bytes left:" & bytesleft & " Length:" & Memory.CANDataLen
+      
+      If bytesleft <= 0 Then
+        DebugMessage "ML: End (warning)"
+        exitloop = 1
+      End If
       Timeout = Timeout - 1
       If Timeout = 0 Then
         exitloop = 1

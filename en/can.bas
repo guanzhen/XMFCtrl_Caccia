@@ -26,10 +26,10 @@ If CANConfig.Config = 0 Then
     Visual.Select("opt_SlotNum").Style.Display  = "none"
   Elseif CANConfig.Config = 1 Then
     CANConfig.Baudrate = "1000"
-    Visual.Select("inputCANID").Value = "510"
+    Visual.Select("inputCANID").Value = "500"
     text = " [XFCU]"
     Visual.Select("btn_AssignCANID").Style.Display  = "none"
-    Visual.Select("opt_SlotNum").Style.Display  = "block"    
+    Visual.Select("opt_SlotNum").Style.Display  = "block"   
     Visual.Select("btn_Reset").Style.Display  = "none"    
   End If
   
@@ -529,16 +529,27 @@ Function CANSendGetEEPROM(Cmd,SubCmd,SlotNo,Division,DataLen)
   'XFCU
   If CANConfig.Config = 1 Then
     With CanSendArg
+      If SubCmd = $(PARAM_GET_EEPROM_START) Then
         'DebugMessage "In Machine GetSendMCData command"
         .CanId = CANID
         .Data(0) = Cmd + &h10
         .Data(1) = SubCmd        
         .Data(2) = SlotNo
-      For i = 0 to DataLen - 1
+        For i = 0 to DataLen - 1
         .Data(3+i) = CANData.Data(i)
         'DebugMessage "Copy Data " & i
-      Next
-      .Length = 3 + DataLen      
+        Next
+        .Length = 3 + DataLen
+      'EEPROM_LINE does not require slot no.
+      Else
+        .CanId = CANID
+        .Data(0) = Cmd + &h10
+        .Data(1) = SubCmd
+        For i = 0 to DataLen - 1
+          .Data(2+i) = CANData.Data(i)
+        Next
+        .Length = 2 + DataLen      
+      End If
     End With
   'Standalone
   Else
@@ -567,27 +578,12 @@ Function CANSendGetEEPROM(Cmd,SubCmd,SlotNo,Division,DataLen)
       DebugMessage "CANSendGetEEPROM OK: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
       CANSendGetEEPROM = True
       'XFCU
-      If CANConfig.Config = 1 Then
-          'DebugMessage "Reading XFCU GetSend MC Data Reply"
-          'Data(0) = CMD
-          'Data(1) = ACK
-          'Data(2) = Data 1
-          'Data(3) = Data 2
-          'Data(4) = Data 3
-          'Data(5) = Data 4
-          CANData.Data(2) = CanReadArg.Data(3) 
-          CANData.Data(3) = CanReadArg.Data(4)
-          CANData.Data(4) = CanReadArg.Data(5)
-          CANData.Data(5) = CanReadArg.Data(6)
-          Memory.Set "CANDataLen" , CanReadArg.Length
-      Else
-        'DebugMessage "Standalone Cmd Reply"
-        'No need to process data, just copy
-         For i = 0 to 7
-          CANData.Data(i) = CanReadArg.Data(i)
-         Next
-        Memory.Set "CANDataLen" , CanReadArg.Length
-      End If
+
+      For i = 0 to 7
+        CANData.Data(i) = CanReadArg.Data(i)
+      Next
+      Memory.Set "CANDataLen" , CanReadArg.Length
+
       Memory.Set "CANData",CANData
       'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
     Else

@@ -1,5 +1,5 @@
 
-
+Const DEFAULT_SLOT = 28
 Const COMP_TYPE_RES  = 1
 Const COMP_TYPE_CAP  = 2
 Const COMP_TYPE_IND  = 3
@@ -69,6 +69,8 @@ Function Init_MFCommand ( )
   For counter = 1 To 60
     Visual.Select("opt_SlotNum").addItem counter,counter
   Next
+   
+  Visual.Select("opt_SlotNum").SelectedIndex  = DEFAULT_SLOT-1
   Memory.Set "SLOT_NO",Visual.Select("opt_SlotNum").SelectedItemAttribute("Value")
   DebugMessage "SLOT_NO :" & Memory.SLOT_NO
     
