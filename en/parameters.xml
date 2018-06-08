@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+  DISPLAYFORMAT (format)):
+  a   = Ascii
+  s   = unsigned short (16Bit)
+  s1  = signed short (16Bit)
+  s2  = signed long (32Bit)
+  s3  = unsigned long (32Bit)
+  f   = float (32 Bit)
+  e   = float (32 Bit, Scientific notation (mantissa/exponent), lowercase)
+  x   = char (8Bit)
+  exp = Exponent (8Bit)
+  str = string
+-->
+
+<Parameters>
+  <ContactModule>
+    <memory size = "128"></memory>
+    <param address="2" length="17" format="str" >SerialNumber</param>
+    <param address="28" length="2" format="str" >FS</param>
+    <param address="30" length="2" format="str" >RS</param>    
+    <param address="38" length="2" format="s1" >Fiducial_X1</param>
+    <param address="40" length="2" format="s1" >Fiducial_Y1</param>
+    <param address="42" length="2" format="s1" >Fiducial_X2</param>
+    <param address="44" length="2" format="s1" >Fiducial_Y2</param>
+    <param address="46" length="2" format="s1" >Fiducial_X3</param>
+    <param address="48" length="2" format="s1" >Fiducial_Y3</param>
+    <param address="50" length="2" format="s1" >Fiducial_X4</param>
+    <param address="52" length="2" format="s1" >Fiducial_Y4</param>    
+    <param address="54" length="2" format="s" >Offset X</param>
+    <param address="56" length="2" format="s" >Offset Y</param>
+    <param address="58" length="4" format="s" >Offset Z</param>    
+    <param address="60" length="2" format="s" >Contact Blk Width</param>    
+    <param address="62" length="4" format="f" >Open Loop Cap. 10kHz</param>
+    <param address="66" length="4" format="f" >Open Loop Cap. 1kHz</param>
+  </ContactModule>
+  <MeasurementBoard>
+    <memory size = "256"></memory>
+    <param address="2" length="17" format="str" >SerialNumber</param>
+    <param address="28" length="2" format="str" >FS</param>
+    <param address="30" length="2" format="str" >RS</param>    
+    <param address="38" length="17" format="str" >CM1 SerialNumber</param>
+    <param address="55" length="17" format="str" >CM2 SerialNumber</param>
+    <param address="72" length="17" format="str" >CM3 SerialNumber</param>
+    <param address="106" length="8" format="str" >Date of last calibration</param>
+    <param address="114" length="4" format="f" >Max Res measured</param>
+    <param address="118" length="4" format="f" >Min Res measured</param>
+    <param address="122" length="4" format="f" >Max Cap measured</param>
+    <param address="126" length="4" format="f" >Min Cap measured</param>
+    <param address="130" length="4" format="f" >Max Ind measured</param>
+    <param address="134" length="4" format="f" >Min Ind measured</param>
+    <param address="138" length="4" format="f" >Max Diode measured</param>
+    <param address="142" length="4" format="f" >Min Diode measured</param>
+    <param address="146" length="4" format="f" >Max Temp measured</param>
+    <param address="150" length="4" format="f" >Min Temp measured</param>    
+    <param address="154" length="1" format="x" >Specified Accuracy R</param>
+    <param address="155" length="1" format="x" >Specified Accuracy C</param>
+    <param address="156" length="1" format="x" >Specified Accuracy L</param>
+    <param address="157" length="1" format="x" >Specified Accuracy D</param>
+    <param address="158" length="2" format="s" >Num of Calibration</param>
+    <param address="160" length="2" format="s" >Num of trim-open OK</param>
+    <param address="162" length="2" format="s" >Num of trim-open NOK</param>
+    <param address="164" length="2" format="s" >Num of trim-close OK</param>
+    <param address="166" length="2" format="s" >Num of trim-close NOK</param>
+    <param address="168" length="4" format="s3" >Total mum measurements</param>
+    <param address="172" length="4" format="s3" >Num of Res measurements</param>
+    <param address="176" length="4" format="s3" >Num of Cap measurements</param>
+    <param address="180" length="4" format="s3" >Num of Ind measurements</param>
+    <param address="184" length="4" format="s3" >Num of Diode measurements</param>
+    <param address="188" length="4" format="s3" >Num of AutoCap measurements</param>
+  </MeasurementBoard>
+</Parameters>

@@ -13,6 +13,7 @@
   <script src="../../../codebase/grid/dhtmlxgridcell.js"></script>  
   <script src="../../../codebase/grid/ext/dhtmlxgrid_srnd.js"></script>
   <script src="../../../codebase/grid/ext/dhtmlxgrid_data.js"></script>
+  <script src="../../../codebase/grid/ext/dhtmlxgrid_nxml.js"></script>
     
   <!-- Dhtmlx Windows -->
   <link rel="stylesheet" type="text/css" href="../../../codebase/windows/skins/dhtmlxwindows_dhx_skyblue.css">
@@ -36,6 +37,10 @@
   #btn_GetSCIErrQ  {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
   #Layer_TabStripMain   {padding: 0px; height:65%; width:100%;background-color : #97A0A5;}
   #Layer_Main   {padding: 1px; height:99%; width:100%;}
+  #Layer_CMEEPROM   {padding: 1px; height:99%; }
+  #Layer_MBEEPROM   {padding: 1px; height:99%; }
+  #Layer_CMGrid   {height:426px; width:600px}
+  #Layer_MBGrid   {height:426px; width:600px}
   #Layer_TabStrip   {padding: 2px; height:94% ;width:100%;}
   #Layer_MessageLog {padding: 0px; height:100% ; width:100%;}
   #Layer_Counters {padding: 1px; height:99% ; width:100%;}
@@ -99,6 +104,9 @@
             <option value = "1">Series</option>
             <option value = "2">Parallel</option>
           </select>      
+          </td>
+          <td>
+          <input id="cbmodesel" type = "checkbox" style = "width:50px">Manual</input>
           </td>
         </tr>
         </table>
@@ -215,30 +223,51 @@
         </table>
       </div>
     </div>
+    <div id="Layer_CMEEPROM" class = "GrpFrame">
+      <div id="Layer_CMGrid"></div>
+      <button id = "btn_ReadCMEEPROM" style = "margin:2px 1px">Get EEPROM Data</button>
+      <button id = "btn_SaveCMEEPROM" style = "margin:2px 1px">Export to CSV</button>
+    </div>
+    
+    <div id="Layer_MBEEPROM" class = "GrpFrame">
+      <div id="Layer_MBGrid"></div>
+      <button id = "btn_ReadMBEEPROM" style = "margin:2px 1px">Get EEPROM Data</button>
+      <button id = "btn_SaveMBEEPROM" style = "margin:2px 1px">Export to CSV</button>
+    </div>    
   </div>
-  
-  <div id="Layer_Counters" class = "GrpFrame">
-    <button id = "btn_ReadCounters">Get Counters</button>
-  </div>
+  <!-- End Div Layer_Main -->
   
   <div id="Layer_Status" class = "GrpFrame">
     <div id=SubLayerStatus_Status style = "float:left">
     <h1>Status</h1>
     <table>
       <tr><td>Parameter</td><td>Status</td></tr>
-      <tr><td title="MB Application Started successfully">App Started</td><td><input id="ipstatus_1" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>App Started OK</td><td><input id="ipstatus_2" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td title="Automatic self test at startup has been carried out">Auto SelfTest Started</td><td><input id="ipstatus_3" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>ShortCircuit Res OK</td><td><input id="ipstatus_4" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>CM OpenLoop Res OK</td><td><input id="ipstatus_5" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>CM OpenLoop Cap OK</td><td><input id="ipstatus_6" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>CM Check Started</td><td><input id="ipstatus_7" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td title = "Serial number matches. OpenLoop Compensation done on CM">CM DataSync OK</td><td><input id="ipstatus_8" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>MB DataSync OK</td><td><input id="ipstatus_13" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>CM Not Present</td><td><input id="ipstatus_9" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>Prepare Cmd in progress</td><td><input id="ipstatus_10" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>Polarity Reverse Check</td><td><input id="ipstatus_11" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-      <tr><td>MB Failure</td><td><input id="ipstatus_12" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="MB Application Started successfully">App Started</td><td>
+      <input id="ipstatus_1" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="MF1 eSW App has started successfully.">App Started OK</td><td>
+      <input id="ipstatus_2" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="Automatic self test at startup has been carried out">Auto SelfTest Started</td><td>
+      <input id="ipstatus_3" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="SelfTest:Shortcircuit resistance passed"> ShortCircuit Res OK</td><td>
+      <input id="ipstatus_4" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="SelfTest: ContactModule Openloop Resistance passed">CM OpenLoop Res OK</td><td>
+      <input id="ipstatus_5" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="SelfTest: ContactModule Openloop Capacitance passed">CM OpenLoop Cap OK</td><td>
+      <input id="ipstatus_6" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title="Check for contact module presence has started">CM Check Started</td><td>
+      <input id="ipstatus_7" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title = "OpenLoop Compensation done on current CM. CM Serial no. stored on MB matches installed CM serial no.">CM DataSync OK</td><td>
+      <input id="ipstatus_8" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title = "Used for EEPROM wearleveling function. serial no. in buffer matches installed MB serial no.">MB DataSync OK</td><td>
+      <input id="ipstatus_13" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title = "CM is not detected. MF is blocked.">CM Not Present</td><td>
+      <input id="ipstatus_9" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title = "Prepare command is currently being executed.">Prepare Cmd in progress</td><td>
+      <input id="ipstatus_10" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title = "MF has internally switched polarity for 2nd measurement. First measurement reported wrong polarity.">Polarity Reverse Check</td><td>
+      <input id="ipstatus_11" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+      <tr><td title ="Communication with MF1 cannot be established.">MB Failure</td><td>
+      <input id="ipstatus_12" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
     </table>
     </div>
     <div id=SubLayerStatus_DataStatus style = "float:left;display:none">
@@ -252,13 +281,20 @@
       <h1>Overrides</h1>
       <table>    
         <tr><td>Parameter</td><td>Status</td></tr>
-        <tr><td title="Force commands even if contact module is not present">Disable CM Check</td><td><input id="ipdebug_1" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="Manually set mode select">Manual ModeSelect</td><td><input id="ipdebug_2" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="Override mode select based on capacitance value">Manual capacitance ModeSelect</td><td><input id="ipdebug_3" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="Disable automatic self test at feeder startup">Disable Auto SelfTest</td><td><input id="ipdebug_4" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="MF can be used even if SelfTest result failed">Override SelfTest Result Check</td><td><input id="ipdebug_5" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="MF can be used even if Application start command start return a failure">Override AppStart result</td><td><input id="ipdebug_6" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="MF can be used even if communication to MB failed">Override MB Check</td><td><input id="ipdebug_7" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="Measurements are enabled even if contact module is not present">Disable CM Check</td><td>
+        <input value = "0" id="ipdebug_1" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="Manually select measurement frequency and model.">Manual ModeSelect</td><td>
+        <input value = "1" id="ipdebug_2" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="eSW will not set mode select based on capacitance value">Manual capacitance ModeSelect</td><td>
+        <input value = "2" id="ipdebug_3" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="Disable automatic self test at feeder startup">Disable Auto SelfTest</td><td>
+        <input value = "3" id="ipdebug_4" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="MF can be used even if SelfTest result failed">Override SelfTest Result Check</td><td>
+        <input value = "4" id="ipdebug_5" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="MF enabled even if Application start command failed (bootloader not present)">Override AppStart result</td><td>
+        <input value = "5" id="ipdebug_6" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="MF can be used even if communication to MB failed">Override MB Check</td><td>
+        <input value = "6" id="ipdebug_7" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
       </table>
     </div>
     <button id="btn_getstatus" style="clear:left;margin:5px;">Get Status</button>
@@ -331,20 +367,20 @@
   var LogGrid = new dhtmlXGridObject('MessageLogObj');
   LogGrid.load_messagebox = function()
   {
-    LogGrid.setHeader("Date,Time,Information");
-    LogGrid.setImagePath("../../../codebase/grid/imgs/");
-    LogGrid.setInitWidths( "100,100,*");
-    LogGrid.setColAlign ("center,center,left");
-    LogGrid.setColTypes ("ro,ro,ro");
-    LogGrid.setColSorting ("na,na,na");
-    LogGrid.setSkin ("red_gray");
-    LogGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
-    LogGrid.enableTooltips ("true,true,true");
-    LogGrid.enableResizing ("true,true,true");
-    LogGrid.enableMultiselect(true);
-    LogGrid.enableAutoWidth (true);
-    LogGrid.enableSmartRendering(true);
-    LogGrid.init();
+    this.setHeader("Date,Time,Information");
+    this.setImagePath("../../../codebase/grid/imgs/");
+    this.setInitWidths( "100,100,*");
+    this.setColAlign ("center,center,left");
+    this.setColTypes ("ro,ro,ro");
+    this.setColSorting ("na,na,na");
+    this.setSkin ("red_gray");
+    this.setStyle("color:black;font-weight:bold;","color:black;","","")
+    this.enableTooltips ("true,true,true");
+    this.enableResizing ("true,true,true");
+    this.enableMultiselect(true);
+    this.enableAutoWidth (true);
+    this.enableSmartRendering(true);
+    this.init();
   }
 </script>
 
@@ -353,57 +389,117 @@
   var SCIGrid = new dhtmlXGridObject('SCILogObj');
   SCIGrid.load_messagebox = function()
   {
-    SCIGrid.setHeader("Date,Time,Information");
-    SCIGrid.setImagePath("../../../codebase/grid/imgs/");
-    SCIGrid.setInitWidths( "100,100,*");
-    SCIGrid.setColAlign ("center,center,left");
-    SCIGrid.setColTypes ("ro,ro,ro");
-    SCIGrid.setColSorting ("na,na,na");
-    SCIGrid.setSkin ("red_gray");
-    SCIGrid.setStyle("color:black;font-weight:bold;","color:black;","","")
-    SCIGrid.enableTooltips ("true,true,true");
-    SCIGrid.enableResizing ("true,true,true");
-    SCIGrid.enableMultiselect(true);
-    SCIGrid.enableAutoWidth (true);
-    SCIGrid.enableSmartRendering(true);
-    SCIGrid.init();
+    this.setHeader("Date,Time,Information");
+    this.setImagePath("../../../codebase/grid/imgs/");
+    this.setInitWidths( "100,100,*");
+    this.setColAlign ("center,center,left");
+    this.setColTypes ("ro,ro,ro");
+    this.setColSorting ("na,na,na");
+    this.setSkin ("red_gray");
+    this.setStyle("color:black;font-weight:bold;","color:black;","","")
+    this.enableTooltips ("true,true,true");
+    this.enableResizing ("true,true,true");
+    this.enableMultiselect(true);
+    this.enableAutoWidth (true);
+    this.enableSmartRendering(true);
+    this.init();
   }
 </script>
 
-<script language = "JScript" type="text/javascript"> 
-  tabbar = new dhtmlXTabBar("Layer_TabStrip","top");
-  tabbar.enableAutoReSize( true );
-  tabbar.setImagePath("../../../codebase/tabbar/imgs/");
-  tabbar.setSkin("silver");
-  tabbar.addTab("msg_tab1","Message Log");
-  tabbar.addTab("msg_tab2","SCI Log");
-  tabbar.setContent( "msg_tab1", Layer_MessageLog);
-  tabbar.setContent( "msg_tab2", Layer_SCILog);
-
-  for ( var i = 1; i <= tabbar.getNumberOfTabs(); i++ )
+<!-- Create MB EEPROM DHTMLX object-->
+<script language="JScript" type="text/javascript">
+  var MBEEPROMGrid = new dhtmlXGridObject('Layer_MBGrid');
+  MBEEPROMGrid.drawgrid = function()
   {
-    tabbar.setCustomStyle( 'main_tab' + i, 'gray', 'black', 'font-size:10pt;font-family:Arial;font-weight: bold;' );
+    this.setHeader("Parameter,Address,Data");
+    this.setImagePath("../../../codebase/grid/imgs/");
+    this.setInitWidths( "200,100,*");
+    this.setColAlign ("center,center,left");
+    this.setColTypes ("ro,ro,ro");
+    this.setColSorting ("na,na,na");
+    this.setSkin ("red_gray");
+    this.setStyle("color:black;font-weight:bold;","color:black;","","")
+    this.enableTooltips ("true,true,true");
+    this.enableResizing ("true,true,true");
+    this.enableMultiselect(true);
+    this.enableAutoWidth (false);
+    this.enableSmartRendering(false);
+    this.init();
   }
-  tabbar.setTabActive("main_tab1");
+  MBEEPROMGrid.setVal = function(row,val) { this.cells(this.getRowId(row),2).cell.innerHTML = val; }
+  MBEEPROMGrid.setCellRed = function(row){this.setCellTextStyle(row,2,"color:red");}
+  MBEEPROMGrid.setCellBlack = function(row){this.setCellTextStyle(row,2,"color:Black");}
+
+</script>
+
+<!-- Create CM EEPROM DHTMLX object-->
+<script language="JScript" type="text/javascript">
+  var CMEEPROMGrid = new dhtmlXGridObject('Layer_CMGrid');
+  CMEEPROMGrid.drawgrid = function()
+  {
+    this.setHeader("Parameter,Address,Data");
+    this.setImagePath("../../../codebase/grid/imgs/");
+    this.setInitWidths( "150,100,*");
+    this.setColAlign ("center,center,left");
+    this.setColTypes ("ro,ro,ro");
+    this.setColSorting ("na,na,na");
+    this.setSkin ("red_gray");
+    this.setStyle("color:black;font-weight:bold;","color:black;","","")
+    this.enableTooltips ("true,true,true");
+    this.enableResizing ("true,true,true");
+    this.enableMultiselect(true);
+    this.enableAutoWidth (false);
+    this.enableSmartRendering(false);
+    this.init();
+  }
+  CMEEPROMGrid.setVal = function(row,val) { this.cells(this.getRowId(row),2).cell.innerHTML = val; }
+  CMEEPROMGrid.setCellRed = function(row){this.setCellTextStyle(row,2,"color:red");}
+  CMEEPROMGrid.setCellBlack = function(row){this.setCellTextStyle(row,2,"color:Black");}
+</script>
+
+
+<script language = "JScript" type="text/javascript"> 
+  tabbar2 = new dhtmlXTabBar("Layer_TabStrip","top");
+  tabbar2.Init = function()
+  {
+  tabbar2.enableAutoReSize( true );
+  tabbar2.setImagePath("../../../codebase/tabbar/imgs/");
+  tabbar2.setSkin("silver");
+  tabbar2.addTab("msg_tab1","Message Log");
+  tabbar2.addTab("msg_tab2","SCI Log");
+  tabbar2.setContent( "msg_tab1", Layer_MessageLog);
+  tabbar2.setContent( "msg_tab2", Layer_SCILog);
+
+  for ( var i = 1; i <= tabbar2.getNumberOfTabs(); i++ )
+  {
+    tabbar2.setCustomStyle( 'msg_tab' + i, 'gray', 'black', 'font-size:10pt;font-family:Arial;font-weight: bold;' );
+  }
+  tabbar2.setTabActive("msg_tab1");
+  }
 </script>
 
 <script language = "JScript" type="text/javascript"> 
   tabbar = new dhtmlXTabBar("Layer_TabStripMain","top");
+  tabbar.Init = function() 
+  {
   tabbar.enableAutoReSize( true );
   tabbar.setImagePath("../../../codebase/tabbar/imgs/");
   tabbar.setSkin("silver");
   tabbar.addTab("main_tab1","Main");
   tabbar.addTab("main_tab2","Status");
-  tabbar.addTab("main_tab3","Counters");
+  tabbar.addTab("main_tab3","CM EEPROM");
+  tabbar.addTab("main_tab4","MB EEPROM");
   tabbar.setContent( "main_tab1", Layer_Main);
   tabbar.setContent( "main_tab2", Layer_Status);
-  tabbar.setContent( "main_tab3", Layer_Counters);
+  tabbar.setContent( "main_tab3", Layer_CMEEPROM);
+  tabbar.setContent( "main_tab4", Layer_MBEEPROM);
 
   for ( var i = 1; i <= tabbar.getNumberOfTabs(); i++ )
   {
     tabbar.setCustomStyle( 'main_tab' + i, 'gray', 'black', 'font-size:10pt;font-family:Arial;font-weight: bold;' );
   }
-  tabbar.setTabActive("main_tab2");
+  tabbar.setTabActive("main_tab3");
+  }
 </script>
 
 </HTML>

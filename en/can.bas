@@ -46,7 +46,7 @@ If CANConfig.Config = 0 Then
   If InitCAN(CANID,CANConfig.Config) = 1 Then
     Visual.Script("dhxWins").unload()
     Visual.Select("Layer_CanSetup").Style.Display = "none"
-    Visual.Select("Layer_Main").style.display = "block"
+    Visual.Select("Layer_TabStripMain").style.display = "block"
     Visual.Select("Layer_Logs").Style.Display = "block"    
   Else
     MsgBox "Cannot Open CAN Manager on Net " & CANConfig.Net + 1 & "!"
@@ -563,7 +563,7 @@ Function CANSendGetEEPROM(Cmd,SubCmd,SlotNo,Division,DataLen)
     Memory.Get "CanManager",CanManager        
     Result = CanManager.SendCmd(CanSendArg,1000,SC_CHECK_ERROR_BYTE,CanReadArg)
     
-    If Result = SCA_NO_ERROR Then      
+    If Result = SCA_NO_ERROR OR Result = SCA_ERROR_BYTE Then      
       DebugMessage "CANSendGetEEPROM OK: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
       CANSendGetEEPROM = True
       'XFCU
