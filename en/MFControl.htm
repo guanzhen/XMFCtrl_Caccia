@@ -382,50 +382,6 @@
   }
 </script> 
 
-<!-- Create message log DHTMLX object-->
-<script language="JScript" type="text/javascript">
-  var LogGrid = new dhtmlXGridObject('MessageLogObj');
-  LogGrid.load_messagebox = function()
-  {
-    this.setHeader("Date,Time,Information");
-    this.setImagePath("../../../codebase/grid/imgs/");
-    this.setInitWidths( "100,100,*");
-    this.setColAlign ("center,center,left");
-    this.setColTypes ("ro,ro,ro");
-    this.setColSorting ("na,na,na");
-    this.setSkin ("red_gray");
-    this.setStyle("color:black;font-weight:bold;","color:black;","","")
-    this.enableTooltips ("true,true,true");
-    this.enableResizing ("true,true,true");
-    this.enableMultiselect(true);
-    this.enableAutoWidth (true);
-    this.enableSmartRendering(true);
-    this.init();
-  }
-</script>
-
-<!-- Create SCI message log DHTMLX object-->
-<script language="JScript" type="text/javascript">
-  var SCIGrid = new dhtmlXGridObject('SCILogObj');
-  SCIGrid.load_messagebox = function()
-  {
-    this.setHeader("Date,Time,Information");
-    this.setImagePath("../../../codebase/grid/imgs/");
-    this.setInitWidths( "100,100,*");
-    this.setColAlign ("center,center,left");
-    this.setColTypes ("ro,ro,ro");
-    this.setColSorting ("na,na,na");
-    this.setSkin ("red_gray");
-    this.setStyle("color:black;font-weight:bold;","color:black;","","")
-    this.enableTooltips ("true,true,true");
-    this.enableResizing ("true,true,true");
-    this.enableMultiselect(true);
-    this.enableAutoWidth (true);
-    this.enableSmartRendering(true);
-    this.init();
-  }
-</script>
-
 <!-- Create MB EEPROM DHTMLX object-->
 <script language="JScript" type="text/javascript">
   var MBEEPROMGrid = new dhtmlXGridObject('Layer_MBGrid');
@@ -479,7 +435,9 @@
 
 
 <script language = "JScript" type="text/javascript"> 
-  tabbar2 = new dhtmlXTabBar("Layer_TabStripLog","top");
+  var LogGrid;
+  var SCIGrid;
+  var tabbar2 = new dhtmlXTabBar("Layer_TabStripLog","top");
   tabbar2.Init = function()
   {
   tabbar2.setSkin("silver");
@@ -488,15 +446,33 @@
   tabbar2.setImagePath("../../../codebase/tabbar/imgs/");
   tabbar2.addTab("msg_tab1","Message Log");
   tabbar2.addTab("msg_tab2","SCI Log");
-  tabbar2.setContent( "msg_tab1", Layer_Tab1_MainLog);
-  tabbar2.setContent( "msg_tab2", Layer_Tab2_SCILog);
-
+  LogGrid = tabbar2.cells("msg_tab1").attachGrid();
+  SCIGrid = tabbar2.cells("msg_tab2").attachGrid();
   for ( var i = 1; i <= tabbar2.getNumberOfTabs(); i++ )
   {
     tabbar2.setCustomStyle( 'msg_tab' + i, 'gray', 'black', 'font-size:10pt;font-family:Arial;font-weight: bold;' );
   }
-  tabbar2.setTabActive("msg_tab1");
+  tabbar2.load_messagebox = function(gridobj)
+  {
+    gridobj.setHeader("Date,Time,Information");
+    gridobj.setImagePath("../../../codebase/grid/imgs/");
+    gridobj.setInitWidths( "100,100,*");
+    gridobj.setColAlign ("center,center,left");
+    gridobj.setColTypes ("ro,ro,ro");
+    gridobj.setColSorting ("na,na,na");
+    gridobj.setSkin ("red_gray");
+    gridobj.setStyle("color:black;font-weight:bold;","color:black;","","")
+    gridobj.enableTooltips ("true,true,true");
+    gridobj.enableResizing ("true,true,true");
+    gridobj.enableMultiselect(true);
+    gridobj.enableAutoWidth (true);
+    gridobj.enableSmartRendering(true);
+    gridobj.init();
   }
+  tabbar2.load_messagebox(LogGrid);
+  tabbar2.load_messagebox(SCIGrid);
+  tabbar2.setTabActive("msg_tab1");
+  } 
 </script>
 
 <script language = "JScript" type="text/javascript"> 

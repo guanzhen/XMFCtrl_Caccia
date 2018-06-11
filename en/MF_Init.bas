@@ -45,9 +45,7 @@ Sub OnLoadFrame()
   Visual.Script("tabbar").Init
   Visual.Script("tabbar2").Init
   Visual.Script("MBEEPROMGrid").drawgrid  
-  Visual.Script("CMEEPROMGrid").drawgrid  
-  Visual.Script("LogGrid").load_messagebox
-  Visual.Script("SCIGrid").load_messagebox  
+  Visual.Script("CMEEPROMGrid").drawgrid
   Visual.Select("Layer_TabStripMain").style.display = "none"
   Visual.Select("Layer_LogGrids").style.display = "none"  
   'Visual.Select("Layer_Tab1_Main").style.display = "none"
