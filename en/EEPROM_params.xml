@@ -62,7 +62,7 @@
     <param address="162" length="2" format="s" >Num of trim-open NOK</param>
     <param address="164" length="2" format="s" >Num of trim-close OK</param>
     <param address="166" length="2" format="s" >Num of trim-close NOK</param>
-    <param address="168" length="4" format="s3" >Total mum measurements</param>
+    <param address="168" length="4" format="s3" >Total measurements</param>
     <param address="172" length="4" format="s3" >Num of Res measurements</param>
     <param address="176" length="4" format="s3" >Num of Cap measurements</param>
     <param address="180" length="4" format="s3" >Num of Ind measurements</param>

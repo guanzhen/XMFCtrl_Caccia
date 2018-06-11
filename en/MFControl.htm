@@ -61,6 +61,16 @@
     margin:           2px;
     padding:          2px;
   }
+    .SubFrame
+  {
+    border-color:     white;
+    border-style:     solid;
+    border-width:     1px;
+    filter:           progid:DXImageTransform.Microsoft.Gradient(startColorStr='#AA312C',endColorStr='#A4312C',gradientType='1');
+    Background-color: #AA312C;
+    margin:           2px;
+    padding:          2px;
+  }
   #Layer_Logs   {padding: 0px; height:37% ;width:100%;}
   </STYLE>
 </HEAD>
@@ -77,8 +87,8 @@
       <td><button id = "btn_GetApp" class = "ButtonInfo">Read Info</button></td>
       <td><button id = "btn_Reset" class = "ButtonInfo">Reset</button></td>
     </table>
-    
-    <div id="LayerCommand" class = "GrpFrame">
+
+    <div id="LayerCommand" class = "SubFrame">
     <!-- Measure Component~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
       <div id="SubLayerMeasure" >
         <h1>Measurement Controls</h1>
@@ -162,7 +172,6 @@
       </div>
       <hr> 
       <div id="SubLayerTools" >
-        <h1> Functions </h1>
         <table>
         <tr><td><button style="width:150px" id="btn_calibrate"> Compensation </button></td>
         <td>
@@ -181,7 +190,7 @@
       </div>
     </div>
     
-    <div id="LayerReply" class = "GrpFrame">
+    <div id="LayerReply" class = "SubFrame">
       <h1>Results</h1>
       <div id= "LayerResults">
       <table>
@@ -285,7 +294,7 @@
         <input value = "0" id="ipdebug_1" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
         <tr><td title="Manually select measurement frequency and model.">Manual ModeSelect</td><td>
         <input value = "1" id="ipdebug_2" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="eSW will not set mode select based on capacitance value">Manual capacitance ModeSelect</td><td>
+        <tr><td title="If selected, eSW will not set mode select based on capacitance value">Manual capacitance ModeSelect</td><td>
         <input value = "2" id="ipdebug_3" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
         <tr><td title="Disable automatic self test at feeder startup">Disable Auto SelfTest</td><td>
         <input value = "3" id="ipdebug_4" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
@@ -293,8 +302,14 @@
         <input value = "4" id="ipdebug_5" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
         <tr><td title="MF enabled even if Application start command failed (bootloader not present)">Override AppStart result</td><td>
         <input value = "5" id="ipdebug_6" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
-        <tr><td title="MF can be used even if communication to MB failed">Override MB Check</td><td>
+        <tr style = "display:none"><td>SCI_TXpubmsg</td><td>
         <input value = "6" id="ipdebug_7" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr style = "display:none"><td>SCI_RXpubmsg</td><td>
+        <input value = "7" id="ipdebug_8" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="MF can be used even if communication to MB failed">Override MB Check</td><td>
+        <input value = "8" id="ipdebug_9" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
+        <tr><td title="When disabled, Measurement counters are written to EEPROM every count.">Disable EEPROM wearleveling</td><td>
+        <input value = "9" id="ipdebug_10" class="inputled" type = "image" src="./icon/led_black.png"></input></td></tr>
       </table>
     </div>
     <button id="btn_getstatus" style="clear:left;margin:5px;">Get Status</button>
@@ -462,9 +477,11 @@
   tabbar2 = new dhtmlXTabBar("Layer_TabStrip","top");
   tabbar2.Init = function()
   {
+  tabbar2.setSkin("silver");
+  tabbar.setSkinColors("gray","black","#97A0A5");  
+  this.setSize("350","500");
   tabbar2.enableAutoReSize( true );
   tabbar2.setImagePath("../../../codebase/tabbar/imgs/");
-  tabbar2.setSkin("silver");
   tabbar2.addTab("msg_tab1","Message Log");
   tabbar2.addTab("msg_tab2","SCI Log");
   tabbar2.setContent( "msg_tab1", Layer_MessageLog);
@@ -483,8 +500,10 @@
   tabbar.Init = function() 
   {
   tabbar.enableAutoReSize( true );
+  tabbar.tabstyle
   tabbar.setImagePath("../../../codebase/tabbar/imgs/");
-  tabbar.setSkin("silver");
+  tabbar.setSkin("silver");  
+  tabbar.setSkinColors("gray","black","#97A0A5");
   tabbar.addTab("main_tab1","Main");
   tabbar.addTab("main_tab2","Status");
   tabbar.addTab("main_tab3","CM EEPROM");
@@ -498,6 +517,7 @@
   {
     tabbar.setCustomStyle( 'main_tab' + i, 'gray', 'black', 'font-size:10pt;font-family:Arial;font-weight: bold;' );
   }
+  
   tabbar.setTabActive("main_tab3");
   }
 </script>

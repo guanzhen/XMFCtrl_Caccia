@@ -515,7 +515,7 @@ Function OnClick_btn_getstatus ( Reason )
   End If
   If CANSendGetMC ($(CMD_GET_DATA),PARAM_MB_OVERRIDE,Memory.SLOT_NO,CM_ID,0) = True Then
     OverrideWord = Lang.MakeWord(Memory.CanData(2),Memory.CanData(3))
-    UpdateStatus "ipdebug_",OverrideWord,7
+    UpdateStatus "ipdebug_",OverrideWord,10
   End If
   DebugMessage String.Format("Status %02X",StatusWord) & String.Format(" DataStat %02X",DataStatusWord) & String.Format(" Override %02X",OverrideWord) 
 End Function
@@ -596,11 +596,19 @@ Function OnClick_ipdebug_6 ( Reason )
   LED_Update "ipdebug_6",NewValue
 End Function
 '------------------------------------------------------------------
-Function OnClick_ipdebug_7 ( Reason )
+Function OnClick_ipdebug_9 ( Reason )
   Dim Bit,NewValue
-  Bit = Visual.Select("ipdebug_7").Value
+  Bit = Visual.Select("ipdebug_9").Value
   NewValue = Override_ToggleBit(Bit)
-  LED_Update "ipdebug_7",NewValue
+  LED_Update "ipdebug_9",NewValue
+End Function
+
+'------------------------------------------------------------------
+Function OnClick_ipdebug_10 ( Reason )
+  Dim Bit,NewValue
+  Bit = Visual.Select("ipdebug_10").Value
+  NewValue = Override_ToggleBit(Bit)
+  LED_Update "ipdebug_10",NewValue
 End Function
 '------------------------------------------------------------------
 ' Read the override word

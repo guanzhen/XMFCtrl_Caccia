@@ -365,6 +365,7 @@ Function GetErrorInfo ( CanReadArg )
   Case $(ACK_TIMEOUT_SUBSYSTEM): ErrorMsg = "Timeout Subsystem"
   Case $(ACK_NOT_IMPLEMENTED): ErrorMsg = "Not Implemented"
   Case $(ACK_ERR_COVER_CLOSED): ErrorMsg = "Protective cover is closed."  
+  Case $(ACK_ERR_SELFTEST_NOK): ErrorMsg = "Self Test not started."    
   Case $(PUB_MB_CRC): ErrorMsg = "MB CRC Error."  
   Case $(PUB_ERROR_ST_CM_CAP): ErrorMsg = "Self Test Contact Module capacitance out of range"
   Case $(PUB_ERROR_ST_CM_RES): ErrorMsg = "Self Test Contact Module resistance out of range"

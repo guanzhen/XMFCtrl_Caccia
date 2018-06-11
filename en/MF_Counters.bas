@@ -1,4 +1,5 @@
 
+Const EEPROMParamFile = "EEPROM_params.xml" 
 Const MB_TARGET  = 4
 Const CM1_TARGET = 5
 Const CM2_TARGET = 6
@@ -61,14 +62,14 @@ Function InitEEPROMGrid()
   
   Set CM_Grid = Visual.Script("CMEEPROMGrid")
   Set MB_Grid = Visual.Script("MBEEPROMGrid")
-  XMLfilepath = System.Environment.Path & "parameters.xml" 
+  XMLfilepath = System.Environment.Path & EEPROMParamFile 
   
   Set EEPROMData_CM = CreateObject("Math.ByteArray")
   Set EEPROMData_MB = CreateObject("Math.ByteArray")
   'Checks if xml file is present
   If File.FileExists(XMLfilepath) = False Then
     DebugMessage "XML file NOK : " & XMLfilepath
-    System.MessageBox "~cf3 File " & Chr(34) & "parameters.xml" & Chr(34) & " does not exist !", "File error", MB_ICONERROR 
+    System.MessageBox "~cf3 File " & Chr(34) & EEPROMParamFile & Chr(34) & " does not exist !", "File error", MB_ICONERROR 
   Else
     DebugMessage "XML file OK : " & XMLfilepath
     xmlOk = True
@@ -260,7 +261,7 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
   ByteCounter = 0
   exitloop = 0
   'Arbitary timeout to limit EEPROM lines read.
-  Timeout = 30
+  Timeout = bytesleft/6 + 10
  'Get SCI TX
   CANData.Data(0) = target
   CANData.Data(1) = Lang.GetByte(address,0)
