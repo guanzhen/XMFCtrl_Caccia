@@ -47,7 +47,7 @@ If CANConfig.Config = 0 Then
     Visual.Script("dhxWins").unload()
     Visual.Select("Layer_CanSetup").Style.Display = "none"
     Visual.Select("Layer_TabStripMain").style.display = "block"
-    Visual.Select("Layer_Logs").Style.Display = "block"    
+    Visual.Select("Layer_TabStripLog").Style.Display = "block"    
   Else
     MsgBox "Cannot Open CAN Manager on Net " & CANConfig.Net + 1 & "!"
   End If

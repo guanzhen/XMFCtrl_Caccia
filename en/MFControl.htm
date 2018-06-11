@@ -31,25 +31,28 @@
   button {width:150px}
   input {width:150px;}
   select {width:150px;}   
-  #btn_GridClear {margin-top:20px;float:right; width: 100px;height:34px;align:right;}
-  #btn_DebugLog  {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
-  #btn_GetSCIbuffer  {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
-  #btn_GetSCIErrQ  {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
-  #Layer_TabStripMain   {padding: 0px; height:65%; width:100%;background-color : #97A0A5;}
-  #Layer_Main   {padding: 1px; height:99%; width:100%;}
-  #Layer_CMEEPROM   {padding: 1px; height:99%; }
-  #Layer_MBEEPROM   {padding: 1px; height:99%; }
-  #Layer_CMGrid   {height:426px; width:600px}
-  #Layer_MBGrid   {height:426px; width:600px}
-  #Layer_TabStrip   {padding: 2px; height:94% ;width:100%;}
-  #Layer_MessageLog {padding: 0px; height:100% ; width:100%;}
-  #Layer_Counters {padding: 1px; height:99% ; width:100%;}
-  #MessageLogObj {height:100%; width :95%;}  
-  #Layer_SCILog {padding: 0px; height:100% ; width:100%;}
-  #SCILogObj {height:100%; width :95%;}  
-  #LayerCommand  {float:left;width :49.5%; height:380px}
-  #LayerReply    {float:left;width :49.5%;height:408px}  
-  #LayerPeripherals { position: absolute; top:338px;}
+
+  #Layer_TabStripMain  {height:70%; background-color:#97A0A5;}
+  #Layer_Tab1_Main     {}
+    #LayerCommand  {float:left;width :51%; height:380 px;}
+    #LayerReply    {float:left;width :48%; height:380 px;}  
+      #LayerPeripherals { position: absolute; top:310px;}
+  #Layer_Tab2_Status   {}
+  #Layer_Tab3_CMEEPROM {}
+    #Layer_CMGrid      {height:390px; width:600px;}
+  #Layer_Tab4_MBEEPROM {}
+    #Layer_MBGrid      {height:390px; width:600px;}
+  
+  #Layer_TabStripLog   {padding: 2px; height:30%;}  
+    #Layer_Tab1_MainLog {}  
+      #MessageLogObj {}  
+    #Layer_Tab2_SCILog  {}
+      #SCILogObj {}  
+    
+  #btn_GridClear    {margin-top:20px;float:right; width: 100px;height:34px;align:right;}
+  #btn_DebugLog     {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
+  #btn_GetSCIbuffer {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
+  #btn_GetSCIErrQ   {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
   .inputled { width: 30px;}
   .GrpFrame
   {
@@ -58,195 +61,183 @@
     border-width:     2px;
     filter:           progid:DXImageTransform.Microsoft.Gradient(startColorStr='#AA312C',endColorStr='#A4312C',gradientType='1');
     Background-color: #AA312C;
-    margin:           2px;
     padding:          2px;
+    height:           100%;   
   }
-    .SubFrame
+  .SubFrame
   {
     border-color:     white;
     border-style:     solid;
     border-width:     1px;
     filter:           progid:DXImageTransform.Microsoft.Gradient(startColorStr='#AA312C',endColorStr='#A4312C',gradientType='1');
     Background-color: #AA312C;
-    margin:           2px;
     padding:          2px;
   }
-  #Layer_Logs   {padding: 0px; height:37% ;width:100%;}
+
   </STYLE>
 </HEAD>
 
 <BODY>
-  <div id="Layer_TabStripMain"></div>
+  <div id="Layer_TabStripMain">
   
-    <div id="Layer_Main" class = "GrpFrame">
-    <table>
-      <td><span style = "color = white;font-size = 10pt;font-family=arial;margin=0px;">Can ID: 0x</span></td>
-      <td><input id = "inputCANID" style = "width: 27px"></input></td>
-      <td><select id = "opt_SlotNum" style = "width:50px;" ></select></td>
-      <td><button id = "btn_AssignCANID" class = "ButtonInfo">Assign CANID</button></td>
-      <td><button id = "btn_GetApp" class = "ButtonInfo">Read Info</button></td>
-      <td><button id = "btn_Reset" class = "ButtonInfo">Reset</button></td>
-    </table>
+    <div id="Layer_Tab1_Main" class = "GrpFrame">
+      <table>
+        <td><span style = "color = white;font-size = 10pt;font-family=arial;margin=0px;">Can ID: 0x</span></td>
+        <td><input id = "inputCANID" style = "width: 27px"></input></td>
+        <td><select id = "opt_SlotNum" style = "width:50px;" ></select></td>
+        <td><button id = "btn_AssignCANID" class = "ButtonInfo">Assign CANID</button></td>
+        <td><button id = "btn_GetApp" class = "ButtonInfo">Read Info</button></td>
+        <td><button id = "btn_Reset" class = "ButtonInfo">Reset</button></td>
+      </table>
 
-    <div id="LayerCommand" class = "SubFrame">
-    <!-- Measure Component~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-      <div id="SubLayerMeasure" >
-        <h1>Measurement Controls</h1>
-        <table> 
-        <tr><td>Contact Module</td>
-          <td><select id = "opt_CMID" style = "width:35px">
-          <option value = "0x01">1</option>
-          <option value = "0x02">2</option>
-          <option value = "0x03">3</option>
-          </select>
-          <td>Freq.</td>
-          <td>
-            <select id = "optFrequency" style = "width:80px">
+      <div id="LayerCommand" class = "SubFrame">
+      <!-- Measure Component~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+        <div id="SubLayerMeasure" >
+          <h1>Measurement Controls</h1>
+          <table> 
+          <tr><td>Contact Module</td>
+            <td><select id = "opt_CMID" style = "width:35px">
+            <option value = "0x01">1</option>
+            <option value = "0x02">2</option>
+            <option value = "0x03">3</option>
+            </select>
+            <td>Freq.</td>
+            <td>
+              <select id = "optFrequency" style = "width:80px">
+                <option value = "0">Auto</option>
+                <option value = "1">1 kHz</option>
+                <option value = "2">10 kHz</option>
+              </select>      
+            </td>
+            <td title ="Series for C/L, Parallel for R">Model</td>
+            <td>
+            <select id = "optModel" style = "width:80px">
               <option value = "0">Auto</option>
-              <option value = "1">1 kHz</option>
-              <option value = "2">10 kHz</option>
+              <option value = "1">Series</option>
+              <option value = "2">Parallel</option>
             </select>      
-          </td>
-          <td title ="Series for C/L, Parallel for R">Model</td>
-          <td>
-          <select id = "optModel" style = "width:80px">
-            <option value = "0">Auto</option>
-            <option value = "1">Series</option>
-            <option value = "2">Parallel</option>
-          </select>      
-          </td>
-          <td>
-          <input id="cbmodesel" type = "checkbox" style = "width:50px">Manual</input>
-          </td>
-        </tr>
-        </table>
-        <hr>
-        <div>
-          <div style = "padding-right:5px;float:right;clear:left">
-            <button id="btn_setupmeasure" style = "height:50px">Setup Measure</button><br><br>
-            <button id="btn_measure" style = "height:50px;clear:right">Start Measure</button><br><br> 
-            <button id="btn_getresults" title = "Retrieve previous measurement results" style = "height:30px;clear:right"> Get results </button>
-          </div>
-          <div style = "float:left;height:180px">
-            <table id="TableComponent">
-              <tr>
-                <td>Component Type 
-                <td><select id = "opt_MeasureCommand" >
-                  <option value = "1">Resistor</option>
-                  <option value = "2">Capacitor</option>
-                  <option value = "3">Inductor</option>
-                  <option value = "4">Forward Voltage</option>
-                  <option value = "5">Polar Cap</option>
-                </select>
-              </tr>
-              <tr id = "param_expectedVal">
-                <td>Component Value </td>
-                <td><input id="ip_param_setupExpectedVal"></input></td>
-                <td id="ParamUnit"> </td>
-              </tr>
-              <tr id="param_voltage"><td>Max Voltage</td> <td><input id = "ip_paramvoltage" ></input><td>V</td>    
-              <tr id="param_current"><td>Current<td><select id = "optCurrSel">
-                <option value = "0.002">2mA</option>
-                <option value = "0.010">10mA</option>              
-              </select>
-              <tr id="param_maxvoltage"><td>Max Voltage</td> <td><input id = "ip_parammaxvoltage" ></input><td>V</td>
-              <tr id="param_numofcycle" title = "[0 = Auto]"><td>NumOfCycles (Opt)</td> <td><input id = "ip_paramnumofcycles" ></input></td>
-              <tr id="param_polarity" title = "[0 = Normal, 1 = Reversed/Inverted]"><td>Polarity (Opt)</td> 
-                  <!--<td><input id = "ip_parampolarity" ></input></td>-->
-                  <td>
-                  <select id = "opt_polarity" >
-                  <option value = "0">Normal</option>
-                  <option value = "1">Reversed</option>                                
+            </td>
+            <td>
+            <input id="cbmodesel" type = "checkbox" style = "width:50px">Manual</input>
+            </td>
+          </tr>
+          </table>
+          <hr>
+          <div>
+            <div style = "padding-right:5px;float:right;clear:left">
+              <button id="btn_setupmeasure" style = "height:50px">Setup Measure</button><br><br>
+              <button id="btn_measure" style = "height:50px;clear:right">Start Measure</button><br><br> 
+              <button id="btn_getresults" title = "Retrieve previous measurement results" style = "height:30px;clear:right"> Get results </button>
+            </div>
+            <div style = "float:left;height:180px">
+              <table id="TableComponent">
+                <tr>
+                  <td>Component Type 
+                  <td><select id = "opt_MeasureCommand" >
+                    <option value = "1">Resistor</option>
+                    <option value = "2">Capacitor</option>
+                    <option value = "3">Inductor</option>
+                    <option value = "4">Forward Voltage</option>
+                    <option value = "5">Polar Cap</option>
                   </select>
-                  </td>
+                </tr>
+                <tr id = "param_expectedVal">
+                  <td>Component Value </td>
+                  <td><input id="ip_param_setupExpectedVal"></input></td>
+                  <td id="ParamUnit"> </td>
+                </tr>
+                <tr id="param_voltage"><td>Max Voltage</td> <td><input id = "ip_paramvoltage" ></input><td>V</td>    
+                <tr id="param_current"><td>Current<td><select id = "optCurrSel">
+                  <option value = "0.002">2mA</option>
+                  <option value = "0.010">10mA</option>              
+                </select>
+                <tr id="param_maxvoltage"><td>Max Voltage</td> <td><input id = "ip_parammaxvoltage" ></input><td>V</td>
+                <tr id="param_numofcycle" title = "[0 = Auto]"><td>NumOfCycles (Opt)</td> <td><input id = "ip_paramnumofcycles" ></input></td>
+                <tr id="param_polarity" title = "[0 = Normal, 1 = Reversed/Inverted]"><td>Polarity (Opt)</td> 
+                    <!--<td><input id = "ip_parampolarity" ></input></td>-->
+                    <td>
+                    <select id = "opt_polarity" >
+                    <option value = "0">Normal</option>
+                    <option value = "1">Reversed</option>                                
+                    </select>
+                    </td>
+              </table>
+            </div>
+            <hr style = "float:left;clear:left;">
+            <table>
+              <tr>
+               <td><button style="width:150px" id="btn_endurance"> Endurance </button>
+               <td><button style="width:150px" id="btn_endu_stop"> Stop </button>
+              </tr>
             </table>
           </div>
-          <hr style = "float:left;clear:left;">
+        </div>
+        <hr> 
+        <div id="SubLayerTools" >
           <table>
-            <tr>
-             <td><button style="width:150px" id="btn_endurance"> Endurance </button>
-             <td><button style="width:150px" id="btn_endu_stop"> Stop </button>
-            </tr>
+          <tr><td><button style="width:150px" id="btn_calibrate"> Compensation </button></td>
+          <td>
+            <select style = "width:180px;" id = "opt_SubCmd">
+            <option value = "0x01">1 Closed Loop</option>
+            <option value = "0x02">2 Closed Loop Cal</option>
+            <option value = "0x03">3 Open Loop</option>
+            <option value = "0x04">4 Restore Compensation Data</option>
+            </select>
+          </td>
+          </tr>
+          <tr>
+          <td><button style="width:150px" id="btn_selftest"> Self Test </button><br></td>
+          </tr>
           </table>
         </div>
       </div>
-      <hr> 
-      <div id="SubLayerTools" >
-        <table>
-        <tr><td><button style="width:150px" id="btn_calibrate"> Compensation </button></td>
-        <td>
-          <select style = "width:180px;" id = "opt_SubCmd">
-          <option value = "0x01">1 Closed Loop</option>
-          <option value = "0x02">2 Closed Loop Cal</option>
-          <option value = "0x03">3 Open Loop</option>
-          <option value = "0x04">4 Restore Compensation Data</option>
-          </select>
-        </td>
-        </tr>
-        <tr>
-        <td><button style="width:150px" id="btn_selftest"> Self Test </button><br></td>
-        </tr>
-        </table>
-      </div>
-    </div>
     
-    <div id="LayerReply" class = "SubFrame">
-      <h1>Results</h1>
-      <div id= "LayerResults">
-      <table>
-        <!-- For Selftest and setup measure -->
-        <tr id="param_ContactRes">  <td>Contact Res</td>          <td><input id = "op_paramContactres" ></input> Ohm</td>    
-        <tr id="param_CapacityCM">    <td>Capacitance CM</td>     <td><input id = "op_paramCapacityCM" ></input> F</td>
-        <tr id="param_ResistanceCM">  <td>Resistance CM</td>      <td><input id = "op_paramResistanceCM" ></input> Ohm</td>
-        
-        <!-- For measurements -->
-        <tr id="param_CompType1">     <td>Primary Attribute</td>      <td><input id = "op_paramcomptype1" ></input></td>
-        <tr id="param_fwdvoltage">    <td>Forward Voltage</td>        <td><input id = "op_paramfwdvoltage" ></input> V</td>
-        <tr id="param_Type1Value">    <td>Parameter 1 value</td>      <td><input id = "op_paramType1Value" ></input></td>
-        <tr id="param_Type1ValueMin"> <td>Parameter 1 value Min</td>  <td><input id = "op_paramType1ValueMin" ></input></td>
-        <tr id="param_Type1ValueMax"> <td>Parameter 1 value Max</td>  <td><input id = "op_paramType1ValueMax" ></input></td>
-        <tr id="param_CompType2">     <td>Secondary Attribute</td>    <td><input id = "op_paramcomptype2" ></input></td>
-        <tr id="param_Type2Value">    <td>Parameter 2 value</td>      <td><input id = "op_paramType2Value" ></input></td>
-        <tr id="param_fwdcurrent">    <td>Forward Current</td>        <td><input id = "op_paramfwdcurrent" ></input> I</td>
-        <tr id="param_Type2ValueMin"> <td>Parameter 2 value Min</td>  <td><input id = "op_paramType2ValueMin" ></input></td>
-        <tr id="param_Type2ValueMax"> <td>Parameter 2 value Max</td>  <td><input id = "op_paramType2ValueMax" ></input></td>
-        <tr id="param_res1k">         <td>Res. 1KHz</td>              <td><input id = "op_paramres1k" ></input> Ohm</td>
-        <tr id="param_reac1k">        <td>Reac. 1KHz</td>             <td><input id = "op_paramreac1k" ></input> Ohm</td>
-        <tr id="param_res10k">        <td>Res. 10KHz</td>             <td><input id = "op_paramres10k" ></input> Ohm</td>
-        <tr id="param_reac10k">       <td>Reac. 10KHz</td>            <td><input id = "op_paramreac10k" ></input> Ohm</td>
-        
-        <!-- For selftest,setup measure and measurements -->
-        <tr id="param_U">        <td>Voltage</td>                <td><input id = "op_paramU" ></input> V</td>
-        <tr id="param_I">        <td>Current </td>               <td><input id = "op_paramI" ></input> A</td>
-        <tr id="param_Phi">      <td>Phase</td>                  <td><input id = "op_paramPhi" ></input> Deg</td>
-        <tr id="param_Freq">     <td>Frequency</td>              <td><input id = "op_paramFreq" ></input> Hz</td>
-        
-      </table>  
-      </div>
-      <div id="LayerPeripherals">
-        <hr>
-        <h1>Peripherals</h1>
+      <div id="LayerReply" class = "SubFrame">
+        <h1>Results</h1>
+        <div id= "LayerResults">
         <table>
-        <tr><td><button style="width:150px" id="btn_getcover"> Get Cover Status </button></td><td><img id="ledcover" src="./icon/led_black.png"></img></td></tr>
-        <tr><td><button style="width:150px" id="btn_gettemp"> Get Temperature</button></td><td><input id = "op_paramtemp" style ="width:50px;"> Degrees</input></td></tr>
-        </table>
+          <!-- For Selftest and setup measure -->
+          <tr id="param_ContactRes">  <td>Contact Res</td>          <td><input id = "op_paramContactres" ></input> Ohm</td>    
+          <tr id="param_CapacityCM">    <td>Capacitance CM</td>     <td><input id = "op_paramCapacityCM" ></input> F</td>
+          <tr id="param_ResistanceCM">  <td>Resistance CM</td>      <td><input id = "op_paramResistanceCM" ></input> Ohm</td>
+          
+          <!-- For measurements -->
+          <tr id="param_CompType1">     <td>Primary Attribute</td>      <td><input id = "op_paramcomptype1" ></input></td>
+          <tr id="param_fwdvoltage">    <td>Forward Voltage</td>        <td><input id = "op_paramfwdvoltage" ></input> V</td>
+          <tr id="param_Type1Value">    <td>Parameter 1 value</td>      <td><input id = "op_paramType1Value" ></input></td>
+          <tr id="param_Type1ValueMin"> <td>Parameter 1 value Min</td>  <td><input id = "op_paramType1ValueMin" ></input></td>
+          <tr id="param_Type1ValueMax"> <td>Parameter 1 value Max</td>  <td><input id = "op_paramType1ValueMax" ></input></td>
+          <tr id="param_CompType2">     <td>Secondary Attribute</td>    <td><input id = "op_paramcomptype2" ></input></td>
+          <tr id="param_Type2Value">    <td>Parameter 2 value</td>      <td><input id = "op_paramType2Value" ></input></td>
+          <tr id="param_fwdcurrent">    <td>Forward Current</td>        <td><input id = "op_paramfwdcurrent" ></input> I</td>
+          <tr id="param_Type2ValueMin"> <td>Parameter 2 value Min</td>  <td><input id = "op_paramType2ValueMin" ></input></td>
+          <tr id="param_Type2ValueMax"> <td>Parameter 2 value Max</td>  <td><input id = "op_paramType2ValueMax" ></input></td>
+          <tr id="param_res1k">         <td>Res. 1KHz</td>              <td><input id = "op_paramres1k" ></input> Ohm</td>
+          <tr id="param_reac1k">        <td>Reac. 1KHz</td>             <td><input id = "op_paramreac1k" ></input> Ohm</td>
+          <tr id="param_res10k">        <td>Res. 10KHz</td>             <td><input id = "op_paramres10k" ></input> Ohm</td>
+          <tr id="param_reac10k">       <td>Reac. 10KHz</td>            <td><input id = "op_paramreac10k" ></input> Ohm</td>
+          
+          <!-- For selftest,setup measure and measurements -->
+          <tr id="param_U">        <td>Voltage</td>                <td><input id = "op_paramU" ></input> V</td>
+          <tr id="param_I">        <td>Current </td>               <td><input id = "op_paramI" ></input> A</td>
+          <tr id="param_Phi">      <td>Phase</td>                  <td><input id = "op_paramPhi" ></input> Deg</td>
+          <tr id="param_Freq">     <td>Frequency</td>              <td><input id = "op_paramFreq" ></input> Hz</td>
+          
+        </table>  
+        </div>
+        <div id="LayerPeripherals">
+          <hr>
+          <h1>Peripherals</h1>
+          <table>
+          <tr><td><button style="width:150px" id="btn_getcover"> Get Cover Status </button></td><td><img id="ledcover" src="./icon/led_black.png"></img></td></tr>
+          <tr><td><button style="width:150px" id="btn_gettemp"> Get Temperature</button></td><td><input id = "op_paramtemp" style ="width:50px;"> Degrees</input></td></tr>
+          </table>
+        </div>
       </div>
     </div>
-    <div id="Layer_CMEEPROM" class = "GrpFrame">
-      <div id="Layer_CMGrid"></div>
-      <button id = "btn_ReadCMEEPROM" style = "margin:2px 1px">Get EEPROM Data</button>
-      <button id = "btn_SaveCMEEPROM" style = "margin:2px 1px">Export to CSV</button>
-    </div>
-    
-    <div id="Layer_MBEEPROM" class = "GrpFrame">
-      <div id="Layer_MBGrid"></div>
-      <button id = "btn_ReadMBEEPROM" style = "margin:2px 1px">Get EEPROM Data</button>
-      <button id = "btn_SaveMBEEPROM" style = "margin:2px 1px">Export to CSV</button>
-    </div>    
-  </div>
-  <!-- End Div Layer_Main -->
+    <!-- End Div Layer_Tab1_Main  -->
   
-  <div id="Layer_Status" class = "GrpFrame">
+  <div id="Layer_Tab2_Status" class = "GrpFrame">
     <div id=SubLayerStatus_Status style = "float:left">
     <h1>Status</h1>
     <table>
@@ -313,23 +304,35 @@
       </table>
     </div>
     <button id="btn_getstatus" style="clear:left;margin:5px;">Get Status</button>
+    
   </div>
   
-  <div id="Layer_Logs">
-    <div id="Layer_TabStrip"  class = "GrpFrame">
+  <div id="Layer_Tab3_CMEEPROM" class = "GrpFrame">
+      <div id="Layer_CMGrid"></div>
+      <button id = "btn_ReadCMEEPROM" style = "margin:2px 1px">Get EEPROM Data</button>
+      <button id = "btn_SaveCMEEPROM" style = "margin:2px 1px">Export to CSV</button>
+  </div>
+    
+  <div id="Layer_Tab4_MBEEPROM" class = "GrpFrame">
+      <div id="Layer_MBGrid"></div>
+      <button id = "btn_ReadMBEEPROM" style = "margin:2px 1px">Get EEPROM Data</button>
+      <button id = "btn_SaveMBEEPROM" style = "margin:2px 1px">Export to CSV</button>
+  </div>    
+  
+  </div>
+  
+  <div id="Layer_TabStripLog">
     <button id="btn_GridClear" title="Clear content in message window.">Clear</button>  
     <button id="btn_DebugLog" title="Open/Close debuglog window.">DebugLog</button>  
     <button id="btn_GetSCIbuffer" title="Get the most recent SCI data.">Read SCI</button>  
     <button id="btn_GetSCIErrQ" title="Get the MB Error Queue">Get MB Errs</button>  
-      <div id="Layer_MessageLog">
+      <div id="Layer_Tab1_MainLog">
         <div id="MessageLogObj"></div>
         <!-- <button id="btn_DebugLog" title="Creates Debug Window">Start DebugLog</button>         -->
       </div>
-      <div id="Layer_SCILog">
+      <div id="Layer_Tab2_SCILog">
         <div id="SCILogObj"></div>
-      SCI Log
       </div>
-    </div>
   </div>
   <div id="Layer_CanSetup"></div> 
  
@@ -474,18 +477,17 @@
 
 
 <script language = "JScript" type="text/javascript"> 
-  tabbar2 = new dhtmlXTabBar("Layer_TabStrip","top");
+  tabbar2 = new dhtmlXTabBar("Layer_TabStripLog","top");
   tabbar2.Init = function()
   {
   tabbar2.setSkin("silver");
-  tabbar.setSkinColors("gray","black","#97A0A5");  
-  this.setSize("350","500");
+  tabbar2.setSkinColors("gray","black","#97A0A5");
   tabbar2.enableAutoReSize( true );
   tabbar2.setImagePath("../../../codebase/tabbar/imgs/");
   tabbar2.addTab("msg_tab1","Message Log");
   tabbar2.addTab("msg_tab2","SCI Log");
-  tabbar2.setContent( "msg_tab1", Layer_MessageLog);
-  tabbar2.setContent( "msg_tab2", Layer_SCILog);
+  tabbar2.setContent( "msg_tab1", Layer_Tab1_MainLog);
+  tabbar2.setContent( "msg_tab2", Layer_Tab2_SCILog);
 
   for ( var i = 1; i <= tabbar2.getNumberOfTabs(); i++ )
   {
@@ -508,10 +510,10 @@
   tabbar.addTab("main_tab2","Status");
   tabbar.addTab("main_tab3","CM EEPROM");
   tabbar.addTab("main_tab4","MB EEPROM");
-  tabbar.setContent( "main_tab1", Layer_Main);
-  tabbar.setContent( "main_tab2", Layer_Status);
-  tabbar.setContent( "main_tab3", Layer_CMEEPROM);
-  tabbar.setContent( "main_tab4", Layer_MBEEPROM);
+  tabbar.setContent( "main_tab1", Layer_Tab1_Main);
+  tabbar.setContent( "main_tab2", Layer_Tab2_Status);
+  tabbar.setContent( "main_tab3", Layer_Tab3_CMEEPROM);
+  tabbar.setContent( "main_tab4", Layer_Tab4_MBEEPROM);
 
   for ( var i = 1; i <= tabbar.getNumberOfTabs(); i++ )
   {

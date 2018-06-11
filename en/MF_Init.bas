@@ -23,7 +23,7 @@ Sub OnLoadFrame()
   Memory.Set "dispLog", true
   
   Window.Width  = 1040
-  Window.Height = 760
+  Window.Height = 660
   
   ' Create version and title ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   If Not System.Configuration ("Version", Config, "Package") Then
@@ -48,12 +48,12 @@ Sub OnLoadFrame()
   Visual.Script("CMEEPROMGrid").drawgrid  
   Visual.Script("LogGrid").load_messagebox
   Visual.Script("SCIGrid").load_messagebox  
-  Visual.Select("Layer_TabStripMain").style.display = "none"
-  Visual.Select("Layer_Logs").style.display = "none"  
-  'Visual.Select("Layer_Main").style.display = "none"
-  'Visual.Select("Layer_CMEEPROM").style.display = "none"  
-  'Visual.Select("Layer_MBEEPROM").style.display = "none"  
-  'Visual.Select("Layer_Status").style.display = "none"  
+  'Visual.Select("Layer_TabStripMain").style.display = "none"
+  'Visual.Select("Layer_TabStripLog").style.display = "none"  
+  'Visual.Select("Layer_Tab1_Main").style.display = "none"
+  'Visual.Select("Layer_Tab2_Status").style.display = "none"  
+  'Visual.Select("Layer_Tab3_CMEEPROM").style.display = "none"  
+  'Visual.Select("Layer_Tab4_MBEEPROM").style.display = "none"  
   Init_MFCommand
   Visual.Script("win").attachEvent "onClose" , Lang.GetRef( "btn_CanConnect" , 1)
 End Sub
