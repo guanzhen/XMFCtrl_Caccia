@@ -25,11 +25,11 @@
   <script src="../../../codebase/tabbar/dhtmlxtabbar.js"></script>
 
   <STYLE>
-  html { background-color : #97A0A5;}
-  h1 {font-size: 12pt;color:white;margin:5px 0px 5px 0px;font-family:arial}
+  html {background-color : #97A0A5;}
+  h1   {font-size: 12pt;color:white;margin:5px 0px 5px 0px;font-family:arial}
   body {margin:2px;font-size: 12pt;color:white;font-family:arial}
   button {width:150px}
-  input {width:150px;}
+  input  {width:150px;}
   select {width:150px;}   
 
   #Layer_TabStripMain  {height:70%; background-color:#97A0A5;}
@@ -43,16 +43,15 @@
   #Layer_Tab4_MBEEPROM {}
     #Layer_MBGrid      {height:390px; width:600px;}
   
-  #Layer_TabStripLog   {padding: 2px; height:30%;}  
-    #Layer_Tab1_MainLog {}  
-      #MessageLogObj {}  
-    #Layer_Tab2_SCILog  {}
-      #SCILogObj {}  
+  #Layer_LogGrids      {padding:2px;height:30%;}
+    #Layer_TabStripLog {float:left;height:100%;width:89.5%}  
+    #Layer_LogButtons  {width:110px;margin-top:30px;clear:left;float:right;}  
+      #Layer_Tab1_MainLog {}
+        #MessageLogObj {}  
+      #Layer_Tab2_SCILog  {}
+        #SCILogObj {}  
     
-  #btn_GridClear    {margin-top:20px;float:right; width: 100px;height:34px;align:right;}
-  #btn_DebugLog     {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
-  #btn_GetSCIbuffer {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
-  #btn_GetSCIErrQ   {margin-top:5px;clear:right;float:right; width: 100px;height:34px;}  
+  .button_log {margin:2px;width:100px;height:34px;}
   .inputled { width: 30px;}
   .GrpFrame
   {
@@ -320,19 +319,22 @@
   </div>    
   
   </div>
-  
-  <div id="Layer_TabStripLog">
-    <button id="btn_GridClear" title="Clear content in message window.">Clear</button>  
-    <button id="btn_DebugLog" title="Open/Close debuglog window.">DebugLog</button>  
-    <button id="btn_GetSCIbuffer" title="Get the most recent SCI data.">Read SCI</button>  
-    <button id="btn_GetSCIErrQ" title="Get the MB Error Queue">Get MB Errs</button>  
+
+  <div id ="Layer_LogGrids">
+    <div id="Layer_TabStripLog">
       <div id="Layer_Tab1_MainLog">
         <div id="MessageLogObj"></div>
-        <!-- <button id="btn_DebugLog" title="Creates Debug Window">Start DebugLog</button>         -->
       </div>
       <div id="Layer_Tab2_SCILog">
         <div id="SCILogObj"></div>
       </div>
+    </div>
+    <div id="Layer_LogButtons">
+      <button id="btn_GridClear" class = "button_log" title="Clear content in message window.">Clear</button>  
+      <button id="btn_DebugLog" class = "button_log" title="Open/Close debuglog window.">DebugLog</button>  
+      <button id="btn_GetSCIbuffer" class = "button_log" title="Get the most recent SCI data.">Read SCI</button>  
+      <button id="btn_GetSCIErrQ" class = "button_log" title="Get the MB Error Queue">Get MB Errs</button>  
+    </div>
   </div>
   <div id="Layer_CanSetup"></div> 
  
