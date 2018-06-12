@@ -28,14 +28,14 @@
   html {background-color : #97A0A5;}
   h1   {font-size: 12pt;color:white;margin:5px 0px 5px 0px;font-family:arial}
   body {margin:2px;font-size: 12pt;color:white;font-family:arial}
-  button {width:150px}
+  button {width:150px;}
   input  {width:150px;}
   select {width:150px;}   
 
   #Layer_TabStripMain  {height:70%; background-color:#97A0A5;}
   #Layer_Tab1_Main     {}
-    #LayerCommand  {float:left;width :51%; height:380 px;}
-    #LayerReply    {float:left;width :48%; height:380 px;}  
+    #LayerCommand  {float:left;width :52%; height:380 px;}
+    #LayerReply    {float:right;width :48%; ; height:380 px;}  
       #LayerPeripherals { position: absolute; top:310px;}
   #Layer_Tab2_Status   {}
   #Layer_Tab3_CMEEPROM {}
@@ -70,7 +70,7 @@
     border-width:     1px;
     filter:           progid:DXImageTransform.Microsoft.Gradient(startColorStr='#AA312C',endColorStr='#A4312C',gradientType='1');
     Background-color: #AA312C;
-    padding:          2px;
+    padding:          5px;
   }
 
   </STYLE>
@@ -124,9 +124,9 @@
           <hr>
           <div>
             <div style = "padding-right:5px;float:right;clear:left">
-              <button id="btn_setupmeasure" style = "height:50px">Setup Measure</button><br><br>
-              <button id="btn_measure" style = "height:50px;clear:right">Start Measure</button><br><br> 
-              <button id="btn_getresults" title = "Retrieve previous measurement results" style = "height:30px;clear:right"> Get results </button>
+              <button id="btn_setupmeasure" style = "height:40px">Setup Measure</button><br><br>
+              <button id="btn_measure" style = "height:40px;">Start Measure</button><br><br> 
+              <button id="btn_getresults" style = "height:40px;" title = "Retrieve previous measurement results"> Get results </button>
             </div>
             <div style = "float:left;height:180px">
               <table id="TableComponent">
@@ -165,8 +165,8 @@
             <hr style = "float:left;clear:left;">
             <table>
               <tr>
-               <td><button style="width:150px" id="btn_endurance"> Endurance </button>
-               <td><button style="width:150px" id="btn_endu_stop"> Stop </button>
+               <td><button id="btn_endurance"> Endurance </button>
+               <td><button id="btn_endu_stop"> Stop </button>
               </tr>
             </table>
           </div>
@@ -498,7 +498,7 @@
     tabbar.setCustomStyle( 'main_tab' + i, 'gray', 'black', 'font-size:10pt;font-family:Arial;font-weight: bold;' );
   }
   
-  tabbar.setTabActive("main_tab3");
+  tabbar.setTabActive("main_tab1");
   }
 </script>
 
