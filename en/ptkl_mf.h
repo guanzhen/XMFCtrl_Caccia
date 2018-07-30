@@ -29,9 +29,10 @@
 *                     v9  , Added defines to access for new factory data: Tolerances / Offsets and settings.
 *					                  Added define PARAM_MB_ERRORS
 *					            2018-03-14
-*					            v10 , Added  PARAM_MEAS_STATUS PARAM_MEAS_DEBUG
+*					            v10 , Added  PARAM_MEAS_STATUS PARAM_MEAS_DEBUG,ACK_ERR_SELFTEST_NOK
 *  \b Description: \n
 */
+
     //Service Commands
 
     //Prepare Commands
@@ -50,7 +51,7 @@
         #define ACK_INVALID_CM                    0x50
         #define ACK_ERR_COVER_CLOSED              0x51
         #define ACK_ERR_SELFTEST_NOK              0x52
-        
+
     //Publics/Errors
         #define PUB_CM_NOT_CONNECTED              0x31
         #define PUB_WRONG_POLARITY                0x32
@@ -67,7 +68,7 @@
 
         #define PARAM_INP_COVER                   0x30
         #define PARAM_MB_TEMP                     0x31
-        
+        #define PARAM_CALB_IOEXP                  0x32 
     // Params : Misc
 
         #define PARAM_MB_ERRORS                   0x54       
