@@ -40,12 +40,13 @@ Sub OnLoadFrame()
   
   '~~~ Read params ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   '~~~ Disable elements for input only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  'CreateDebugLogWindow
+  CreateDebugLogWindow
   Visual.Script("dhxWins").load_cansetup
   Visual.Script("tabbar").Init
   Visual.Script("tabbar2").Init
   Visual.Script("MBEEPROMGrid").drawgrid  
   Visual.Script("CMEEPROMGrid").drawgrid
+  Visual.Script("CalibEEPROMGrid").drawgrid
   Visual.Select("Layer_TabStripMain").style.display = "none"
   Visual.Select("Layer_LogGrids").style.display = "none"  
   'Visual.Select("Layer_Tab1_Main").style.display = "none"

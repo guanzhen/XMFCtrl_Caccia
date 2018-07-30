@@ -44,6 +44,16 @@ Const PARAM_MB_STATUS  = &h55
 Const PARAM_DATA_STATUS = &h56
 Const PARAM_MB_OVERRIDE = &h57
 
+Const CALB_COMP1 = &h8080F1
+Const CALB_COMP2 = &h808001
+Const CALB_COMP3 = &h808003
+Const CALB_COMP4 = &h418001
+Const CALB_COMP5 = &h488001
+Const CALB_COMP6 = &h428001
+Const CALB_COMP7 = &h508001
+Const CALB_COMP8 = &h448001
+Const CALB_COMP9 = &h608001
+
 Function Init_MFCommand ( )
   Dim PrepCmd_Inprogress,PrepCmd_Error,PrepCmd_PrepID,Endurance_Inprogress
   Dim PrepCmd_MeasureInProgress,counter
@@ -611,6 +621,133 @@ Function OnClick_ipdebug_10 ( Reason )
   LED_Update "ipdebug_10",NewValue
 End Function
 '------------------------------------------------------------------
+Function OnClick_btn_Sel1 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP1,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP1,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP1,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel2 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP2,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP2,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP2,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel3 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP3,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP3,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP3,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel4 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP4,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP4,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP4,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel5 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP5,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP5,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP5,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel6 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP6,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP6,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP6,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel7 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP7,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP7,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP7,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel8 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP8,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP8,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP8,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel9 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP9,0)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP9,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP9,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+End Function
+'------------------------------------------------------------------
+
 ' Read the override word
 Function Override_Get (ByRef Value)
   Dim CM_ID

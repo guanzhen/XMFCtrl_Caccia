@@ -25,6 +25,14 @@ UpdateMBGrid
 
 End Function
 '------------------------------------------------------------------
+Function OnClick_btn_btn_ReadCLEEPROM( Reason )
+Dim EEPROMData
+Set EEPROMData = Memory.EEPROMData_Calib
+GetEEPROMML 0,MB_TARGET,EEPROMData
+UpdateCalibGrid
+
+End Function
+'------------------------------------------------------------------
 Function OnClick_btn_SaveCMEEPROM(Reason)
   Dim Filename
   
@@ -51,6 +59,19 @@ Function OnClick_btn_SaveMBEEPROM(Reason)
   End if
 End Function
 '------------------------------------------------------------------
+Function OnClick_btn_SaveCLEEPROM(Reason)
+  Dim Filename
+  
+  If System.FileDialog( False, _
+     OFN_HIDEREADONLY or OFN_CREATEPROMPT or OFN_OVERWRITEPROMPT, _
+     "CSV files(*.csv)", _
+     Filename ) Then
+    DebugMessage "Save calibration data to:"& Filename
+    WriteFile "CalibEEPROMGrid",Filename
+    System.MessageBox filename & " saved.","File Saved",MB_OK
+  End if
+End Function
+'------------------------------------------------------------------
 Function InitEEPROMGrid()
   Dim xmlOk, XMLfilepath, ackNode, i 
   Dim Address, Length, Name, Format, Value, SizeNode
@@ -58,6 +79,7 @@ Function InitEEPROMGrid()
   Dim EEPROMData_CM,EEPROMData_MB
   Dim CM_Grid
   Dim MB_Grid
+  Dim Calib_Grid
   Dim MsgId
   
   Set CM_Grid = Visual.Script("CMEEPROMGrid")
@@ -77,6 +99,7 @@ Function InitEEPROMGrid()
     Memory.Set "EEPROMXMLNode",ackNode
     xmlOk = Lang.IsObject(ackNode)
     If xmlOk = True Then
+      'Pupulate CM Tab
       EEPROMSize = ackNode("ContactModule").Child("memory").Attribute.Attribute("size")
       'Init memory to hold EEPROMData
       For i = 0 to EEPROMSize-1
@@ -129,9 +152,97 @@ Function InitEEPROMGrid()
       Next      
       Memory.Set "MBFORMATNODE",ackNode
     End If
+    ' Populate Calib tab
+    InitEEPROMGrid_Calib
   End If  
 End Function
 
+'------------------------------------------------------------------
+Function InitEEPROMGrid_Calib()
+  Dim xmlOk, XMLfilepath, ackNode, i 
+  Dim Address, Length, Name, Format,RowType
+  Dim EEPROMSize
+  Dim EEPROMData_Calib
+  Dim Calib_Grid
+  
+  Set Calib_Grid = Visual.Script("CalibEEPROMGrid")
+  Set EEPROMData_Calib = CreateObject("Math.ByteArray")
+  Set ackNode = Memory.EEPROMXMLNode
+  xmlOk = Lang.IsObject(ackNode)
+  If xmlOk = True Then
+    EEPROMSize = ackNode("CalibrationBoard").Child("memory").Attribute.Attribute("size")
+    'Init memory to hold EEPROMData
+    For i = 0 to EEPROMSize-1
+      EEPROMData_Calib.Add(0)
+    Next
+    DebugMessage "Calib size:" & EEPROMSize & " EEPROMData_Calib Size:" & EEPROMData_Calib.Size
+    Memory.Set "EEPROMData_Calib",EEPROMData_Calib
+    Set ackNode = ackNode("CalibrationBoard").SelectNodes("param")
+    xmlOk = Lang.IsObject(ackNode)
+  End If
+  If xmlOk = True Then
+    'Search for all parameters
+    'DebugMessage "Number of parameters: " & ackNode.size
+    For i = 0 to ackNode.Size-1        
+      RowType =  ackNode(i).Attribute.Attribute("paramtype") 
+      Address =  ackNode(i).Attribute.Attribute("address") 
+      Length = ackNode(i).Attribute.Attribute("length") 
+      Format = ackNode(i).Attribute.Attribute("format") 
+      Name = ackNode.ChildContent(i)
+      Calib_Grid.addrow i,RowType & "," & Name & "," & String.Format("0x%04X",Address) & ",",i
+    Next
+    Calib_Grid.collapseAllGroups
+    Calib_Grid.expandGroup "Param"
+    Memory.Set "CALIBFORMATNODE",ackNode          
+  End If
+End Function
+'------------------------------------------------------------------
+Function UpdateCalibGrid()
+Dim Node,EEPROMData_Calib,xmlOk,i
+  Memory.Get "EEPROMData_Calib",EEPROMData_Calib
+  Set Node = Memory.CALIBFORMATNODE
+  xmlOk = Lang.IsObject(Node)
+  If xmlOk Then
+    For i = 0 to Node.Size-1
+      DataError = False
+      Format = Node(i).Attribute.Attribute("format")
+      Address = Node(i).Attribute.Attribute("address")
+      Length = Node(i).Attribute.Attribute("length")       
+      'Format data based on address and data format, from EEPROM data array read using GetEEPROMML
+      Select case Format
+        case "str":
+          'Convert to string. 
+          If GetString(EEPROMData_Calib,Address,Length,Data) = False Then
+            'Error with string
+            DataError = True
+          End If
+        case "x":
+          Data = EEPROMData_Calib.Char(Address)        
+        case "s":
+          Data = EEPROMData_Calib.Word(Address)
+        case "f":
+          Data = String.Format("%G",EEPROMData_Calib.Float(Address))
+        case "s1":
+          Data = EEPROMData_Calib.Short(Address)
+        case "s2":
+          Data = EEPROMData_Calib.Long(Address)
+        case "s3":
+          Data = EEPROMData_Calib.Long(Address)
+          'DebugMessage String.Format("%02X,%02X,%02X,%02X",EEPROMData_Calib.Data(Address),EEPROMData_Calib.Data(Address+1),EEPROMData_Calib.Data(Address+2),EEPROMData_Calib.Data(Address+3))
+          'Data = String.Format("%u",Lang.MakeLong4(EEPROMData_Calib.Data(Address),EEPROMData_Calib.Data(Address+1),EEPROMData_Calib.Data(Address+2),EEPROMData_Calib.Data(Address+3)))
+        case else:
+      End Select
+      Visual.Script("CalibEEPROMGrid").setVal i,Data
+      If DataError = True Then
+        Visual.Script("CalibEEPROMGrid").setCellRed(i)
+      Else
+        Visual.Script("CalibEEPROMGrid").setCellBlack(i)        
+      End If
+      'DebugMessage "Param" & i & " "& Address & " "& Length & " "& Format & "Data: " & Data
+    Next
+    'Get Component data
+  End If
+End Function
 '------------------------------------------------------------------
 Function UpdateMBGrid()
 Dim Node,EEPROMData_MB

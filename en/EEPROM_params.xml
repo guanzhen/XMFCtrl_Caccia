@@ -33,6 +33,18 @@
     <param address="60" length="2" format="s" >Contact Blk Width</param>    
     <param address="62" length="4" format="f" >Open Loop Cap. 10kHz</param>
     <param address="66" length="4" format="f" >Open Loop Cap. 1kHz</param>
+    <param address="70" length="4" format="f" >Closed Loop resistance</param>
+    <param address="74" length="4" format="f" >Contact Resistance</param>
+    <param address="78" length="4" format="f" >Counter 1</param>
+    <param address="82" length="4" format="f" >Counter 2</param>
+    <param address="86" length="4" format="f" >Counter 3</param>
+    <param address="90" length="4" format="f" >Counter 4</param>
+    <param address="94" length="4" format="f" >Counter 5</param>
+    <param address="98" length="4" format="f" >Counter 6</param>
+    <param address="102" length="4" format="f" >Counter 7</param>
+    <param address="106" length="4" format="f" >Counter 8</param>
+    <param address="110" length="4" format="f" >Counter 9</param>
+    <param address="114" length="4" format="f" >Counter 10</param>
   </ContactModule>
   <MeasurementBoard>
     <memory size = "256"></memory>
@@ -69,4 +81,87 @@
     <param address="184" length="4" format="s3" >Num of Diode measurements</param>
     <param address="188" length="4" format="s3" >Num of AutoCap measurements</param>
   </MeasurementBoard>
+  <CalibrationBoard>
+    <memory size = "318"></memory>
+    <param paramtype = "Param" address="2" length="17" format="str" >SerialNumber</param>
+    <param paramtype = "Param" address="28" length="2" format="str" >FS</param>
+    <param paramtype = "Param" address="30" length="2" format="str" >RS</param>
+    <param paramtype = "Comp 1" address="38" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 1" address="40" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 1" address="44" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 1" address="48" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 1" address="52" length="4" format="x" >ConfigData</param>
+    <param paramtype = "Comp 2" address="56" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 2" address="58" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 2" address="62" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 2" address="66" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 2" address="70" length="4" format="x" >ConfigData</param>
+    <param paramtype = "Comp 3" address="74" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 3" address="76" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 3" address="80" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 3" address="84" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 3" address="88" length="4" format="x" >ConfigData</param>
+    <param paramtype = "Comp 4" address="92" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 4" address="94" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 4" address="98" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 4" address="102" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 4" address="106" length="4" format="x" >ConfigData</param>   
+    <param paramtype = "Comp 5" address="110" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 5" address="112" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 5" address="116" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 5" address="120" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 5" address="124" length="4" format="x" >ConfigData</param>   
+    <param paramtype = "Comp 6" address="128" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 6" address="130" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 6" address="134" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 6" address="138" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 6" address="142" length="4" format="x" >ConfigData</param>   
+    <param paramtype = "Comp 7" address="146" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 7" address="148" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 7" address="152" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 7" address="156" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 7" address="160" length="4" format="x" >ConfigData</param>    
+    <param paramtype = "Comp 8" address="164" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 8" address="166" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 8" address="170" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 8" address="174" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 8" address="178" length="4" format="x" >ConfigData</param>
+    <param paramtype = "Comp 9" address="182" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 9" address="184" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 9" address="188" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 9" address="192" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 9" address="196" length="4" format="x" >ConfigData</param>
+    <param paramtype = "Comp 10" address="200" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 10" address="202" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 10" address="206" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 10" address="210" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 10" address="214" length="4" format="x" >ConfigData</param>
+    <param paramtype = "Comp 11" address="218" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 11" address="220" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 11" address="224" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 11" address="228" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 11" address="232" length="4" format="x" >ConfigData</param>
+    <param paramtype = "Comp 12" address="236" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 12" address="238" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 12" address="242" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 12" address="246" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 12" address="250" length="4" format="x" >ConfigData</param>
+    <param paramtype = "Comp 13" address="254" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 13" address="256" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 13" address="260" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 13" address="264" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 13" address="268" length="4" format="x" >ConfigData</param>
+    <param paramtype = "Comp 14" address="272" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 14" address="274" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 14" address="278" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 14" address="282" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 14" address="286" length="4" format="x" >ConfigData</param>
+    <param paramtype = "Comp 15" address="290" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 15" address="292" length="4" format="f" >Value</param>
+    <param paramtype = "Comp 15" address="296" length="4" format="f" >Tolerance</param>
+    <param paramtype = "Comp 15" address="300" length="4" format="x" >RFU</param>
+    <param paramtype = "Comp 15" address="304" length="4" format="x" >ConfigData</param>
+    <param paramtype = "Counters" address="308" length="4" format="x" >Calibration Counter</param>
+    
+    </CalibrationBoard>
 </Parameters>

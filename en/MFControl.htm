@@ -13,6 +13,7 @@
   <script src="../../../codebase/grid/dhtmlxgridcell.js"></script>  
   <script src="../../../codebase/grid/ext/dhtmlxgrid_srnd.js"></script>
   <script src="../../../codebase/grid/ext/dhtmlxgrid_data.js"></script>
+  <script src="../../../codebase/grid/ext/dhtmlxgrid_group.js"></script>
   <script src="../../../codebase/grid/ext/dhtmlxgrid_nxml.js"></script>
     
   <!-- Dhtmlx Windows -->
@@ -41,8 +42,11 @@
   #Layer_Tab3_CMEEPROM {}
     #Layer_CMGrid      {height:390px; width:600px;}
   #Layer_Tab4_MBEEPROM {}
-    #Layer_MBGrid      {height:390px; width:600px;}
-  
+    #Layer_MBGrid      {height:390px; width:600px;}  
+  #Layer_Tab5_CalibBoard {}
+    #Layer_CLMainGrid   {float:left}    
+      #Layer_CalibGrid   {height:390px; width:600px}    
+    #Layer_calibcontrol   {margin-left:5px;float:left;}    
   #Layer_LogGrids      {padding:2px;height:30%;}
     #Layer_TabStripLog {float:left;height:100%;width:89.5%}  
     #Layer_LogButtons  {width:110px;margin-top:30px;clear:left;float:right;}  
@@ -318,6 +322,29 @@
       <button id = "btn_SaveMBEEPROM" style = "margin:2px 1px">Export to CSV</button>
   </div>    
   
+  <div id="Layer_Tab5_CalibBoard" class = "GrpFrame">
+      <div id="Layer_CLMainGrid">
+        <div id="Layer_CalibGrid"></div>
+        <button id = "btn_ReadCLEEPROM" style = "margin:2px 1px">Get EEPROM Data</button>
+        <button id = "btn_SaveCLEEPROM" style = "margin:2px 1px">Export to CSV</button>
+      </div>
+      <div id="Layer_calibcontrol">
+        <h1>CalibBoard Control</h1>        
+        <h1>Mode Select</h1>        
+        <table>
+          <tr><td><button id = "btn_Sel1" style = "margin:2px 1px">Initialise</button></td></tr>
+          <tr><td><button id = "btn_Sel2" style = "margin:2px 1px">Trim Open</button></td></tr>
+          <tr><td><button id = "btn_Sel3" style = "margin:2px 1px">Trim Close</button></td></tr>
+          <tr><td><button id = "btn_Sel4" style = "margin:2px 1px">1 KOhm</button></td></tr>
+          <tr><td><button id = "btn_Sel5" style = "margin:2px 1px">100KOhm</button></td></tr>
+          <tr><td><button id = "btn_Sel6" style = "margin:2px 1px">1 nF</button></td></tr>
+          <tr><td><button id = "btn_Sel7" style = "margin:2px 1px">3.3 uF</button></td></tr>
+          <tr><td><button id = "btn_Sel8" style = "margin:2px 1px">1 uH</button></td></tr>
+          <tr><td><button id = "btn_Sel9" style = "margin:2px 1px">1 mH</button></td></tr>
+        </table>
+      </div>
+  </div>  
+  
   </div>
 
   <div id ="Layer_LogGrids">
@@ -433,6 +460,37 @@
   CMEEPROMGrid.setCellBlack = function(row){this.setCellTextStyle(row,2,"color:Black");}
 </script>
 
+<!-- Create CalibBoard EEPROM DHTMLX object-->
+<script language="JScript" type="text/javascript">
+  var CalibEEPROMGrid = new dhtmlXGridObject('Layer_CalibGrid');
+  CalibEEPROMGrid.drawgrid = function()
+  {
+    this.setHeader("Type,Parameter,Address,Data");
+    this.setImagePath("../../../codebase/grid/imgs/");
+    this.setInitWidths( "80,150,80,*");
+    this.setColAlign ("center,center,center,left");
+    this.setColTypes ("ro,ro,ro,ro");
+    this.setColSorting ("na,na,na,na");
+    this.setSkin ("red_gray");
+    this.setStyle("color:black;font-weight:bold;","color:black;","","","")
+    this.enableTooltips ("true,true,true,true");
+    this.enableResizing ("true,true,true,true");
+    this.enableMultiselect(true);
+    this.enableAutoWidth (false);
+    this.enableSmartRendering(false);
+    this.groupBy(0);
+    this.setColumnHidden(0,true);
+    this.customGroupFormat=function(type,values){
+            return type;
+    }
+    this.init();
+  }
+  CalibEEPROMGrid.setVal = function(row,val) { this.cells(this.getRowId(row),3).cell.innerHTML = val; }
+  CalibEEPROMGrid.setCellRed = function(row){this.setCellTextStyle(row,3,"color:red");}
+  CalibEEPROMGrid.setCellBlack = function(row){this.setCellTextStyle(row,3,"color:Black");}
+
+</script>
+
 
 <script language = "JScript" type="text/javascript"> 
   var LogGrid;
@@ -488,10 +546,12 @@
   tabbar.addTab("main_tab2","Status");
   tabbar.addTab("main_tab3","CM EEPROM");
   tabbar.addTab("main_tab4","MB EEPROM");
+  tabbar.addTab("main_tab5","Calibration Module");
   tabbar.setContent( "main_tab1", Layer_Tab1_Main);
   tabbar.setContent( "main_tab2", Layer_Tab2_Status);
   tabbar.setContent( "main_tab3", Layer_Tab3_CMEEPROM);
   tabbar.setContent( "main_tab4", Layer_Tab4_MBEEPROM);
+  tabbar.setContent( "main_tab5", Layer_Tab5_CalibBoard);
 
   for ( var i = 1; i <= tabbar.getNumberOfTabs(); i++ )
   {
