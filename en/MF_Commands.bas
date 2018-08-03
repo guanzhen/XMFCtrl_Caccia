@@ -16,7 +16,9 @@ Const TIO_MEASURE = 10000
 Const TIO_CALIBRATE = 100000
 Const TIO_SELFTEST = 10000
 
-Const ACK_CRC_ERROR                   = &hD0
+Const ERR_SELF_TEST_INPUT_OFFSET_R93_WARN = 20
+Const ERR_SELF_TEST_ADC_IPP_1KHZ_WARN     = 21
+Const ERR_SELF_TEST_ADC_IPP_10KHZ_WARN    = 22
 Const ACK_CM_NOT_CONNECTED            = &hD1
 Const ACK_WRONG_POLARITY              = &hD2
 Const ACK_MAX_VOLTAGE                 = &hD3

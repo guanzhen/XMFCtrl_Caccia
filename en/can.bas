@@ -389,6 +389,9 @@ Function GetErrorInfo ( CanReadArg )
     Case  ACK_AUTO_RANGE_DID_NOT_SUCCEED   : ErrorMsg = "MB Internal error: Auto range did not succeed"
     Case  ACK_CAP_AUTO_POL_UNDETERMINED    : ErrorMsg = "MB Internal error: Polarity for capacitor undetermined"
     Case  ACK_FWD_VOLT_ONLY_2MA_OR_10MA    : ErrorMsg = "MB Internal error: Invalid current used for Diode measurement"    
+    Case  ERR_SELF_TEST_INPUT_OFFSET_R93_WARN : ErrorMsg = "MB Internal error: R93 offset out of range"    
+    Case  ERR_SELF_TEST_ADC_IPP_1KHZ_WARN     : ErrorMsg = "MB Internal error: Invalid 1kHz ADC I PP Warning"    
+    Case  ERR_SELF_TEST_ADC_IPP_10KHZ_WARN    : ErrorMsg = "MB Internal error: Invalid 10kHz ADC I PP Warning"    
     Case Else :ErrorMsg = "Other MB errors"
     End Select    
   'Case $(ACK_WRONG_LENGTH): ErrorMsg = "Wrong Length"      
