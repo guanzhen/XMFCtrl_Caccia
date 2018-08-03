@@ -25,10 +25,10 @@ UpdateMBGrid
 
 End Function
 '------------------------------------------------------------------
-Function OnClick_btn_btn_ReadCLEEPROM( Reason )
+Function OnClick_btn_ReadCLEEPROM( Reason )
 Dim EEPROMData
 Set EEPROMData = Memory.EEPROMData_Calib
-GetEEPROMML 0,MB_TARGET,EEPROMData
+GetEEPROMML 0,CM3_TARGET,EEPROMData
 UpdateCalibGrid
 
 End Function
@@ -191,14 +191,17 @@ Function InitEEPROMGrid_Calib()
       Name = ackNode.ChildContent(i)
       Calib_Grid.addrow i,RowType & "," & Name & "," & String.Format("0x%04X",Address) & ",",i
     Next
+    Memory.Set "CALIBFORMATNODE",ackNode          
     Calib_Grid.collapseAllGroups
     Calib_Grid.expandGroup "Param"
-    Memory.Set "CALIBFORMATNODE",ackNode          
   End If
 End Function
 '------------------------------------------------------------------
 Function UpdateCalibGrid()
-Dim Node,EEPROMData_Calib,xmlOk,i
+  Dim Node,EEPROMData_Calib,xmlOk
+  Dim Address, Length, Format
+  Dim i,y
+  Dim Data,DataError
   Memory.Get "EEPROMData_Calib",EEPROMData_Calib
   Set Node = Memory.CALIBFORMATNODE
   xmlOk = Lang.IsObject(Node)
@@ -207,7 +210,8 @@ Dim Node,EEPROMData_Calib,xmlOk,i
       DataError = False
       Format = Node(i).Attribute.Attribute("format")
       Address = Node(i).Attribute.Attribute("address")
-      Length = Node(i).Attribute.Attribute("length")       
+      Length = Node(i).Attribute.Attribute("length")
+      DebugMessage "Node: " & i & " " & String.Format("%04X",Address) & " " & Length
       'Format data based on address and data format, from EEPROM data array read using GetEEPROMML
       Select case Format
         case "str":
@@ -228,6 +232,9 @@ Dim Node,EEPROMData_Calib,xmlOk,i
           Data = EEPROMData_Calib.Long(Address)
         case "s3":
           Data = EEPROMData_Calib.Long(Address)
+        case "x1":
+          Data = String.Format("0x%08X",Lang.MakeLong4(EEPROMData_Calib.Data(Address),EEPROMData_Calib.Data(Address+1),EEPROMData_Calib.Data(Address+2),EEPROMData_Calib.Data(Address+3)))
+
           'DebugMessage String.Format("%02X,%02X,%02X,%02X",EEPROMData_Calib.Data(Address),EEPROMData_Calib.Data(Address+1),EEPROMData_Calib.Data(Address+2),EEPROMData_Calib.Data(Address+3))
           'Data = String.Format("%u",Lang.MakeLong4(EEPROMData_Calib.Data(Address),EEPROMData_Calib.Data(Address+1),EEPROMData_Calib.Data(Address+2),EEPROMData_Calib.Data(Address+3)))
         case else:
@@ -251,7 +258,6 @@ Dim Format,Length,Address
 Dim i,y
 Dim Data
 Dim DataError
-Dim TmpString,TmpWord
   Memory.Get "EEPROMData_MB",EEPROMData_MB
   Set Node = Memory.MBFORMATNODE
   xmlOk = Lang.IsObject(Node)
@@ -305,7 +311,6 @@ Dim Format,Length,Address
 Dim i,y
 Dim Data
 Dim DataError
-Dim TmpString,TmpWord
   Memory.Get "EEPROMData_CM",EEPROMData_CM
   Set Node = Memory.CMFORMATNODE
   xmlOk = Lang.IsObject(Node)
