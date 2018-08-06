@@ -78,6 +78,8 @@ Function Init_MFCommand ( )
   Visual.Select("ip_paramvoltage").Value = 3
   Visual.Select("ip_parammaxvoltage").Value = 5
   
+  Visual.Select("param_numofcycle").Style.Display = "None"
+    
   For counter = 1 To 60
     Visual.Select("opt_SlotNum").addItem counter,counter
   Next
@@ -1080,7 +1082,9 @@ Function ChangeVisibility_Result ( ProcessType )
     Visual.Select("param_Type1ValueMax").Style.Display = "Block"
     Visual.Select("param_Type2Value").Style.Display = "Block"  
     Visual.Select("param_Type2ValueMin").Style.Display = "Block"  
-    Visual.Select("param_Type2ValueMax").Style.Display = "Block"  
+    Visual.Select("param_Type2ValueMax").Style.Display = "Block"
+    Visual.Select("param_U").Style.Display = "Block"
+    Visual.Select("param_I").Style.Display = "Block"
   'Component = Diode
   Else
     Visual.Select("param_fwdvoltage").Style.Display = "Block"

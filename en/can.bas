@@ -356,6 +356,7 @@ Function GetErrorInfo ( CanReadArg )
   'DebugMessage "Error num: " & String.Format("%2x",ErrCode)
   Select Case ErrCode
   Case $(ACK_NOK): ErrorMsg = "Command Error (NOK)"
+  Case $(ACK_INVALID_CM): ErrorMsg = "Invalid Contact/Calibration module"
   Case $(ACK_UNKNOWN_CMD): ErrorMsg = "Unknown Command"
   Case $(ACK_WRONG_STATE): ErrorMsg = "Wrong State"
   Case $(ACK_INVALID_PARAM): ErrorMsg = "Invalid Parameters"

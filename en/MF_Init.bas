@@ -48,7 +48,7 @@ Sub OnLoadFrame()
   Visual.Script("CMEEPROMGrid").drawgrid
   Visual.Script("CalibEEPROMGrid").drawgrid
   Visual.Select("Layer_TabStripMain").style.display = "none"
-  Visual.Select("Layer_LogGrids").style.display = "none"  
+  Visual.Select("Layer_LogGrids").style.display = "none"
   'Visual.Select("Layer_Tab1_Main").style.display = "none"
   'Visual.Select("Layer_Tab2_Status").style.display = "none"  
   'Visual.Select("Layer_Tab3_CMEEPROM").style.display = "none"  
