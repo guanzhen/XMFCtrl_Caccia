@@ -1073,6 +1073,10 @@ Function ChangeVisibility_Result ( ProcessType )
   Visual.Select("param_Freq").Style.Display = "Block"
   Case $(CMD_PREPARE_MEASURE):
   CompType = Visual.Select("opt_MeasureCommand").Value
+  Visual.Select("param_U").Style.Display = "Block"
+  Visual.Select("param_I").Style.Display = "Block"
+  Visual.Select("param_Phi").Style.Display = "Block"
+  Visual.Select("param_Freq").Style.Display = "Block"
   'Component = R, C or L
   If Not CompType = 4 Then
     Visual.Select("param_CompType1").Style.Display = "Block"
