@@ -1,9 +1,9 @@
 
 Const EEPROMParamFile = "EEPROM_params.xml" 
-Const MB_TARGET  = 4
 Const CM1_TARGET = 5
 Const CM2_TARGET = 6
-Const CM3_TARGET = 7
+Const CM3_TARGET = 8
+Const MB_TARGET  = 9
 
 '------------------------------------------------------------------
 Function OnClick_btn_ReadCMEEPROM( Reason )
@@ -211,7 +211,7 @@ Function UpdateCalibGrid()
       Format = Node(i).Attribute.Attribute("format")
       Address = Node(i).Attribute.Attribute("address")
       Length = Node(i).Attribute.Attribute("length")
-      DebugMessage "Node: " & i & " " & String.Format("%04X",Address) & " " & Length
+      'DebugMessage "Node: " & i & " " & String.Format("%04X",Address) & " " & Length
       'Format data based on address and data format, from EEPROM data array read using GetEEPROMML
       Select case Format
         case "str":
@@ -390,7 +390,7 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
   If CANSendGetEEPROM($(CMD_GET_DATA),$(PARAM_GET_EEPROM_START), Memory.SLOT_NO,1,5) = True Then      
     Do
       LineNumber = LineNumber + 1
-      'DebugMessage "ML:Line " & LineNumber & " bytes: " & bytesleft
+      DebugMessage "ML:Line " & LineNumber & " bytes: " & bytesleft
       DebugLine = ""
       If CANSendGetEEPROM($(CMD_GET_DATA),$(PARAM_GET_EEPROM_LINE), Memory.SLOT_NO,1,0) = True Then
         Memory.Get "CANData",CANData
@@ -408,13 +408,15 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
           End If
         Next
         If CANData(1) = $(ACK_NO_MORE_DATA) Then
+          DebugMessage "ML : No more data"
+          bytesleft = 0
           exitloop = 1
         End If
       End If
       DebugMessage "ACK:" & CANData(1) & " ML:" & DebugLine & " Bytes left:" & bytesleft & " Length:" & Memory.CANDataLen
       
       If bytesleft <= 0 Then
-        DebugMessage "ML: End (warning)"
+        DebugMessage "ML: End (warning: not all bytes read)"
         exitloop = 1
       End If
       Timeout = Timeout - 1
