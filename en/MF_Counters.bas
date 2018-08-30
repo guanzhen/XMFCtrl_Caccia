@@ -2,16 +2,19 @@
 Const EEPROMParamFile = "EEPROM_params.xml" 
 Const CM1_TARGET = 5
 Const CM2_TARGET = 6
-Const CM3_TARGET = 8
-Const MB_TARGET  = 9
+Const CM3_TARGET = 7
+Const MB_TARGET  = 8
 
 '------------------------------------------------------------------
 Function OnClick_btn_ReadCMEEPROM( Reason )
   Dim EEPROMData,i
 
   If Memory.Get("EEPROMData_CM",EEPROMData) = True Then
-    GetEEPROMML 0,CM1_TARGET,EEPROMData
-    UpdateCMGrid
+    If GetEEPROMML(0,CM1_TARGET,EEPROMData) = True Then
+      UpdateCMGrid
+    Else
+      LogAdd "Check if Contact Module is installed properly"
+    End If
   End If
 
 End Function
@@ -20,16 +23,21 @@ End Function
 Function OnClick_btn_ReadMBEEPROM( Reason )
 Dim EEPROMData
 Set EEPROMData = Memory.EEPROMData_MB
-GetEEPROMML 0,MB_TARGET,EEPROMData
-UpdateMBGrid
+      
+  If GetEEPROMML(0,MB_TARGET,EEPROMData) = True Then
+    UpdateMBGrid
+  End If
 
 End Function
 '------------------------------------------------------------------
 Function OnClick_btn_ReadCLEEPROM( Reason )
 Dim EEPROMData
 Set EEPROMData = Memory.EEPROMData_Calib
-GetEEPROMML 0,CM3_TARGET,EEPROMData
-UpdateCalibGrid
+  If GetEEPROMML(0,CM3_TARGET,EEPROMData) = True Then
+    UpdateCalibGrid
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If
 
 End Function
 '------------------------------------------------------------------
@@ -370,7 +378,9 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
   Dim DebugLine
   Dim ByteCounter
   Dim LineNumber  
+  Dim ProcessError
  
+ ProcessError = 0
   Memory.Get "CANData",CANData
   bytesleft = EEPROMArray.size
   DebugMessage "Bytes to Read from EEPROM: " & bytesleft
@@ -390,7 +400,7 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
   If CANSendGetEEPROM($(CMD_GET_DATA),$(PARAM_GET_EEPROM_START), Memory.SLOT_NO,1,5) = True Then      
     Do
       LineNumber = LineNumber + 1
-      DebugMessage "ML:Line " & LineNumber & " bytes: " & bytesleft
+      'DebugMessage "ML:Line " & LineNumber & " bytes: " & bytesleft
       DebugLine = ""
       If CANSendGetEEPROM($(CMD_GET_DATA),$(PARAM_GET_EEPROM_LINE), Memory.SLOT_NO,1,0) = True Then
         Memory.Get "CANData",CANData
@@ -400,25 +410,24 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
             EEPROMArray.Data(ByteCounter) = CANData.Data(i)
             bytesleft = bytesleft - 1
             ByteCounter = ByteCounter + 1
+            exitloop = 0
           End If
           If CANData.Data(1) = $(ACK_NO_MORE_DATA) Then
-            DebugMessage "ML: End"
+            If bytesleft > 0 Then
+              DebugMessage "ML:End (no more data; "& ByteCounter & " bytes read, "& bytesleft & " bytes left)"
+            Else
+              DebugMessage "ML:End (no more data; "& ByteCounter & " bytes read)"
+            End If         
             exitloop = 1
             Exit For
           End If
         Next
-        If CANData(1) = $(ACK_NO_MORE_DATA) Then
-          DebugMessage "ML : No more data"
-          bytesleft = 0
-          exitloop = 1
-        End If
-      End If
-      DebugMessage "ACK:" & CANData(1) & " ML:" & DebugLine & " Bytes left:" & bytesleft & " Length:" & Memory.CANDataLen
-      
-      If bytesleft <= 0 Then
-        DebugMessage "ML: End (warning: not all bytes read)"
+      Else
+        'PARAM_GET_EEPROM_LINE Error
         exitloop = 1
+        ProcessError = 1
       End If
+      'DebugMessage "ACK:" & CANData(1) & " ML:" & DebugLine & " Bytes left:" & bytesleft & " Length:" & Memory.CANDataLen
       Timeout = Timeout - 1
       If Timeout = 0 Then
         exitloop = 1
@@ -426,7 +435,17 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
       End If
     Loop Until exitloop = 1
   Else
+    'PARAM_GET_EEPROM_START Error
+    ProcessError = 1
+  End If  
+  
+  If ProcessError = 1 Then
+     LogAdd "Error Reading EEPROM"
+     GetEEPROMML = False
+  Else
+     GetEEPROMML = True
   End If
+     
 
 End Function
 

@@ -596,7 +596,7 @@ Function CANSendGetEEPROM(Cmd,SubCmd,SlotNo,Division,DataLen)
         CanReadArg.Data(1) = &h0C
       ElseIf Result = SCA_ERROR_BYTE AND CanReadArg.Data(1) = &H10 Then      
         CANSendGetEEPROM = True
-        DebugMessage "CANSendGetEEPROM NOMOREDATA: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
+        DebugMessage "CANSendGetEEPROM No More Data: " & " (" & CanReadArg.Format & ")"
       Else
         LogAdd "CANSendGetEEPROM NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
         DebugMessage "CANSendGetEEPROM NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"

@@ -318,7 +318,6 @@ Function OnClick_btn_AssignCANID( Reason )
   CANID_Assign CanID
   System.Delay(100)
   If Command_GetNumOfSlots = True Then
-    System.Delay(1000)
     Get_Firmware
     'Debug_Set_Bit Debug_Bit_SCIRX
     'Set Green LED    
