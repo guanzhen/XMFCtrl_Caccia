@@ -19,6 +19,9 @@
     <param address="2" length="17" format="str" >SerialNumber</param>
     <param address="28" length="2" format="str" >FS</param>
     <param address="30" length="2" format="str" >RS</param>    
+    <param address="34" length="1" format="x" >Version (Actual)</param>    
+    <param address="35" length="1" format="x" >Version (Compatible)</param>    
+    <param address="36" length="1" format="x" >Version (Latest)</param>    
     <param address="38" length="2" format="s1" >Fiducial_X1</param>
     <param address="40" length="2" format="s1" >Fiducial_Y1</param>
     <param address="42" length="2" format="s1" >Fiducial_X2</param>
@@ -50,10 +53,13 @@
     <memory size = "256"></memory>
     <param address="2" length="17" format="str" >SerialNumber</param>
     <param address="28" length="2" format="str" >FS</param>
-    <param address="30" length="2" format="str" >RS</param>    
+    <param address="30" length="2" format="str" >RS</param>  
+    <param address="34" length="1" format="x" >Version (Actual)</param>    
+    <param address="35" length="1" format="x" >Version (Compatible)</param>    
+    <param address="36" length="1" format="x" >Version (Latest)</param>      
     <param address="38" length="17" format="str" >CM1 SerialNumber</param>
     <param address="55" length="17" format="str" >CM2 SerialNumber</param>
-    <param address="72" length="17" format="str" >CM3 SerialNumber</param>
+    <param address="72" length="17" format="str" >Calibration Module SerialNumber</param>
     <param address="106" length="8" format="str" >Date of last calibration</param>
     <param address="114" length="4" format="f" >Max Res measured</param>
     <param address="118" length="4" format="f" >Min Res measured</param>
@@ -86,6 +92,9 @@
     <param paramtype = "Param" address="2" length="17" format="str" >SerialNumber</param>
     <param paramtype = "Param" address="28" length="2" format="str" >FS</param>
     <param paramtype = "Param" address="30" length="2" format="str" >RS</param>
+    <param paramtype = "Param" address="34" length="1" format="x" >Version (Actual)</param>    
+    <param paramtype = "Param" address="35" length="1" format="x" >Version (Compatible)</param>    
+    <param paramtype = "Param" address="36" length="1" format="x" >Version (Latest)</param>  
     <param paramtype = "Comp 1" address="38" length="2" format="str" >Type</param>
     <param paramtype = "Comp 1" address="40" length="4" format="f" >Value</param>
     <param paramtype = "Comp 1" address="44" length="4" format="f" >Tolerance</param>

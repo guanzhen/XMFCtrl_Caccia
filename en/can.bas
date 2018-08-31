@@ -366,7 +366,7 @@ Function GetErrorInfo ( CanReadArg )
   Case $(ACK_TIMEOUT_SUBSYSTEM): ErrorMsg = "Timeout Subsystem"
   Case $(ACK_NOT_IMPLEMENTED): ErrorMsg = "Not Implemented"
   Case $(ACK_ERR_COVER_CLOSED): ErrorMsg = "Protective cover is closed."  
-  Case $(ACK_ERR_SELFTEST_NOK): ErrorMsg = "Self Test not started."    
+  Case $(ACK_ERR_SELFTEST_NOK): ErrorMsg = "Self Test not yet initiated."    
   Case $(PUB_MB_CRC): ErrorMsg = "MB CRC Error."  
   Case $(PUB_ERROR_ST_CM_CAP): ErrorMsg = "Self Test Contact Module capacitance out of range"
   Case $(PUB_ERROR_ST_CM_RES): ErrorMsg = "Self Test Contact Module resistance out of range"
@@ -374,7 +374,7 @@ Function GetErrorInfo ( CanReadArg )
   Case $(PUB_MAX_VOLTAGE): ErrorMsg = "Max Voltage for measurement reached"
   Case $(PUB_WRONG_POLARITY): ErrorMsg = "Wrong component polarity"
   Case $(PUB_CM_NOT_CONNECTED): ErrorMsg = "Contact Module not present"
-  Case $(PUB_ERROR_CM_CHANGED): ErrorMsg = "Contact Module has changed! Compensation required."
+  Case $(PUB_ERROR_CM_CHANGED): ErrorMsg = "Contact Module has changed! Please start Trim Open."
   Case $(PUB_ERROR_MB_COMM): ErrorMsg = "MF1 Board communication error!"
   Case $(PUB_MB_ERROR):
     Select Case CanReadArg.Data(3)

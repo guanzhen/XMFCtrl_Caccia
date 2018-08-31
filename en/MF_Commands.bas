@@ -371,7 +371,7 @@ Function OnClick_btn_Reset ( Reason )
     CanSendArg.Data(0) = &h06
     CanSendArg.Length = 1
     Memory.CanManager.Send CanSendArg
-    LogAdd "Resetting XMF!" 
+    LogAdd "Resetting Measurement Feeder." 
   End if
 End Function
 
