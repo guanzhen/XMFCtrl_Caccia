@@ -40,7 +40,7 @@ Sub OnLoadFrame()
   
   '~~~ Read params ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   '~~~ Disable elements for input only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  CreateDebugLogWindow
+  'CreateDebugLogWindow
   Visual.Script("dhxWins").load_cansetup
   Visual.Script("tabbar").Init
   Visual.Script("tabbar2").Init

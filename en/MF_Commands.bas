@@ -630,13 +630,16 @@ Function OnClick_btn_Sel1 ( Reason )
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP1,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
   Memory.CANData(0) = 2
   Memory.CANData(1) = Lang.GetByte(CALB_COMP1,1)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
   Memory.CANData(0) = 3
   Memory.CANData(1) = Lang.GetByte(CALB_COMP1,2)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If
 End Function
 '------------------------------------------------------------------
 Function OnClick_btn_Sel2 ( Reason )
@@ -644,13 +647,16 @@ Function OnClick_btn_Sel2 ( Reason )
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP2,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+ If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
   Memory.CANData(0) = 2
   Memory.CANData(1) = Lang.GetByte(CALB_COMP2,1)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
   Memory.CANData(0) = 3
   Memory.CANData(1) = Lang.GetByte(CALB_COMP2,2)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If
 End Function
 '------------------------------------------------------------------
 Function OnClick_btn_Sel3 ( Reason )
@@ -658,13 +664,16 @@ Function OnClick_btn_Sel3 ( Reason )
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP3,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
   Memory.CANData(0) = 2
   Memory.CANData(1) = Lang.GetByte(CALB_COMP3,1)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
   Memory.CANData(0) = 3
   Memory.CANData(1) = Lang.GetByte(CALB_COMP3,2)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+    Else
+    LogAdd "Check if Calibration Module is connected"
+  End If
 End Function
 '------------------------------------------------------------------
 Function OnClick_btn_Sel4 ( Reason )
@@ -672,13 +681,16 @@ Function OnClick_btn_Sel4 ( Reason )
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP4,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
   Memory.CANData(0) = 2
   Memory.CANData(1) = Lang.GetByte(CALB_COMP4,1)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
   Memory.CANData(0) = 3
   Memory.CANData(1) = Lang.GetByte(CALB_COMP4,2)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If  
 End Function
 '------------------------------------------------------------------
 Function OnClick_btn_Sel5 ( Reason )
@@ -686,13 +698,16 @@ Function OnClick_btn_Sel5 ( Reason )
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP5,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
   Memory.CANData(0) = 2
   Memory.CANData(1) = Lang.GetByte(CALB_COMP5,1)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
   Memory.CANData(0) = 3
   Memory.CANData(1) = Lang.GetByte(CALB_COMP5,2)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2 
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If
 End Function
 '------------------------------------------------------------------
 Function OnClick_btn_Sel6 ( Reason )
@@ -700,13 +715,16 @@ Function OnClick_btn_Sel6 ( Reason )
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP6,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
   Memory.CANData(0) = 2
   Memory.CANData(1) = Lang.GetByte(CALB_COMP6,1)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
   Memory.CANData(0) = 3
   Memory.CANData(1) = Lang.GetByte(CALB_COMP6,2)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If  
 End Function
 '------------------------------------------------------------------
 Function OnClick_btn_Sel7 ( Reason )
@@ -714,13 +732,16 @@ Function OnClick_btn_Sel7 ( Reason )
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP7,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
   Memory.CANData(0) = 2
   Memory.CANData(1) = Lang.GetByte(CALB_COMP7,1)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
   Memory.CANData(0) = 3
   Memory.CANData(1) = Lang.GetByte(CALB_COMP7,2)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If  
 End Function
 '------------------------------------------------------------------
 Function OnClick_btn_Sel8 ( Reason )
@@ -728,13 +749,16 @@ Function OnClick_btn_Sel8 ( Reason )
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP8,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
   Memory.CANData(0) = 2
   Memory.CANData(1) = Lang.GetByte(CALB_COMP8,1)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
   Memory.CANData(0) = 3
   Memory.CANData(1) = Lang.GetByte(CALB_COMP8,2)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If  
 End Function
 '------------------------------------------------------------------
 Function OnClick_btn_Sel9 ( Reason )
@@ -742,13 +766,16 @@ Function OnClick_btn_Sel9 ( Reason )
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP9,0)
-  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
   Memory.CANData(0) = 2
   Memory.CANData(1) = Lang.GetByte(CALB_COMP9,1)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
   Memory.CANData(0) = 3
   Memory.CANData(1) = Lang.GetByte(CALB_COMP9,2)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If  
 End Function
 '------------------------------------------------------------------
 
