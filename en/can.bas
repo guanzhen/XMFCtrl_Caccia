@@ -305,7 +305,7 @@ Function Handle_PubMsg_Standalone( CanReadArg )
   
   'Call handler to handle Async messages
   If Bit_Async = 1 Then  
-    'MF_Handle_Async_Msg_Standalone CanReadArg
+    MF_Handle_Async_Msg_Standalone CanReadArg
   End If  
   
   If Memory.PrepCmd_Inprogress = 1 Then

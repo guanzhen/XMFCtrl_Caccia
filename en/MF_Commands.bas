@@ -460,12 +460,13 @@ Function OnClick_btn_getcover ( Reason )
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")  
   If CANSendGetMC ($(CMD_GET_DATA),$(PARAM_INP_COVER),Memory.SLOT_NO,CM_ID,0) = True Then
     If Memory.CanData.Data(2) = 1 Then
-      LED_Update "ledcover",1
+      LED_Update "ledcover",0
+      LogAdd "Cover Open"
       GetSCITrace Log_SCI_TXRX, "Cover Open"
     Else
-      LED_Update "ledcover",0
+      LED_Update "ledcover",1
+      LogAdd "Cover Closed"
       GetSCITrace Log_SCI_TXRX, "Cover Closed"
-
     End If
   Else
     LED_Update "ledcover",0
@@ -935,7 +936,7 @@ Function Command_Prepare_Measure (CM_ID,ExpectedValue,ComponentType,NumofCycles,
     System.Start "Wait_Measurement",TimeOut
   Else
     LogAdd "Measure Command Error."
-    LED_Change 1
+    'LED_Change 1
   End If
 End Function
 
@@ -1459,12 +1460,13 @@ End Function
 '-------------------------------------------------------------------
 
 Function MF_Handle_Async_Msg_Standalone ( CanReadArg )
-  If CanReadArg.Data(1) = $(PB_USER) Then
-    If CanReadArg.Data(3) = 0 Then
-      'LogAdd "Testing TX"
-    ElseIf CanReadArg.Data(3) = 1 Then
-      'LogAdd "Testing RX"    
-      GetSCITrace Log_SCI_RX, ""
+  If CanReadArg.Data(1) = $(PUB_WG_COVER) Then
+    If CanReadArg.Data(0) = &h40 Then
+      LogAdd "Cover Opened"
+      LED_Update "ledcover",1
+    ElseIf CanReadArg.Data(0) = &h41 Then
+      LogAdd "Cover Closed"
+      LED_Update "ledcover",0
     End If
   End If
 End Function
