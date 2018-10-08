@@ -33,6 +33,7 @@
 *  \b Description: \n
 */
 
+
     //Service Commands
 
     //Prepare Commands
@@ -63,6 +64,7 @@
         #define PUB_ERROR_ST_SC_RES               0x38
         #define PUB_ERROR_CM_CHANGED              0x39
         #define PUB_ERROR_MB_COMM                 0x3A
+        #define PUB_WG_COVER                      0x3B
 
     //Params : IOs
 
