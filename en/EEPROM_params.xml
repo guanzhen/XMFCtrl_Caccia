@@ -38,16 +38,16 @@
     <param address="66" length="4" format="f" >Open Loop Cap. 1kHz</param>
     <param address="70" length="4" format="f" >Closed Loop resistance</param>
     <param address="74" length="4" format="f" >Contact Resistance</param>
-    <param address="78" length="4" format="f" >Counter 1</param>
-    <param address="82" length="4" format="f" >Counter 2</param>
-    <param address="86" length="4" format="f" >Counter 3</param>
-    <param address="90" length="4" format="f" >Counter 4</param>
-    <param address="94" length="4" format="f" >Counter 5</param>
-    <param address="98" length="4" format="f" >Counter 6</param>
-    <param address="102" length="4" format="f" >Counter 7</param>
-    <param address="106" length="4" format="f" >Counter 8</param>
-    <param address="110" length="4" format="f" >Counter 9</param>
-    <param address="114" length="4" format="f" >Counter 10</param>
+    <param address="78" length="4" format="s3" >Counter 1</param>
+    <param address="82" length="4" format="s3" >Counter 2</param>
+    <param address="86" length="4" format="s3" >Counter 3</param>
+    <param address="90" length="4" format="s3" >Counter 4</param>
+    <param address="94" length="4" format="s3" >Counter 5</param>
+    <param address="98" length="4" format="s3" >Counter 6</param>
+    <param address="102" length="4" format="s3" >Counter 7</param>
+    <param address="106" length="4" format="s3" >Counter 8</param>
+    <param address="110" length="4" format="s3" >Counter 9</param>
+    <param address="114" length="4" format="s3" >Counter 10</param>
   </ContactModule>
   <MeasurementBoard>
     <memory size = "256"></memory>
