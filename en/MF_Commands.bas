@@ -163,9 +163,10 @@ Dim cmd
       End If  
     Loop Until loop_enable = 0 
     
-    If measureOK = 1 Then
+    'Always retrieve measurements.
+    'If measureOK = 1 Then
       Get_Measurements
-    End If
+    'End If
     
     Memory.Set "measureOK",measureOK
     Memory.PrepCmd_MeasureInProgress = 0
