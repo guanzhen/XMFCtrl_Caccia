@@ -207,7 +207,7 @@ End Function
 '------------------------------------------------------------------
 Function UpdateCalibGrid()
   Dim Node,EEPROMData_Calib,xmlOk
-  Dim Address, Length, Format
+  Dim Address, Length, Format, Name
   Dim i,y
   Dim Data,DataError
   Memory.Get "EEPROMData_Calib",EEPROMData_Calib
@@ -219,6 +219,7 @@ Function UpdateCalibGrid()
       Format = Node(i).Attribute.Attribute("format")
       Address = Node(i).Attribute.Attribute("address")
       Length = Node(i).Attribute.Attribute("length")
+      Name = Node.ChildContent(i)
       'DebugMessage "Node: " & i & " " & String.Format("%04X",Address) & " " & Length
       'Format data based on address and data format, from EEPROM data array read using GetEEPROMML
       Select case Format
@@ -242,11 +243,27 @@ Function UpdateCalibGrid()
           Data = EEPROMData_Calib.Long(Address)
         case "x1":
           Data = String.Format("0x%08X",Lang.MakeLong4(EEPROMData_Calib.Data(Address),EEPROMData_Calib.Data(Address+1),EEPROMData_Calib.Data(Address+2),EEPROMData_Calib.Data(Address+3)))
-
           'DebugMessage String.Format("%02X,%02X,%02X,%02X",EEPROMData_Calib.Data(Address),EEPROMData_Calib.Data(Address+1),EEPROMData_Calib.Data(Address+2),EEPROMData_Calib.Data(Address+3))
           'Data = String.Format("%u",Lang.MakeLong4(EEPROMData_Calib.Data(Address),EEPROMData_Calib.Data(Address+1),EEPROMData_Calib.Data(Address+2),EEPROMData_Calib.Data(Address+3)))
         case else:
       End Select
+      If Name = "Type" Then
+        Select case Data 
+        case 1:
+          Data = "Res"
+        case 2:
+          Data = "Cap"
+        case 3:
+          Data = "Inductor"
+        case 4:
+          Data = "Diode"
+        case 5:
+          Data = "Polar Cap"
+        case Else:
+          Data = "Unknown"
+          DataError = True        
+        End Select
+      End If
       Visual.Script("CalibEEPROMGrid").setVal i,Data
       If DataError = True Then
         Visual.Script("CalibEEPROMGrid").setCellRed(i)
@@ -412,16 +429,16 @@ Function GetEEPROMML(address,target,byref EEPROMArray)
             ByteCounter = ByteCounter + 1
             exitloop = 0
           End If
-          If CANData.Data(1) = $(ACK_NO_MORE_DATA) Then
-            If bytesleft > 0 Then
-              DebugMessage "ML:End (no more data; "& ByteCounter & " bytes read, "& bytesleft & " bytes left)"
-            Else
-              DebugMessage "ML:End (no more data; "& ByteCounter & " bytes read)"
-            End If         
-            exitloop = 1
-            Exit For
-          End If
         Next
+        If CANData.Data(1) = $(ACK_NO_MORE_DATA) Then
+          If bytesleft > 0 Then
+            DebugMessage "ML:End (no more data; "& ByteCounter & " bytes read, "& bytesleft & " bytes left)"
+            LogAdd "Unexpected end of data! Read: " & ByteCounter & "bytes, left: " & bytesleft & "bytes"
+          Else
+            DebugMessage "ML:End (no more data; "& ByteCounter & " bytes read)"
+          End If         
+          exitloop = 1
+        End If
       Else
         'PARAM_GET_EEPROM_LINE Error
         exitloop = 1

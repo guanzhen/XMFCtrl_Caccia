@@ -572,7 +572,7 @@ Function CANSendGetEEPROM(Cmd,SubCmd,SlotNo,Division,DataLen)
         End If
         .Length = 2 + DataLen
     End With  
-  End If 
+  End If
   'End If CANConfig.Config = 1 Then
   'Process Response
   If Memory.Exists("CanManager") AND CanConfig.CANIDvalid = 1 Then    
@@ -585,18 +585,19 @@ Function CANSendGetEEPROM(Cmd,SubCmd,SlotNo,Division,DataLen)
     Next
     Memory.Set "CANDataLen" , CanReadArg.Length
     Memory.Set "CANData",CANData
-      
+    
     If Result = SCA_NO_ERROR Then      
-      DebugMessage "CANSendGetEEPROM OK: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
-      CANSendGetEEPROM = True
+       DebugMessage "CANSendGetEEPROM OK: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
+       CANSendGetEEPROM = True
       'DebugMessage "CANData:" & String.Format("%02X %02X %02X %02X %02X %02X %02X %02X",CanReadArg.Data(0),CanReadArg.Data(1) ,CanReadArg.Data(2) ,CanReadArg.Data(3) ,CanReadArg.Data(4) ,CanReadArg.Data(5) ,CanReadArg.Data(6) ,CanReadArg.Data(7))
     Else
       If Result = SCA_TIMEOUT Then
         CanReadArg.Length = 2
         CanReadArg.Data(1) = &h0C
+        DebugMessage "CANSendGetEEPROM Timeout!"
       ElseIf Result = SCA_ERROR_BYTE AND CanReadArg.Data(1) = &H10 Then      
-        CANSendGetEEPROM = True
         DebugMessage "CANSendGetEEPROM No More Data: " & " (" & CanReadArg.Format & ")"
+        CANSendGetEEPROM = True
       Else
         LogAdd "CANSendGetEEPROM NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
         DebugMessage "CANSendGetEEPROM NOK: " & GetErrorInfo( CanReadArg ) & " (" & CanReadArg.Format & ")"
