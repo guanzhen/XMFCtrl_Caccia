@@ -9,6 +9,7 @@
   f   = float (32 Bit)
   e   = float (32 Bit, Scientific notation (mantissa/exponent), lowercase)
   x   = char (8Bit)
+  x1  = 
   exp = Exponent (8Bit)
   str = string
 -->
@@ -113,77 +114,77 @@
     <param paramtype = "Comp C" address="97" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp C" address="101" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp C" address="105" length="4" format="x1" >ConfigData</param>
-    <param paramtype = "Comp 1" address="109" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 1" address="109" length="2" format="x" >Type</param>
     <param paramtype = "Comp 1" address="111" length="4" format="f" >Value</param>
     <param paramtype = "Comp 1" address="115" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 1" address="119" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 1" address="123" length="4" format="x1" >ConfigData</param>   
-    <param paramtype = "Comp 2" address="127" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 2" address="127" length="2" format="x" >Type</param>
     <param paramtype = "Comp 2" address="129" length="4" format="f" >Value</param>
     <param paramtype = "Comp 2" address="133" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 2" address="137" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 2" address="141" length="4" format="x1" >ConfigData</param>   
-    <param paramtype = "Comp 3" address="145" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 3" address="145" length="2" format="x" >Type</param>
     <param paramtype = "Comp 3" address="147" length="4" format="f" >Value</param>
     <param paramtype = "Comp 3" address="151" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 3" address="155" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 3" address="159" length="4" format="x1" >ConfigData</param>   
-    <param paramtype = "Comp 4" address="163" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 4" address="163" length="2" format="x" >Type</param>
     <param paramtype = "Comp 4" address="165" length="4" format="f" >Value</param>
     <param paramtype = "Comp 4" address="169" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 4" address="173" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 4" address="177" length="4" format="x1" >ConfigData</param>    
-    <param paramtype = "Comp 5" address="181" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 5" address="181" length="2" format="x" >Type</param>
     <param paramtype = "Comp 5" address="183" length="4" format="f" >Value</param>
     <param paramtype = "Comp 5" address="187" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 5" address="191" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 5" address="195" length="4" format="x1" >ConfigData</param>
-    <param paramtype = "Comp 6" address="199" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 6" address="199" length="2" format="x" >Type</param>
     <param paramtype = "Comp 6" address="201" length="4" format="f" >Value</param>
     <param paramtype = "Comp 6" address="205" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 6" address="209" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 6" address="213" length="4" format="x1" >ConfigData</param>
-    <param paramtype = "Comp 7" address="217" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 7" address="217" length="2" format="x" >Type</param>
     <param paramtype = "Comp 7" address="219" length="4" format="f" >Value</param>
     <param paramtype = "Comp 7" address="223" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 7" address="227" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 7" address="231" length="4" format="x1" >ConfigData</param>
-    <param paramtype = "Comp 8" address="235" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 8" address="235" length="2" format="x" >Type</param>
     <param paramtype = "Comp 8" address="237" length="4" format="f" >Value</param>
     <param paramtype = "Comp 8" address="241" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 8" address="245" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 8" address="249" length="4" format="x1" >ConfigData</param>
-    <param paramtype = "Comp 9" address="253" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 9" address="253" length="2" format="x" >Type</param>
     <param paramtype = "Comp 9" address="255" length="4" format="f" >Value</param>
     <param paramtype = "Comp 9" address="259" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 9" address="263" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 9" address="267" length="4" format="x1" >ConfigData</param>
-    <param paramtype = "Comp 10" address="271" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 10" address="271" length="2" format="x" >Type</param>
     <param paramtype = "Comp 10" address="273" length="4" format="f" >Value</param>
     <param paramtype = "Comp 10" address="277" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 10" address="281" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 10" address="285" length="4" format="x1" >ConfigData</param>
-    <param paramtype = "Comp 11" address="289" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 11" address="289" length="2" format="x" >Type</param>
     <param paramtype = "Comp 11" address="291" length="4" format="f" >Value</param>
     <param paramtype = "Comp 11" address="295" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 11" address="299" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 11" address="303" length="4" format="x1" >ConfigData</param>
-    <param paramtype = "Comp 12" address="307" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 12" address="307" length="2" format="x" >Type</param>
     <param paramtype = "Comp 12" address="309" length="4" format="f" >Value</param>
     <param paramtype = "Comp 12" address="313" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 12" address="317" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 12" address="321" length="4" format="x1" >ConfigData</param>    
-    <param paramtype = "Comp 13" address="325" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 13" address="325" length="2" format="x" >Type</param>
     <param paramtype = "Comp 13" address="327" length="4" format="f" >Value</param>
     <param paramtype = "Comp 13" address="331" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 13" address="335" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 13" address="339" length="4" format="x1" >ConfigData</param>    
-    <param paramtype = "Comp 14" address="343" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 14" address="343" length="2" format="x" >Type</param>
     <param paramtype = "Comp 14" address="345" length="4" format="f" >Value</param>
     <param paramtype = "Comp 14" address="349" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 14" address="353" length="4" format="x1" >RFU</param>
     <param paramtype = "Comp 14" address="357" length="4" format="x1" >ConfigData</param>    
-    <param paramtype = "Comp 15" address="361" length="2" format="str" >Type</param>
+    <param paramtype = "Comp 15" address="361" length="2" format="x" >Type</param>
     <param paramtype = "Comp 15" address="363" length="4" format="f" >Value</param>
     <param paramtype = "Comp 15" address="367" length="4" format="f" >Tolerance</param>
     <param paramtype = "Comp 15" address="371" length="4" format="x1" >RFU</param>
