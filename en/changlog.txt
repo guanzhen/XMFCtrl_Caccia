@@ -1,5 +1,5 @@
 V0.15 17.04.18  Bug fix in forward voltage measurement.
-V0.16		Added read EEPROM function for Contact Module, Measurement Board
+V0.16 12.06.18	Added read EEPROM function for Contact Module, Measurement Board
 V0.17 31.08.18	Added error codes to support BMK V31.
 		Updated Calibration Module EEPROM table to reflect new EEPROM structure.
 		Improvements to EEPROM reading.
