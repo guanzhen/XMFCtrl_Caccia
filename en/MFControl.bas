@@ -10,8 +10,8 @@
 Option Explicit   
 
 #include <can.bas>
-#include <PTKL_c.h>
-#include <PTKL_be.h>
+#include <eSW\PTKL_c.h>
+#include <eSW\PTKL_be.h>
 #include <LedCtrl.bas>
 #include <Math.bas>
 #include <System.bas>
