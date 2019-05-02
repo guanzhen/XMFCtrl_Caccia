@@ -1,1 +1,10 @@
 V0.15 17.04.18  Bug fix in forward voltage measurement.
+V0.16		Added read EEPROM function for Contact Module, Measurement Board
+V0.17 31.08.18	Added error codes to support BMK V31.
+		Updated Calibration Module EEPROM table to reflect new EEPROM structure.
+		Improvements to EEPROM reading.
+V0.18 23.01.19  Increased timeout to cater for Calibration Module functions
+	        Updated Calibration Module EEPROM table to reflect new EEPROM structure.
+	        Added Feeder Cover status messages.
+V0.19 02.05.19  Bug fix module hang when only partial EEPROM can be read. 
+	        Improved description of component types in Calibration Module EEPROM content table.
