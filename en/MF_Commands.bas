@@ -11,8 +11,9 @@ Const PROCESS_NONE = 0
 Const PREPARE_NONE = 0
 Const PREPARE_ALL = 6
 
+'Timeouts in milli seconds.
 Const TIO_SETUPMEASURE = 20000
-Const TIO_MEASURE = 20000
+Const TIO_MEASURE = 50000
 Const TIO_CALIBRATE = 100000
 Const TIO_SELFTEST = 30000
 
@@ -46,15 +47,39 @@ Const PARAM_MB_STATUS  = &h55
 Const PARAM_DATA_STATUS = &h56
 Const PARAM_MB_OVERRIDE = &h57
 
-Const CALB_COMP1 = &h8080F1
-Const CALB_COMP2 = &h808001
-Const CALB_COMP3 = &h808003
-Const CALB_COMP4 = &h418001
-Const CALB_COMP5 = &h488001
-Const CALB_COMP6 = &h428001
-Const CALB_COMP7 = &h508001
-Const CALB_COMP8 = &h448001
-Const CALB_COMP9 = &h608001
+'1. Init 
+'2. Reset
+'3. Trim Open 
+'4. Trim Close
+'5. 1 Ohm
+'6. 10 Ohm
+'7. 138pF
+'8. 1.5nF
+'9. 15nF
+'10. 150nF
+'11. 1K
+'12. 100K
+'13. 1 nF
+'14. 3.3uF
+'15. 1 uH
+'16. 1 mH
+'
+Const CALB_COMP1 = &h8080E0
+Const CALB_COMP2 = &h8080E1
+Const CALB_COMP3 = &h808001
+Const CALB_COMP4 = &h808003
+Const CALB_COMP5 = &h805001
+Const CALB_COMP6 = &h806001
+Const CALB_COMP7 = &h804101
+Const CALB_COMP8 = &h804201
+Const CALB_COMP9 = &h804401
+Const CALB_COMP10 = &h804801
+Const CALB_COMP11 = &h418001
+Const CALB_COMP12 = &h488001
+Const CALB_COMP13 = &h428001
+Const CALB_COMP14 = &h508001
+Const CALB_COMP15 = &h448001
+Const CALB_COMP16 = &h608001
 
 Function Init_MFCommand ( )
   Dim PrepCmd_Inprogress,PrepCmd_Error,PrepCmd_PrepID,Endurance_Inprogress
@@ -71,19 +96,21 @@ Function Init_MFCommand ( )
   Memory.Set "Endurance_Inprogress",Endurance_Inprogress
   Memory.Set "PrepCmd_PrepID",PrepCmd_PrepID
   
+  'Set default values for controls on GUI
   Visual.Select("cbmodesel").Checked = True
   Visual.Select("ip_param_setupExpectedVal").Value = 100E-06
   Visual.Select("opt_polarity").Value = 0
   Visual.Select("ip_paramnumofcycles").Value = 0
   Visual.Select("ip_paramvoltage").Value = 3
   Visual.Select("ip_parammaxvoltage").Value = 5
-  
-  Visual.Select("param_numofcycle").Style.Display = "None"
+  'Disable unused controls on the GUI
+  'Visual.Select("param_numofcycle").Style.Display = "None"
     
+  'Initialize drop down menu for feeder slot selection
   For counter = 1 To 60
     Visual.Select("opt_SlotNum").addItem counter,counter
   Next
-   
+  
   Visual.Select("opt_SlotNum").SelectedIndex  = DEFAULT_SLOT-1
   Memory.Set "SLOT_NO",Visual.Select("opt_SlotNum").SelectedItemAttribute("Value")
   DebugMessage "SLOT_NO :" & Memory.SLOT_NO
@@ -93,6 +120,7 @@ Function Init_MFCommand ( )
   PrepCmd_MeasureInProgress = 0
   Memory.Set "PrepCmd_MeasureInProgress",PrepCmd_MeasureInProgress
   
+  'Initialize the EEPROM grid for display.
   InitEEPROMGrid
   
 End Function
@@ -630,6 +658,7 @@ End Function
 Function OnClick_btn_Sel1 ( Reason )
   Dim CM_ID
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP1)
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP1,0)
   If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
@@ -647,6 +676,7 @@ End Function
 Function OnClick_btn_Sel2 ( Reason )
   Dim CM_ID
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP2 )
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP2,0)
  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
@@ -664,6 +694,7 @@ End Function
 Function OnClick_btn_Sel3 ( Reason )
   Dim CM_ID
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP3 )
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP3,0)
   If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
@@ -681,6 +712,7 @@ End Function
 Function OnClick_btn_Sel4 ( Reason )
   Dim CM_ID
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP4 )
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP4,0)
   If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
@@ -698,6 +730,7 @@ End Function
 Function OnClick_btn_Sel5 ( Reason )
   Dim CM_ID
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP5 )
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP5,0)
   If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
@@ -715,6 +748,7 @@ End Function
 Function OnClick_btn_Sel6 ( Reason )
   Dim CM_ID
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP6 )
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP6,0)
   If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
@@ -732,6 +766,7 @@ End Function
 Function OnClick_btn_Sel7 ( Reason )
   Dim CM_ID
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP7 )
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP7,0)
   If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
@@ -749,6 +784,7 @@ End Function
 Function OnClick_btn_Sel8 ( Reason )
   Dim CM_ID
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP8 )
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP8,0)
   If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
@@ -766,6 +802,7 @@ End Function
 Function OnClick_btn_Sel9 ( Reason )
   Dim CM_ID
   CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP9 )
   Memory.CANData(0) = 1
   Memory.CANData(1) = Lang.GetByte(CALB_COMP9,0)
   If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
@@ -774,6 +811,132 @@ Function OnClick_btn_Sel9 ( Reason )
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
   Memory.CANData(0) = 3
   Memory.CANData(1) = Lang.GetByte(CALB_COMP9,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If  
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel10 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP10)
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP10,0)
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP10,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP10,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If  
+End Function
+ '------------------------------------------------------------------
+Function OnClick_btn_Sel11 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP11)
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP11,0)
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP11,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP11,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If  
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel12 ( Reason )
+  Dim CM_ID
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP12)
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP12,0)
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP12,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP12,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If  
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel13 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP13)
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP13,0)
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP13,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP13,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If  
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel14 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP14)
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP14,0)
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP14,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP14,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If  
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel15 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP15)
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP15,0)
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP15,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP15,2)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
+  Else
+    LogAdd "Check if Calibration Module is connected"
+  End If  
+End Function
+'------------------------------------------------------------------
+Function OnClick_btn_Sel16 ( Reason )
+  Dim CM_ID
+  CM_ID = Visual.Select("opt_CMID").SelectedItemAttribute("Value")
+  DebugMessage "Config = " & String.Format("%06X",CALB_COMP16)
+  Memory.CANData(0) = 1
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP16,0)
+  If CANSendGetMC($(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2) = True Then
+  Memory.CANData(0) = 2
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP16,1)
+  CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2
+  Memory.CANData(0) = 3
+  Memory.CANData(1) = Lang.GetByte(CALB_COMP16,2)
   CANSendGetMC $(CMD_SEND_DATA),$(PARAM_CALB_IOEXP),Memory.SLOT_NO,CM_ID,2    
   Else
     LogAdd "Check if Calibration Module is connected"
@@ -1180,7 +1343,6 @@ Function ChangeVisibility_ComponentSelect ( CompType )
   Select Case CompType
   'Res
   Case 1:
-  
     Visual.Select("ParamUnit").InnerHTML  = "Ohm"
     Visual.Select("param_expectedVal").Style.Display = "block"
     Visual.Select("param_numofcycle").Style.Display  = "block"

@@ -664,7 +664,7 @@ Function CANSendGetFeed(Cmd,SubCmd,SlotNo,Division,DataLen)
   If Memory.Exists("CanManager") AND CanConfig.CANIDvalid = 1 Then    
     Memory.Get "CanManager",CanManager        
     Result = CanManager.SendCmd(CanSendArg,1000,SC_CHECK_ERROR_BYTE,CanReadArg)    
-    DebugMessage "GetSendFeed: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
+    'DebugMessage "GetSendFeed: (TX:" & CanSendArg.Format(CFM_SHORT)&")" & " (RX:" & CanReadArg.Format & ")"
     'XFCU
     If CANConfig.Config = 1 Then
       'StandAlone Prepare Commands
